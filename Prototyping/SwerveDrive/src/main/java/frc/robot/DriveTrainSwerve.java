@@ -1,40 +1,10 @@
-Skip to content
-Why GitHub? 
-Team
-Enterprise
-Explore 
-Marketplace
-Pricing 
-Search
-Sign in
-Sign up
-SwerveDriveSpecialties
-/
-swerve-template
-Public
-Code
-Issues
-3
-Pull requests
-1
-Actions
-Projects
-Wiki
-Security
-Insights
-swerve-template/src/main/java/frc/robot/subsystems/DrivetrainSubsystem.java /
-@JacobJBublitz
-JacobJBublitz Add deadband to inputs and set modules in periodic
-Latest commit dacd559 on Nov 6, 2021
- History
- 1 contributor
-195 lines (174 sloc)  9.29 KB
-   
+//
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gryo;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
@@ -48,9 +18,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-import static frc.robot.Constants.*;
+//import static frc.robot.Constants.*;
 
-public class DrivetrainSubsystem {
+public class DrivetrainSwerve {
   /**
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
