@@ -1,0 +1,9 @@
+{
+  "lengthUnit": "Foot",
+  "exportUnit": "Same as Project",
+  "maxVelocity": 1.0,
+  "maxAcceleration": 0.25,
+  "trackWidth": 2.0,
+  "gameName": "Rapid React",
+  "outputDir": "../../PathWeaver/src/main/deploy/paths"
+}
