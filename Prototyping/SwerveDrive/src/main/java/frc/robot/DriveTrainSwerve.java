@@ -172,10 +172,10 @@ public class DriveTrainSwerve {
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
 
-  public void drive(double x, double y, double rotation) {
+  public void drive(double x, double y, double rotation)
+  {
         m_chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds( x, y, rotation, getGyroscopeRotation() );
-       
-}
+  }
 
    public void periodic() {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
