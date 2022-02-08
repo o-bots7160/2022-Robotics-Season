@@ -9,17 +9,18 @@ public class Robot extends TimedRobot {
   private final WestCoastDrive _westCoastDrive = new WestCoastDrive(); 
   private final Intake _intakeClass            = new Intake();
   private final Turret _turretClass            = new Turret();
-  private Joystick _joystick                   = new Joystick(0);
+  private final Joystick _joystick             = new Joystick(0);
 
   private double speedReducerY = 2.5;
   private double speedReducerZ = 2; 
 
-  
   @Override
   public void robotInit() {}
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    _intakeClass.execute();
+  }
 
   @Override
   public void autonomousInit() {}
@@ -36,7 +37,7 @@ public class Robot extends TimedRobot {
   }
 
   private double zInput(){
-    if(_joystick.getRawAxis(2) >=.2 || _joystick.getRawAxis(2) <= -.2){
+    if(_joystick.getRawAxis(2) >=.1 || _joystick.getRawAxis(2) <= -.1){
       return _joystick.getZ() / speedReducerZ;
     }else{
       return 0;
@@ -44,8 +45,7 @@ public class Robot extends TimedRobot {
   }
   
   @Override
-  public void teleopInit() {
-  }
+  public void teleopInit() {}
 
   @Override
   public void teleopPeriodic() {
@@ -58,10 +58,10 @@ public class Robot extends TimedRobot {
       _turretClass.StopTurret();
     }
 
-    _westCoastDrive.arcadeDrive(yInput(), zInput()); 
+    _westCoastDrive.arcadeDrive(zInput(), yInput()); 
     if(_joystick.getRawButton(1)){
       _intakeClass.Collect();
-      _turretClass.Shoot();
+    //_turretClass.Shoot();
     }else{
       _intakeClass.Stop();
       _turretClass.StopShooter();

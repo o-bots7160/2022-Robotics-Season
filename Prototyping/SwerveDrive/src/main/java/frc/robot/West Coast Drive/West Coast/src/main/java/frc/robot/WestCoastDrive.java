@@ -11,7 +11,7 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
   
-  public void robotInit() {
+  public WestCoastDrive() {
     _leftFrnt.configFactoryDefault();
     _leftBack.configFactoryDefault();
     _rghtFrnt.configFactoryDefault();
@@ -21,8 +21,8 @@ public class WestCoastDrive {
     _rghtBack.follow( _rghtFrnt );
     _leftFrnt.setInverted(TalonFXInvertType.CounterClockwise);
     _leftBack.setInverted(TalonFXInvertType.FollowMaster);
-    _rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
-    _rghtBack.setInverted(TalonFXInvertType.FollowMaster);
+    //_rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
+    //_rghtBack.setInverted(TalonFXInvertType.FollowMaster);
 
   }
 
