@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.DriverStation;
 
@@ -10,9 +11,11 @@ public class Robot extends TimedRobot {
   private final Intake _intakeClass            = new Intake();
   private final Turret _turretClass            = new Turret();
   private final Joystick _joystick             = new Joystick(0);
+  private final Timer shotTimer                = new Timer();
+  private boolean isShooting                   = false;
 
   private double speedReducerY = 2.5;
-  private double speedReducerZ = 2; 
+  private double speedReducerZ = 2.5; 
 
   @Override
   public void robotInit() {}
@@ -45,7 +48,8 @@ public class Robot extends TimedRobot {
   }
   
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   @Override
   public void teleopPeriodic() {
@@ -58,15 +62,38 @@ public class Robot extends TimedRobot {
       _turretClass.StopTurret();
     }
 
-    _westCoastDrive.arcadeDrive(zInput(), yInput()); 
+    _westCoastDrive.arcadeDrive(yInput(), zInput()); 
     if(_joystick.getRawButton(1)){
       _intakeClass.Collect();
-    //_turretClass.Shoot();
-    }else{
+    }else if(_joystick.getRawButton(2)){
+      /*if(isShooting == false) {
+        shotTimer.reset();
+        shotTimer.start();
+        isShooting = true;
+      }*/
+      _turretClass.Shoot(); 
+      /*if(shotTimer.hasElapsed( 5 ) ) {*/
+      _intakeClass.Shoot();
+      
+      /*}else {
+      _intakeClass.Stop();
+      _turretClass.StopTurret();
+      isShooting = false;
+      }*/
+      
+
+    }else if(_joystick.getRawButton(4)){
+      _intakeClass.Flush();
+    }else if(_joystick.getRawButton(3) ){
+        _intakeClass.intakeFlush();}
+    else {
       _intakeClass.Stop();
       _turretClass.StopShooter();
+
     }
   }
+
+
 
   @Override
   public void disabledInit() {}

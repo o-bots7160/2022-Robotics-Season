@@ -11,29 +11,21 @@ public class Intake {
     private final WPI_TalonFX _index     = new WPI_TalonFX(31); 
     private final TimeOfFlight _catch    = new TimeOfFlight(101);
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
-    
+    private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
+    private final OnOffDelay _highDelay  = new OnOffDelay( 0.0, 0.15, () -> _barrel.getRange() < 100 );
+
+
 protected void execute() {
     SmartDashboard.putNumber("_catch", _catch.getRange());
     SmartDashboard.putNumber("_barrel", _barrel.getRange());
 }
 
-public void Intake() {
+public Intake() {
     _catch.setRangingMode    ( RangingMode.Short, 24.0d );
     _barrel.setRangingMode   ( RangingMode.Short, 24.0d );
 }    
 
-public void Collect() {
-    if( haveBallLow() ) {
-        _intake.stopMotor();
-    }else{
-        _intake.set(0.60);
-    }
-    if( haveBallHigh() ) {
-        _index.stopMotor();
-    }else{
-        _index.set(0.70);
-    }
-
+public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
         _index.stopMotor();
         _intake.stopMotor();
@@ -43,23 +35,34 @@ public void Collect() {
     }else if( !haveBallHigh() && haveBallLow()) {
         _index.set(0.70);
         _intake.stopMotor();
-    }else {
+    }else if( !haveBallHigh() && !haveBallLow()){
         _index.stopMotor();
         _intake.set(0.60);
     }
 }
 
+public void Shoot(){
+    _intake.set(0.40);
+    _index.set(0.40);
+}
+public void Flush(){
+    _intake.set(-0.90);
+    _index.set(-0.40);
+}
+public void intakeFlush(){
+    _intake.set(-0.60);
+}
 public void Stop() {
     _intake.stopMotor();
     _index.stopMotor();
 }
 
 public boolean haveBallLow() {
-    return (_catch.getRange() < 100);
+    return (_lowDelay.isOn( ) );
 }
 
 public boolean haveBallHigh() {
-    return (_barrel.getRange() < 100);
+    return (_highDelay.isOn( ) );
 }
-    
+   
 }

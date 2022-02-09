@@ -21,8 +21,8 @@ public class WestCoastDrive {
     _rghtBack.follow( _rghtFrnt );
     _leftFrnt.setInverted(TalonFXInvertType.CounterClockwise);
     _leftBack.setInverted(TalonFXInvertType.FollowMaster);
-    //_rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
-    //_rghtBack.setInverted(TalonFXInvertType.FollowMaster);
+    _rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
+    _rghtBack.setInverted(TalonFXInvertType.FollowMaster);
 
   }
 
