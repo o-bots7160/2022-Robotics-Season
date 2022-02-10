@@ -1,27 +1,27 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.DriverStation;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+
+  private final WestCoastDrive _westCoastDrive = new WestCoastDrive(); 
+  private final Intake _intakeClass            = new Intake();
+  private final Turret _turretClass            = new Turret();
+  private final Joystick _joystick             = new Joystick(0);
+
+  private double speedReducerY = 2.5;
+  private double speedReducerZ = 2.5; 
+
   @Override
   public void robotInit() {}
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    _intakeClass.execute();
+    _turretClass.execute();
+  }
 
   @Override
   public void autonomousInit() {}
@@ -29,11 +29,73 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {}
 
+  private double yInput(){
+    if(_joystick.getRawAxis(1) >=.2 || _joystick.getRawAxis(1) <= -.2){
+      return _joystick.getY() / speedReducerY;
+    }else{
+      return 0;
+    }
+  }
+
+  private double zInput(){
+    if(_joystick.getRawAxis(2) >=.1 || _joystick.getRawAxis(2) <= -.1){
+      return _joystick.getZ() / speedReducerZ;
+    }else{
+      return 0;
+    }
+  }
+  
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+    if(_joystick.getRawButton(5)){
+      _turretClass.TurnLeft();
+    }else if(_joystick.getRawButton(6)){
+      _turretClass.TurnRight();
+    }else{
+      _turretClass.StopTurret();
+    }
+
+    _westCoastDrive.arcadeDrive(yInput(), zInput()); 
+    if(_joystick.getRawButton(1))
+    {
+      _intakeClass.Collect();
+    }
+    else if(_joystick.getRawButton(2))
+    {
+      _turretClass.Shoot();
+      if (_turretClass.isReady())
+      {
+        _intakeClass.Shoot();
+      }
+      else
+      {
+        _intakeClass.Stop();
+      }
+      
+    }
+    else if(_joystick.getRawButton(4))
+    {
+      _intakeClass.Flush();
+    }
+    else if(_joystick.getRawButton(3) )
+    {
+        _intakeClass.intakeFlush();
+      }
+      else if(_joystick.getRawButton(7)){
+        _turretClass.ShooterOn();
+      }
+    else 
+    {
+      _intakeClass.Stop();
+      _turretClass.StopShooter();
+
+    }
+  }
 
   @Override
   public void disabledInit() {}
