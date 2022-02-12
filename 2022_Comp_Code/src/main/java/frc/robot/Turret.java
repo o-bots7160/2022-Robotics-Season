@@ -118,11 +118,12 @@ public void Update_Limelight_Tracking()
   }
 
 private void setTurret(double turnRate) {
-    double position = offset - _turret.getSelectedSensorPosition(); 
-    if (turnRate > 0 && position > -1000) {
+    double position = offset - _turret.getSelectedSensorPosition();
+
+    if (turnRate > 0.05 && position > -50000) {
         _turret.setNeutralMode(NeutralMode.Coast); 
         _turret.set(turnRate);
-    } else if (turnRate > 0 && position < 1000) {
+    } else if (turnRate < 0.05 && position < 50000) {
         _turret.setNeutralMode(NeutralMode.Coast); 
         _turret.set(turnRate);
     } else {
