@@ -1,14 +1,17 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
-  
-  @Override
-  public void robotInit() {}
 
   @Override
-  public void robotPeriodic() {}
+  public void robotInit() {
+    led = new Spark(9);
+  }
+
+  @Override
+  public void robotPeriodic() {
+    led.set(0.61);
+  }
 
   @Override
   public void autonomousInit() {}
