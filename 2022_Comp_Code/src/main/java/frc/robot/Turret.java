@@ -54,7 +54,6 @@ public void StopTurret(){
 //turns turret left
 public void TurnLeft(){
     setTurret(-0.1);
-    //_turret.getSpeed();
 }
 
 //turns turret right
@@ -112,10 +111,15 @@ public void Update_Limelight_Tracking()
 
   }
 
-private void setTurret(double turnRate) {
-    _turret.setNeutralMode(NeutralMode.Coast); 
-    _turret.set(turnRate);
-
-}
-
+private void setTurret(double turnRate) {  
+    if (turnRate > 0 && _turret.getSelectedSensorPosition() < 1000) {
+        _turret.setNeutralMode(NeutralMode.Coast); 
+        _turret.set(turnRate);
+    } else if (turnRate > 0 && _turret.getSelectedSensorPosition() > -1000) {
+        _turret.setNeutralMode(NeutralMode.Coast); 
+        _turret.set(turnRate);
+    } else {
+        _turret.stopMotor();
+    }
+  }
 }
