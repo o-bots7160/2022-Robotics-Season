@@ -17,14 +17,20 @@ public class Turret {
     private boolean m_LimelightHasValidTarget = false;
 
     private double m_LimelightSteerCommand = 0.0;
+    private double offset;
 
 
 protected void execute(){
     SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Turrent Position", offset - _turret.getSelectedSensorPosition());
     SmartDashboard.putBoolean("Target?", m_LimelightHasValidTarget);
     Update_Limelight_Tracking();
 }
 
+public Turret()
+{
+    offset = _turret.getSelectedSensorPosition();
+}
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
@@ -54,7 +60,6 @@ public void StopTurret(){
 //turns turret left
 public void TurnLeft(){
     setTurret(-0.1);
-    //_turret.getSpeed();
 }
 
 //turns turret right
@@ -113,9 +118,15 @@ public void Update_Limelight_Tracking()
   }
 
 private void setTurret(double turnRate) {
-    _turret.setNeutralMode(NeutralMode.Coast); 
-    _turret.set(turnRate);
-
-}
-
+    double position = offset - _turret.getSelectedSensorPosition(); 
+    if (turnRate > 0 && position > -1000) {
+        _turret.setNeutralMode(NeutralMode.Coast); 
+        _turret.set(turnRate);
+    } else if (turnRate > 0 && position < 1000) {
+        _turret.setNeutralMode(NeutralMode.Coast); 
+        _turret.set(turnRate);
+    } else {
+        _turret.stopMotor();
+    }
+  }
 }
