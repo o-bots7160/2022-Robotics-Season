@@ -40,10 +40,52 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    _westCoastDrive.autonomousInit();
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    switch ( _chooser.getSelected() ){
+      case 1:
+        auton1();
+        break;
+      case 2: 
+        break;
+      case 3:
+        break;
+    }
+  }
+
+  private int step = 0; 
+  private void auton1 () {
+      // move to cargo 2 with intake on
+      if (step == 0) {
+        _westCoastDrive.zeroEncoders();
+        step++;
+      } else if (step == 1) {
+        _intakeClass.Collect();
+        if (_westCoastDrive.turnTo( 1000 )) {
+          step++;
+        }
+      } else if (step == 2) {
+        if (_westCoastDrive.moveTo( 3000 )) {
+          step++;
+        }
+      }
+      
+      // shoot two balls
+      _westCoastDrive.turnTo( 1000 );
+      _turretClass.Shoot();
+      if ( !_turretClass.isReady()){}
+      if ( true ){
+        _intakeClass.Shoot();
+      } 
+      //delay???
+      // turn to face third ball
+      // move to cargo 3 with intake on
+      // shoot one ball 
+  }
 
   private double yInput(){
     if(_joystick.getRawAxis(1) >=.2 || _joystick.getRawAxis(1) <= -.2){

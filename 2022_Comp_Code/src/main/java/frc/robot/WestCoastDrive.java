@@ -11,6 +11,10 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
   
+  private void zeroEncoders(){
+    _leftFrnt.setSelectedSensorPosition( 0.0 );
+    _leftFrnt.setSelectedSensorPosition( 0.0 );
+  }
   public WestCoastDrive() {
     _leftFrnt.configFactoryDefault();
     _leftBack.configFactoryDefault();
@@ -23,10 +27,28 @@ public class WestCoastDrive {
     _leftBack.setInverted(TalonFXInvertType.FollowMaster);
     _rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
     _rghtBack.setInverted(TalonFXInvertType.FollowMaster);
+    zeroEncoders();
+  }
 
+  public void autonomousInit() {
+    zeroEncoders();
   }
 
   public void arcadeDrive(double y, double z){
     _difDrive.arcadeDrive(y, z);
+  }
+  public void turnTo( double rotation ) {
+    zeroEncoders();
+    while( _leftFrnt.getSelectedSensorPosition() < rotation ) {
+      _difDrive.arcadeDrive(0, rotation);
+    }
+    _difDrive.stopMotor();
+  }
+  public void moveTo( double distance ) {
+    zeroEncoders();
+    while( _leftFrnt.getSelectedSensorPosition() < distance ) {
+      _difDrive.arcadeDrive( 0.3, 0);
+    }
+    _difDrive.stopMotor();
   }
 }
