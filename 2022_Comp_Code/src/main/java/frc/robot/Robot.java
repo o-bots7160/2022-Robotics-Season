@@ -37,6 +37,8 @@ public class Robot extends TimedRobot {
     //puts options and result on Smart Dashboard
     SmartDashboard.putData(_chooser);
     SmartDashboard.putNumber("Position", _chooser.getSelected());
+    SmartDashboard.putNumber("Step", step);
+    _westCoastDrive.robotPeriodic();
   }
 
   @Override
@@ -59,28 +61,30 @@ public class Robot extends TimedRobot {
 
   private int step = 0; 
   private void auton1 () {
+
       // move to cargo 2 with intake on
       if (step == 0) {
         _westCoastDrive.zeroEncoders();
         step++;
       } else if (step == 1) {
         _intakeClass.Collect();
-        if (_westCoastDrive.turnTo( 1000 )) {
+        if (_westCoastDrive.turnTo( 80 )) {
           step++;
         }
       } else if (step == 2) {
-        if (_westCoastDrive.moveTo( 3000 )) {
+        if (_westCoastDrive.moveTo( 300 )) {
           step++;
         }
       }
       
       // shoot two balls
-      _westCoastDrive.turnTo( 1000 );
-      _turretClass.Shoot();
+      //_westCoastDrive.turnTo( 1000 );
+     /* _turretClass.Shoot();
       if ( !_turretClass.isReady()){}
       if ( true ){
         _intakeClass.Shoot();
       } 
+      */
       //delay???
       // turn to face third ball
       // move to cargo 3 with intake on
@@ -156,7 +160,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    step = 0;
+  }
 
   @Override
   public void disabledPeriodic() {}

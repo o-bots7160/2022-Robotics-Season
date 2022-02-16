@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WestCoastDrive {
   private final WPI_TalonFX _leftFrnt       = new WPI_TalonFX(10);
@@ -10,8 +11,9 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtFrnt       = new WPI_TalonFX(20);
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
+  private boolean autonActive = false;
   
-  private void zeroEncoders(){
+  public void zeroEncoders(){
     _leftFrnt.setSelectedSensorPosition( 0.0 );
     _leftFrnt.setSelectedSensorPosition( 0.0 );
   }
@@ -37,18 +39,42 @@ public class WestCoastDrive {
   public void arcadeDrive(double y, double z){
     _difDrive.arcadeDrive(y, z);
   }
-  public void turnTo( double rotation ) {
-    zeroEncoders();
-    while( _leftFrnt.getSelectedSensorPosition() < rotation ) {
-      _difDrive.arcadeDrive(0, rotation);
+  
+  public boolean turnTo( double rotation ) {
+    if (!autonActive) {
+      zeroEncoders();
+      autonActive = true;
     }
-    _difDrive.stopMotor();
+   
+    if ( _leftFrnt.getSelectedSensorPosition() < rotation ) {
+      _difDrive.arcadeDrive(0, 0.5);
+      return false;
+    } else {
+      _difDrive.stopMotor();
+      autonActive = false;
+      return true;
+    }
   }
-  public void moveTo( double distance ) {
-    zeroEncoders();
-    while( _leftFrnt.getSelectedSensorPosition() < distance ) {
-      _difDrive.arcadeDrive( 0.3, 0);
+  public void robotPeriodic() {
+    SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
+  }
+  public boolean moveTo( double distance ) {
+    if (!autonActive) {
+      zeroEncoders();
+      autonActive = true;
     }
-    _difDrive.stopMotor();
+
+    double pulsesPerInch = 2048 / 6 / Math.PI;
+    double pulses = distance * pulsesPerInch;  
+
+    if( _leftFrnt.getSelectedSensorPosition() < -pulses ) {
+      _difDrive.arcadeDrive( -0.3, 0);
+      return false;
+    } else {
+      _difDrive.stopMotor();
+      autonActive = false;
+      return true;
+    }
+
   }
 }
