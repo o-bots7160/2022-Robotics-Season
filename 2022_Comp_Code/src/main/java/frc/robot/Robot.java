@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.AnalogAccelerometer;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.DriverStation;
 
@@ -39,6 +40,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Position", _chooser.getSelected());
     SmartDashboard.putNumber("Step", step);
     _westCoastDrive.robotPeriodic();
+    SmartDashboard.putNumber("Angle", _westCoastDrive.getXYZ()[3]);
+    SmartDashboard.putNumber("ROT Error", _westCoastDrive.getrotError());
   }
 
   @Override
@@ -48,7 +51,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    switch ( _chooser.getSelected() ){
+
+    _westCoastDrive.moveTo(144.0);
+
+    /*switch ( _chooser.getSelected() ){
       case 1:
         auton1();
         break;
@@ -56,7 +62,7 @@ public class Robot extends TimedRobot {
         break;
       case 3:
         break;
-    }
+    }*/
   }
 
   private int step = 0; 
@@ -68,11 +74,12 @@ public class Robot extends TimedRobot {
         step++;
       } else if (step == 1) {
         _intakeClass.Collect();
-        if (_westCoastDrive.turnTo( 80 )) {
-          step++;
+      if (_westCoastDrive.turnTo( 0 )) {
+        step++;
         }
       } else if (step == 2) {
-        if (_westCoastDrive.moveTo( 300 )) {
+        _intakeClass.Collect();
+      if (_westCoastDrive.moveTo( 30 )) {
           step++;
         }
       }

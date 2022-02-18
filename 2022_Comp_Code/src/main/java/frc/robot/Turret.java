@@ -88,8 +88,8 @@ public void Update_Limelight_Tracking()
         double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
         double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
 
-        System.out.println("tv" + tv);
-        System.out.println( "tx" + tx);
+        //System.out.println("tv" + tv);
+        //System.out.println( "tx" + tx);
         if (tv < 1.0)
         {
           m_LimelightHasValidTarget = false;
