@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.AnalogAccelerometer;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.DriverStation;
 
@@ -13,7 +12,9 @@ public class Robot extends TimedRobot {
   private final Intake _intakeClass               = new Intake();
   private final Turret _turretClass               = new Turret();
   private final Joystick _joystick                = new Joystick(0);
+  private final Joystick _ButtonBoard             = new Joystick(2);
   private final SendableChooser<Integer> _chooser = new SendableChooser<>();
+  private final Climber _climberClass             = new Climber();
 
   private double speedReducerY = 2.5;
   private double speedReducerZ = 2.5; 
@@ -22,6 +23,9 @@ public class Robot extends TimedRobot {
   private final Integer PositionOne   = 1;
   private final Integer PositionTwo   = 2;
   private final Integer PositionThree = 3;
+
+
+ 
 
   @Override
   public void robotInit() {
@@ -40,7 +44,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Position", _chooser.getSelected());
     SmartDashboard.putNumber("Step", step);
     _westCoastDrive.robotPeriodic();
-    SmartDashboard.putNumber("Angle", _westCoastDrive.getXYZ()[3]);
+    //SmartDashboard.putNumber("Angle", _westCoastDrive.getXYZ()[3]);
     SmartDashboard.putNumber("ROT Error", _westCoastDrive.getrotError());
   }
 
@@ -52,9 +56,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
-    _westCoastDrive.moveTo(144.0);
-
-    /*switch ( _chooser.getSelected() ){
+    switch ( _chooser.getSelected() ){
       case 1:
         auton1();
         break;
@@ -62,7 +64,7 @@ public class Robot extends TimedRobot {
         break;
       case 3:
         break;
-    }*/
+    }
   }
 
   private int step = 0; 
@@ -73,15 +75,15 @@ public class Robot extends TimedRobot {
         _westCoastDrive.zeroEncoders();
         step++;
       } else if (step == 1) {
-        _intakeClass.Collect();
-      if (_westCoastDrive.turnTo( 0 )) {
-        step++;
-        }
-      } else if (step == 2) {
-        _intakeClass.Collect();
-      if (_westCoastDrive.moveTo( 30 )) {
+        //_intakeClass.Collect();
+        if (_westCoastDrive.turnTo( 144.0 )) {
           step++;
         }
+      } else if (step == 2) {
+        //_intakeClass.Collect();
+        //if (_westCoastDrive.moveTo( 30 )) {
+        //    step++;
+        //}
       }
       
       // shoot two balls
@@ -164,11 +166,27 @@ public class Robot extends TimedRobot {
       _turretClass.StopShooter();
 
     }
+    if(_ButtonBoard.getRawButton(5)) {
+      _climberClass.Extend();
+    }else if(_ButtonBoard.getRawButton(2)) {
+      _climberClass.Retract();
+    }else {
+      _climberClass.StopClimber();
+    }
+
+    if(_ButtonBoard.getRawButton(1)) {
+      _climberClass.Push();
+    }else if(_ButtonBoard.getRawButton(3)) {
+      _climberClass.Pull();
+    }else {
+      _climberClass.StopTilt();
+    }
   }
 
   @Override
   public void disabledInit() {
     step = 0;
+    _westCoastDrive.setCoastMode();
   }
 
   @Override
