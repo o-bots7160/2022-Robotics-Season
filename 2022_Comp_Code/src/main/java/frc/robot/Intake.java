@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
+
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
@@ -12,6 +14,7 @@ public class Intake {
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
     private final OnOffDelay _highDelay  = new OnOffDelay( 0.0, 0.15, () -> _barrel.getRange() < 100 );
+    private final Spark _LED             = new Spark(4);
 
 //puts stuff on the Smart Dashboard
 protected void execute() {
@@ -26,19 +29,20 @@ public Intake() {
 }    
 
 //uses TOF sensors to intake or not intake
-public void Collect() {    
+public void Collect() {  
+    _LED.set(-.65);  
     if( haveBallLow() && haveBallHigh() ) {
         _index.stopMotor();
         _intake.stopMotor();
     }else if( haveBallHigh() && !haveBallLow()) {
         _index.stopMotor();
-        _intake.set(0.60);
+        _intake.set(0.70);
     }else if( !haveBallHigh() && haveBallLow()) {
         _index.set(0.70);
         _intake.stopMotor();
     }else if( !haveBallHigh() && !haveBallLow()){
         _index.stopMotor();
-        _intake.set(0.60);
+        _intake.set(0.70);
     }
 }
 
@@ -62,6 +66,7 @@ public void intakeFlush(){
 public void Stop() {
     _intake.stopMotor();
     _index.stopMotor();
+    _LED.set(-.95);
 }
 
 public boolean haveBallLow() {

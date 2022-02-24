@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -11,9 +12,11 @@ public class Turret {
     private final WPI_TalonFX _turret    = new WPI_TalonFX(40); 
     private final WPI_TalonFX _shooter   = new WPI_TalonFX(41);     
     private final Timer       shotTimer  = new Timer();
-
-    private boolean isShooting = false;
-
+    private final Joystick _buttons1     = new Joystick(1);
+    private final Joystick _buttons2     = new Joystick(2);
+    
+    private boolean _highLow                  = false;
+    private boolean isShooting                = false;
     private boolean m_LimelightHasValidTarget = false;
 
     private double m_LimelightSteerCommand = 0.0;
@@ -42,8 +45,14 @@ public void Shoot(){
     isShooting = true;
 }
 
+//sets shooter speed based off of switch
 public void ShooterOn(){
-    _shooter.set(0.55);
+    if(_buttons2.getRawButton(7)){
+        _shooter.set(0.55);
+    }
+    else {
+        _shooter.set(0.2);
+    }
 }
 
 //stops shooter motor

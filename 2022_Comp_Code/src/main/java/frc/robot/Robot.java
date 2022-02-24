@@ -3,6 +3,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.hal.simulation.DriverStationDataJNI;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.DriverStation;
 
@@ -12,11 +14,13 @@ public class Robot extends TimedRobot {
   private final Intake _intakeClass               = new Intake();
   private final Turret _turretClass               = new Turret();
   private final Joystick _joystick                = new Joystick(0);
-  private final Joystick _ButtonBoard             = new Joystick(2);
+  private final Joystick _buttons1                = new Joystick(1);
+  private final Joystick _buttons2                = new Joystick(2);
   private final SendableChooser<Integer> _chooser = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
 
-  private double speedReducerY = 2.5;
+
+  private double speedReducerY = 2.0;
   private double speedReducerZ = 2.5; 
 
   //creates options for Smart Dashboard
@@ -46,6 +50,9 @@ public class Robot extends TimedRobot {
     _westCoastDrive.robotPeriodic();
     //SmartDashboard.putNumber("Angle", _westCoastDrive.getXYZ()[3]);
     SmartDashboard.putNumber("ROT Error", _westCoastDrive.getrotError());
+
+
+    
   }
 
   @Override
@@ -123,20 +130,21 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    if(_joystick.getRawButton(5)){
+    if(_buttons1.getRawButton(12)){
       _turretClass.TurnLeft();
-    }else if(_joystick.getRawButton(6)){
+    }else if(_buttons1.getRawButton(10)){
       _turretClass.TurnRight();
     }else{
       _turretClass.StopTurret();
     }
 
     _westCoastDrive.arcadeDrive(yInput(), zInput()); 
-    if(_joystick.getRawButton(1))
+    if(_buttons1.getRawButton(7))
     {
       _intakeClass.Collect();
+ 
     }
-    else if(_joystick.getRawButton(2))
+    else if(_buttons1.getRawButton(11))
     {
       _turretClass.Shoot();
       if (_turretClass.isReady())
@@ -146,19 +154,17 @@ public class Robot extends TimedRobot {
       else
       {
         _intakeClass.Stop();
+
       }
       
     }
-    else if(_joystick.getRawButton(4))
+    else if(_buttons1.getRawButton(9))
     {
       _intakeClass.Flush();
     }
-    else if(_joystick.getRawButton(3) )
+    else if(_buttons1.getRawButton(8) )
     {
         _intakeClass.intakeFlush();
-      }
-      else if(_joystick.getRawButton(7)){
-        _turretClass.ShooterOn();
       }
     else 
     {
@@ -166,22 +172,39 @@ public class Robot extends TimedRobot {
       _turretClass.StopShooter();
 
     }
-    if(_ButtonBoard.getRawButton(5)) {
-      _climberClass.Extend();
-    }else if(_ButtonBoard.getRawButton(2)) {
-      _climberClass.Retract();
-    }else {
-      _climberClass.StopClimber();
-    }
+  //   if(_ButtonBoard.getRawButton(5)) {
+  //     _climberClass.Extend();
+  //   }else if(_ButtonBoard.getRawButton(2)) {
+  //     _climberClass.Retract();
+  //   }else {
+  //     _climberClass.StopClimber();
+  //   }
 
-    if(_ButtonBoard.getRawButton(1)) {
-      _climberClass.Push();
-    }else if(_ButtonBoard.getRawButton(3)) {
-      _climberClass.Pull();
-    }else {
-      _climberClass.StopTilt();
-    }
+  //   if(_ButtonBoard.getRawButton(1)) {
+  //     _climberClass.Push();
+  //   }else if(_ButtonBoard.getRawButton(3)) {
+  //     _climberClass.Pull();
+  //   }else {
+  //     _climberClass.StopTilt();
+  //   }
+  // }
+
+  if(_buttons2.getRawButton(12)) {
+    _climberClass.Extend();
+  }else if(_buttons2.getRawButton(11)) {
+    _climberClass.Retract();
+  }else {
+    _climberClass.StopClimber();
   }
+
+  if(_buttons2.getRawButton(10)) {
+    _climberClass.Push();
+  }else if(_buttons2.getRawButton(9)) {
+    _climberClass.Pull();
+  }else {
+    _climberClass.StopTilt();
+  }
+}
 
   @Override
   public void disabledInit() {
