@@ -113,6 +113,7 @@ public class WestCoastDrive {
 
     double error = position - pulses;
 
+    // Move to the set location
     if (error > 15.0) {
       _difDrive.arcadeDrive( 0.35, 0);
     } else if ( error > 5 ) {

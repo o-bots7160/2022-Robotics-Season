@@ -46,13 +46,14 @@ public void Collect() {
     }
 }
 
+//moves cargo up when the shoot button is pressed
 public void Shoot(){
     _intake.set(0.40);
     _index.set(0.40);
 }
 
 //spits all cargo out
-public void Flush(){
+public void FlushHigh(){
     _intake.set(-0.90);
     _index.set(-0.40);
 }
@@ -60,6 +61,7 @@ public void Flush(){
 //spits the lower cargo out
 public void intakeFlush(){
     _intake.set(-0.60);
+    _index.stopMotor();
 }
 
 //stops _intake & _index motors
@@ -75,6 +77,5 @@ public boolean haveBallLow() {
 
 public boolean haveBallHigh() {
     return (_highDelay.isOn( ) );
-}
-   
+}  
 }

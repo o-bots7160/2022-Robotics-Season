@@ -32,6 +32,7 @@ public Turret()
 {
     offset = _turret.getSelectedSensorPosition();
 }
+
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
@@ -41,10 +42,6 @@ public void Shoot(){
         shotTimer.start();
     } 
     isShooting = true;
-}
-
-public void AutoAim(){
-
 }
 
 //sets shooter speed based off of switch

@@ -3,8 +3,6 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-
-
 public class Climber {
 
     private final WPI_TalonFX _Climber    = new WPI_TalonFX(61);
@@ -20,6 +18,8 @@ public class Climber {
     public void reset(){
         _Tiltinator.setSelectedSensorPosition(0.0);
     }
+
+
     public void execute(){
         System.out.println(_Tiltinator.getSelectedSensorPosition());
     }
@@ -34,6 +34,7 @@ public class Climber {
         }
         return Extend_Value;
     }
+
     public boolean Retract() {
         boolean Return_Value = false;
         if(_Climber.getSelectedSensorPosition() > 0) {
@@ -55,6 +56,7 @@ public class Climber {
         }
         return Push_Value;
     }
+
     public boolean Pull() {
         boolean Pull_Value = true;
         if(_Tiltinator.getSelectedSensorPosition() > 0) {
@@ -66,15 +68,18 @@ public class Climber {
         return Pull_Value;
     }
 
+    //stops the _Climber motor
     public void StopClimber() {
         _Climber.stopMotor();
 
     }
 
+    //stops the _Tiltinator motor
     public void StopTilt() {
         _Tiltinator.stopMotor();
     }
 
+    //sets the _Tiltinator motor to coast mode
     public void setCoastMode(){
         _Tiltinator.setNeutralMode(NeutralMode.Coast);
     }
