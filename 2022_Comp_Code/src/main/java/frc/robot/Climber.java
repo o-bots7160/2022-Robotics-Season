@@ -11,10 +11,17 @@ public class Climber {
     private final WPI_TalonFX _Tiltinator = new WPI_TalonFX(62);
     
 
-
     public Climber() {
         _Climber.setNeutralMode(NeutralMode.Brake);
         _Tiltinator.setNeutralMode(NeutralMode.Brake);
+        _Tiltinator.setSelectedSensorPosition(0.0);
+    }
+
+    public void reset(){
+        _Tiltinator.setSelectedSensorPosition(0.0);
+    }
+    public void execute(){
+        System.out.println(_Tiltinator.getSelectedSensorPosition());
     }
 
     public boolean Extend() {
@@ -40,7 +47,7 @@ public class Climber {
 
     public boolean Push() {
         boolean Push_Value = false;
-        if(_Tiltinator.getSelectedSensorPosition() < 500) {
+        if(_Tiltinator.getSelectedSensorPosition() < 45903.0) {
             _Tiltinator.set(.25);
         } else {
             _Tiltinator.stopMotor();
@@ -66,5 +73,9 @@ public class Climber {
 
     public void StopTilt() {
         _Tiltinator.stopMotor();
+    }
+
+    public void setCoastMode(){
+        _Tiltinator.setNeutralMode(NeutralMode.Coast);
     }
 }

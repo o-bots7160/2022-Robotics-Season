@@ -1,13 +1,13 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
+//import com.ctre.phoenix.sensors.WPI_Pigeon2; // for using Pigeon Gyro
+import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+//import edu.wpi.first.math.controller.PIDController;
+//import edu.wpi.first.math.controller.ProfiledPIDController;
+//import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -20,24 +20,10 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtFrnt       = new WPI_TalonFX(20);
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
-  private final WPI_Pigeon2 _pidgeyGyro     = new WPI_Pigeon2(8);
-  //private final AHRS gyro                   = new AHRS(SPI.Port.kMXP);
-  private final double _rotP                = 0.035;
-  private final double _rotI                = 0.013;//0.096;
-  private final double _rotD                = 0.0;//0.001;
-  private final TrapezoidProfile.Constraints limits = new TrapezoidProfile.Constraints( 100.0, 30.0);
-  private final ProfiledPIDController _rotPID       = new ProfiledPIDController(_rotP, _rotI, _rotD, limits);
-  // private final double _distP               = 0.0;
-  // private final double _distI               = 0.0;
-  // private final double _distD               = 0.0;
-  // private final ProfiledPIDController _distPID      = new ProfiledPIDController(_distP, _distI, _distD, limits);
+  //private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
+  private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
   private final double GEAR_BOX_RATIO       = 2.7;
   private boolean autonActive               = false;
-  private double[] xyz                      = new double[4];
-  private double _rotError                  = 0.0;
-  private double _rotSpeed                  = 0.0;
-  private double _rotAngle                  = 0.0;
-  private TrapezoidProfile.State _rotGoal   = new TrapezoidProfile.State(0.0, 0.0);
  
   public void zeroEncoders(){
     _leftFrnt.setSelectedSensorPosition( 0.0 );
@@ -56,15 +42,13 @@ public class WestCoastDrive {
     _rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
     _rghtBack.setInverted(TalonFXInvertType.FollowMaster);
     zeroEncoders();
-    _pidgeyGyro.calibrate();
-    _pidgeyGyro.reset();
-    //gyro.reset();
+    gyro.calibrate();
+    gyro.reset();
   }
 
   public void autonomousInit() {
     zeroEncoders();
-    _pidgeyGyro.reset();
-    //gyro.reset();
+    gyro.reset();
   }
 
   public void arcadeDrive(double y, double z){
@@ -76,7 +60,7 @@ public class WestCoastDrive {
   //
   //
   public boolean turnTo( double angle ) {
-    double tempAngle;
+    double error = 0.0;
     if ( angle > 180 )
     {
       angle = 180.0;  
@@ -87,77 +71,62 @@ public class WestCoastDrive {
     }
     if (!autonActive) {
       setBrakeMode();
-      _pidgeyGyro.reset();
-      _rotPID.reset( 0.0 );
-      _rotGoal = new TrapezoidProfile.State( angle, 0.0 );
-      _rotPID.setGoal( _rotGoal );
-      _rotPID.setTolerance( 0.5, 0.5 );
+      gyro.reset(); 
       autonActive = true;
-      _rotAngle = 0.0;
-      _rotSpeed = 0.0;
-    }
-    else
-    {
-      tempAngle = _pidgeyGyro.getAngle();
-      _rotSpeed = _rotAngle - tempAngle;
-      _rotAngle = tempAngle;
+    } else { // Turn to angle
+      error = angle - gyro.getAngle();
+       if (error > 15.0) {
+         _difDrive.arcadeDrive( 0, 0.35);
+       } else if ( error > 5 ) {
+        _difDrive.arcadeDrive( 0, 0.15);
+       } else if ( error > -5) {
+         _difDrive.stopMotor();
+         autonActive = false;
+       } else if (error > -15) {
+         _difDrive.arcadeDrive( 0, -0.15);
+       } else {
+         _difDrive.arcadeDrive( 0, -0.35);
+       }
     }
 
-    _rotError = _rotPID.calculate( _rotAngle, _rotGoal );
-    if ( ! _rotPID.atGoal( ) ) {
-      if ( _rotError > 1 )
-      {
-        _rotError = 1;
-      }
-      else if ( _rotError < -1 )
-      {
-        _rotError = -1;
-      }
-      _difDrive.arcadeDrive( 0, _rotError );
-      return false;
-    } else {
-      _difDrive.stopMotor();
-      autonActive = false;
-      return true;
-    }
-  }
-
-  private void driveStraight(double forwardSpeed) {
-    _difDrive.arcadeDrive(forwardSpeed, _rotPID.calculate(_pidgeyGyro.getAngle()));
+    return autonActive;
   }
 
   public void robotPeriodic() {
     SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
-    SmartDashboard.putNumber("Angle", _pidgeyGyro.getAngle());
+    //PIDController test = new PIDController(0, 0, 0);
+    ///SmartDashboard.putNumber("Angle", gyro.ge);
 
   }
   public boolean moveTo( double distance ) {
-    if (!autonActive) {
-      zeroEncoders();
-      _pidgeyGyro.reset();
-      //_rotPID.setSetpoint(0.0);
-      autonActive = true;
-    }
 
     double pulsesPerInch = 2048 / 6 / Math.PI * GEAR_BOX_RATIO;
-    double pulses = distance * pulsesPerInch;  
+    double pulses = distance * pulsesPerInch;
+    double position = _rghtFrnt.getSelectedSensorPosition();
 
-    if( _leftFrnt.getSelectedSensorPosition() > -pulses ) {
-      driveStraight(-.4);
-      return false;
-    } else {
+    if (!autonActive) {
+      zeroEncoders();
+      gyro.reset();
+      //_rotPID.setSetpoint(0.0);
+      autonActive = true;
+    } 
+
+    double error = position - pulses;
+
+    if (error > 15.0) {
+      _difDrive.arcadeDrive( 0.35, 0);
+    } else if ( error > 5 ) {
+     _difDrive.arcadeDrive( 0.15, 0);
+    } else if ( error > -5) {
       _difDrive.stopMotor();
       autonActive = false;
-      return true;
+    } else if (error > -15) {
+      _difDrive.arcadeDrive( -0.15, 0);
+    } else {
+      _difDrive.arcadeDrive( -0.35, 0);
     }
 
-  }
-
-  public double[] getXYZ(){
-    return xyz;
-  }
-  public double getrotError(){
-    return _rotError;
+    return autonActive;
   }
 
   public void setCoastMode(){
@@ -167,6 +136,10 @@ public class WestCoastDrive {
   public void setBrakeMode(){
     _leftFrnt.setNeutralMode(NeutralMode.Coast);
     _rghtFrnt.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void stopDrive(){
+    _difDrive.arcadeDrive(0, 0);
   }
 
 }

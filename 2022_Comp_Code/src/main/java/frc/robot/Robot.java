@@ -43,13 +43,12 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     _intakeClass.execute();
     _turretClass.execute();
+    _climberClass.execute();
     //puts options and result on Smart Dashboard
     SmartDashboard.putData(_chooser);
     SmartDashboard.putNumber("Position", _chooser.getSelected());
     SmartDashboard.putNumber("Step", step);
     _westCoastDrive.robotPeriodic();
-    //SmartDashboard.putNumber("Angle", _westCoastDrive.getXYZ()[3]);
-    SmartDashboard.putNumber("ROT Error", _westCoastDrive.getrotError());
 
 
     
@@ -87,10 +86,10 @@ public class Robot extends TimedRobot {
           step++;
         }
       } else if (step == 2) {
-        //_intakeClass.Collect();
-        //if (_westCoastDrive.moveTo( 30 )) {
-        //    step++;
-        //}
+        _intakeClass.Collect();
+        if (_westCoastDrive.moveTo( 30 )) {
+            step++;
+        }
       }
       
       // shoot two balls
@@ -125,28 +124,32 @@ public class Robot extends TimedRobot {
   
   @Override
   public void teleopInit() {
+    _climberClass.reset();
   }
 
   @Override
   public void teleopPeriodic() {
 
-    if(_buttons1.getRawButton(12)){
+    /*if(_buttons1.getRawButton(12)){
       _turretClass.TurnLeft();
     }else if(_buttons1.getRawButton(10)){
       _turretClass.TurnRight();
     }else{
       _turretClass.StopTurret();
-    }
+    }*/
 
     _westCoastDrive.arcadeDrive(yInput(), zInput()); 
-    if(_buttons1.getRawButton(7))
+    if(_buttons1.getRawButton(7) || _joystick.getRawButton(1))
     {
       _intakeClass.Collect();
- 
     }
     else if(_buttons1.getRawButton(11))
-    {
-      _turretClass.Shoot();
+    { 
+      if (_buttons2.getRawButton(7)) {
+        //_turretClass.SetLow();
+      } else {
+        //_turretClass.SetHigh();
+      }
       if (_turretClass.isReady())
       {
         _intakeClass.Shoot();
@@ -154,9 +157,7 @@ public class Robot extends TimedRobot {
       else
       {
         _intakeClass.Stop();
-
       }
-      
     }
     else if(_buttons1.getRawButton(9))
     {
@@ -165,13 +166,17 @@ public class Robot extends TimedRobot {
     else if(_buttons1.getRawButton(8) )
     {
         _intakeClass.intakeFlush();
-      }
+    }
     else 
     {
       _intakeClass.Stop();
       _turretClass.StopShooter();
-
     }
+
+    /*if (_buttons2.getRawButton(8)){
+      _turretClass.AutoAim();
+    }*/
+    
   //   if(_ButtonBoard.getRawButton(5)) {
   //     _climberClass.Extend();
   //   }else if(_ButtonBoard.getRawButton(2)) {
@@ -204,12 +209,14 @@ public class Robot extends TimedRobot {
   }else {
     _climberClass.StopTilt();
   }
+
 }
 
   @Override
   public void disabledInit() {
     step = 0;
     _westCoastDrive.setCoastMode();
+    _climberClass.setCoastMode();
   }
 
   @Override
