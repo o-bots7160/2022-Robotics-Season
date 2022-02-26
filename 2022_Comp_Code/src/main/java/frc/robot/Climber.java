@@ -24,54 +24,29 @@ public class Climber {
         System.out.println(_Tiltinator.getSelectedSensorPosition());
     }
 
-    public boolean Extend() {
-        boolean Extend_Value = false;
-        if(_Climber.getSelectedSensorPosition() < 500) {
+    public void Extend() {
             _Climber.set(.25);
-        } else {
-            _Climber.stopMotor();
-            Extend_Value = true;
-        }
-        return Extend_Value;
     }
 
-    public boolean Retract() {
-        boolean Return_Value = false;
-        if(_Climber.getSelectedSensorPosition() > 0) {
+    public void Retract() {
             _Climber.set(-.25);
-        } else {
-            _Climber.stopMotor();
-            Return_Value = true;
-        }
-        return Return_Value;
     }
 
-    public boolean Push() {
-        boolean Push_Value = false;
+    public void Push() {
         if(_Tiltinator.getSelectedSensorPosition() < 45903.0) {
             _Tiltinator.set(.25);
         } else {
             _Tiltinator.stopMotor();
-            Push_Value = true;
         }
-        return Push_Value;
     }
 
-    public boolean Pull() {
-        boolean Pull_Value = true;
-        if(_Tiltinator.getSelectedSensorPosition() > 0) {
+    public void Pull() {
             _Tiltinator.set(-.25);
-        } else {
-            _Tiltinator.stopMotor();
-            Pull_Value = true;
-        }
-        return Pull_Value;
     }
 
     //stops the _Climber motor
     public void StopClimber() {
         _Climber.stopMotor();
-
     }
 
     //stops the _Tiltinator motor

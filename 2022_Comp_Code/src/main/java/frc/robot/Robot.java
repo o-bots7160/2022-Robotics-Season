@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
-//import edu.wpi.first.hal.simulation.DriverStationDataJNI;
-//import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.cscore.UsbCamera;
 
 public class Robot extends TimedRobot {
 
@@ -24,6 +22,8 @@ public class Robot extends TimedRobot {
   private final Integer PositionTwo   = 2;
   private final Integer PositionThree = 3;
 
+  // Camera Thread
+  Thread m_visionThread;
 
  
 
@@ -33,7 +33,16 @@ public class Robot extends TimedRobot {
     _chooser.setDefaultOption("Position 1", PositionOne);
     _chooser.addOption("Position 2", PositionTwo);
     _chooser.addOption("Position 3", PositionThree);
-    CameraServer.startAutomaticCapture();
+    m_visionThread =
+        new Thread(
+            () -> {
+              // Get the UsbCamera from CameraServer
+              UsbCamera camera = CameraServer.startAutomaticCapture();
+              // Set the resolution
+              camera.setResolution(640, 480);
+            });
+    m_visionThread.setDaemon(true);
+    m_visionThread.start();
   }
 
   @Override
@@ -46,6 +55,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Position", _chooser.getSelected());
     SmartDashboard.putNumber("Step", step);
     _westCoastDrive.robotPeriodic();
+
 
 
     
@@ -120,6 +130,7 @@ public class Robot extends TimedRobot {
     }*/
 
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
+
     if(UI.getIntake())
     {
       _intakeClass.Collect();
@@ -158,22 +169,6 @@ public class Robot extends TimedRobot {
       _turretClass.AutoAim();
     }*/
     
-  //   if(_ButtonBoard.getRawButton(5)) {
-  //     _climberClass.Extend();
-  //   }else if(_ButtonBoard.getRawButton(2)) {
-  //     _climberClass.Retract();
-  //   }else {
-  //     _climberClass.StopClimber();
-  //   }
-
-  //   if(_ButtonBoard.getRawButton(1)) {
-  //     _climberClass.Push();
-  //   }else if(_ButtonBoard.getRawButton(3)) {
-  //     _climberClass.Pull();
-  //   }else {
-  //     _climberClass.StopTilt();
-  //   }
-  // }
 
   if(UI.getClimbExtend()) {
     _climberClass.Extend();
@@ -185,7 +180,7 @@ public class Robot extends TimedRobot {
 
   if(UI.getClimbPush()) {
     _climberClass.Push();
-  }else if(UI.getClimbRetract()) {
+  }else if(UI.getClimbPull()) {
     _climberClass.Pull();
   }else {
     _climberClass.StopTilt();

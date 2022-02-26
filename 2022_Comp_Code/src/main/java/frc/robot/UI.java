@@ -67,11 +67,11 @@ public class UI {
     }
 
     public static boolean getClimbPush(){
-        return _buttons1.getRawButton( 10 );
+        return _buttons2.getRawButton( 10 );
     }
 
     public static boolean getClimbPull(){
-        return _buttons1.getRawButton( 9 );
+        return _buttons2.getRawButton( 9 );
     }
 
     
