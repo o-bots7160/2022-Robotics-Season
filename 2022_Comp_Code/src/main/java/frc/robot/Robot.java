@@ -11,11 +11,9 @@ public class Robot extends TimedRobot {
   private final WestCoastDrive _westCoastDrive    = new WestCoastDrive(); 
   private final Intake _intakeClass               = new Intake();
   private final Turret _turretClass               = new Turret();
-  private final SendableChooser<Integer> _chooser = new SendableChooser<>();
+  private final SendableChooser<AUTO> _chooser = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
 
-
-  
 
   //creates options for Smart Dashboard
   private final Integer PositionOne   = 1;
@@ -25,14 +23,25 @@ public class Robot extends TimedRobot {
   // Camera Thread
   Thread m_visionThread;
 
- 
+  private enum AUTO {
+    LAUNCHAUTO
+  }
+
+  private AUTO autonTracker;
+
+  private  enum LAUNCHAUTO {
+    BALLPICKUP,
+    TURN,
+    SHOOT
+  }
+
+  private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
 
   @Override
   public void robotInit() {
     //sets up auton options on the Smart Dashboard
-    _chooser.setDefaultOption("Position 1", PositionOne);
-    _chooser.addOption("Position 2", PositionTwo);
-    _chooser.addOption("Position 3", PositionThree);
+    _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
+    //_chooser.addOption(name, object);
     m_visionThread =
         new Thread(
             () -> {
@@ -52,8 +61,6 @@ public class Robot extends TimedRobot {
     //_climberClass.execute();
     //puts options and result on Smart Dashboard
     SmartDashboard.putData(_chooser);
-    SmartDashboard.putNumber("Position", _chooser.getSelected());
-    SmartDashboard.putNumber("Step", step);
     _westCoastDrive.robotPeriodic();
 
 
@@ -64,53 +71,27 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     _westCoastDrive.autonomousInit();
+    switch ( _chooser.getSelected() ){
+      case LAUNCHAUTO:
+        autonTracker = AUTO.LAUNCHAUTO;
+        break;
+    }
   }
 
   @Override
   public void autonomousPeriodic() {
 
-    switch ( _chooser.getSelected() ){
-      case 1:
-        auton1();
-        break;
-      case 2: 
-        break;
-      case 3:
-        break;
+    switch(autonTracker){
+      case LAUNCHAUTO:
+      launchAuto();
+      break;
     }
+    
   }
 
-  private int step = 0; 
-  private void auton1 () {
-
-      // move to cargo 2 with intake on
-      if (step == 0) {
-        _westCoastDrive.zeroEncoders();
-        step++;
-      } else if (step == 1) {
-        //_intakeClass.Collect();
-        if (_westCoastDrive.turnTo( 144.0 )) {
-          step++;
-        }
-      } else if (step == 2) {
-        _intakeClass.Collect();
-        if (_westCoastDrive.moveTo( 30 )) {
-            step++;
-        }
-      }
+  private void launchAuto () {
       
-      // shoot two balls
-      //_westCoastDrive.turnTo( 1000 );
-     /* _turretClass.Shoot();
-      if ( !_turretClass.isReady()){}
-      if ( true ){
-        _intakeClass.Shoot();
-      } 
-      */
-      //delay???
-      // turn to face third ball
-      // move to cargo 3 with intake on
-      // shoot one ball 
+      
   }
   
   @Override
@@ -193,7 +174,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    step = 0;
     _westCoastDrive.setCoastMode();
     _climberClass.setCoastMode();
   }
