@@ -36,7 +36,7 @@ public void Collect() {
         _intake.stopMotor();
     }else if( haveBallHigh() && !haveBallLow()) {
         _index.stopMotor();
-        _intake.set(0.70);
+        _intake.set(0.85);
     }else if( !haveBallHigh() && haveBallLow()) {
         _index.set(0.70);
         _intake.stopMotor();

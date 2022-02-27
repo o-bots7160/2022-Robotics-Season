@@ -25,11 +25,11 @@ public class Climber {
     }
 
     public void Extend() {
-            _Climber.set(.25);
+            _Climber.set(.75);
     }
 
     public void Retract() {
-            _Climber.set(-.25);
+            _Climber.set(-.75);
     }
 
     public void Push() {

@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
               // Get the UsbCamera from CameraServer
               UsbCamera camera = CameraServer.startAutomaticCapture();
               // Set the resolution
-              camera.setResolution(640, 480);
+              camera.setResolution(320, 240);
             });
     m_visionThread.setDaemon(true);
     m_visionThread.start();
@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     _intakeClass.execute();
     _turretClass.execute();
-    _climberClass.execute();
+    //_climberClass.execute();
     //puts options and result on Smart Dashboard
     SmartDashboard.putData(_chooser);
     SmartDashboard.putNumber("Position", _chooser.getSelected());
@@ -121,13 +121,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    /*if(_buttons1.getRawButton(12)){
+    if(UI.getTurretLeft()){
       _turretClass.TurnLeft();
-    }else if(_buttons1.getRawButton(10)){
+    }else if(UI.getTurretRight()){
       _turretClass.TurnRight();
     }else{
       _turretClass.StopTurret();
-    }*/
+    }
 
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
 
@@ -138,9 +138,9 @@ public class Robot extends TimedRobot {
     else if(UI.getShoot())
     { 
       if (UI.getShooterLow()) {
-        //_turretClass.SetLow();
+        _turretClass.SetLow();
       } else {
-        //_turretClass.SetHigh();
+        _turretClass.SetHigh();
       }
       if (_turretClass.isReady())
       {
