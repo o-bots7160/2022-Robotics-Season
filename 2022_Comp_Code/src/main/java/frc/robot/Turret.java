@@ -32,6 +32,7 @@ public Turret()
 {
     offset = _turret.getSelectedSensorPosition();
 }
+
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
@@ -43,10 +44,6 @@ public void Shoot(){
     isShooting = true;
 }
 
-public void AutoAim(){
-
-}
-
 //sets shooter speed based off of switch
 public void ShooterOn(){
     
@@ -55,13 +52,13 @@ public void ShooterOn(){
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     isHigh = true;
-    _shooter.set(0.55);
+    _shooter.set(0.75);
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     isHigh = false;
-    _shooter.set(0.2);
+    _shooter.set(0.55);
 }
 
 //stops shooter motor
@@ -77,12 +74,12 @@ public void StopTurret(){
 
 //turns turret left
 public void TurnLeft(){
-    setTurret(-0.1);
+    setTurret(-0.2);
 }
 
 //turns turret right
 public void TurnRight(){
-    setTurret(0.1);
+    setTurret(0.2);
 }
 
 //sets a 5 second delay so the _shooter can get up to speed
