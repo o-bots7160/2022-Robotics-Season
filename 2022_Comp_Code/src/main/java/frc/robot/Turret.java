@@ -52,13 +52,13 @@ public void ShooterOn(){
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     isHigh = true;
-    _shooter.set(0.75);
+    _shooter.set(0.70);
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     isHigh = false;
-    _shooter.set(0.55);
+    _shooter.set(0.35);
 }
 
 //stops shooter motor
@@ -74,12 +74,12 @@ public void StopTurret(){
 
 //turns turret left
 public void TurnLeft(){
-    setTurret(-0.2);
+    setTurret(-0.125);
 }
 
 //turns turret right
 public void TurnRight(){
-    setTurret(0.2);
+    setTurret(0.125);
 }
 
 //sets a 5 second delay so the _shooter can get up to speed
@@ -87,7 +87,7 @@ public boolean isReady(){
     double target = 5000;
     if ( isHigh )
     {
-        target = 10000;
+        target = 14000;
     } 
     if(_shooter.getSelectedSensorVelocity() > target) {
         return true;

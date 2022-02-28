@@ -6,13 +6,14 @@ public class UI {
 
     private static final Joystick _joystick                = new Joystick(0);
     private static final Joystick _buttons1                = new Joystick(1);
-    //private static final Joystick _buttons2                = new Joystick(2);
-    private static double speedReducerY = 2.0;
-    private static double speedReducerZ = 2.5; 
+
+    private static final Joystick _buttons2                = new Joystick(2);
+    private static double speedReducerY = 1.25;
+    private static double speedReducerZ = 2; 
 
     public static double yInput(){
         if(_joystick.getRawAxis(1) >=.2 || _joystick.getRawAxis(1) <= -.2){
-          return _joystick.getY() / speedReducerY;
+          return -(_joystick.getY() / speedReducerY);
         }else{
           return 0;
         }
@@ -58,7 +59,8 @@ public class UI {
         return _buttons1.getRawButton( 5 );
     }
 
-    /*public static boolean getClimbExtend(){
+
+    public static boolean getClimbExtend(){
         return _buttons2.getRawButton( 12 );
     }
 
@@ -72,7 +74,7 @@ public class UI {
 
     public static boolean getClimbPull(){
         return _buttons2.getRawButton( 9 );
-    }*/
+    }
 
     
 }

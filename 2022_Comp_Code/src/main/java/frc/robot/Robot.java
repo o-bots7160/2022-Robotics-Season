@@ -14,7 +14,6 @@ public class Robot extends TimedRobot {
   private final SendableChooser<AUTO> _chooser = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
 
-
   //creates options for Smart Dashboard
   private final Integer PositionOne   = 1;
   private final Integer PositionTwo   = 2;
@@ -34,7 +33,6 @@ public class Robot extends TimedRobot {
     TURN,
     SHOOT
   }
-
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
 
   @Override
@@ -97,7 +95,6 @@ public class Robot extends TimedRobot {
 
         break;
       }
-      
   }
   
   @Override
@@ -109,9 +106,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
 
-
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
-
+    
     if(UI.getIntake())
     {
       _intakeClass.Collect();
@@ -145,6 +141,7 @@ public class Robot extends TimedRobot {
       _intakeClass.Stop();
       _turretClass.StopShooter();
     }
+
 
     if(UI.getAutoAim()){
       _turretClass.Update_Limelight_Tracking();

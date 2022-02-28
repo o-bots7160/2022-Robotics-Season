@@ -30,19 +30,23 @@ public Intake() {
 
 //uses TOF sensors to intake or not intake
 public void Collect() {  
-    _LED.set(-.65);  
+    //_LED.set(-.65);  
     if( haveBallLow() && haveBallHigh() ) {
         _index.stopMotor();
         _intake.stopMotor();
+        _LED.set(-.65);
     }else if( haveBallHigh() && !haveBallLow()) {
         _index.stopMotor();
-        _intake.set(0.70);
+        _intake.set(0.85);
+        _LED.set(-0.41);
     }else if( !haveBallHigh() && haveBallLow()) {
         _index.set(0.70);
         _intake.stopMotor();
+        _LED.set(-0.41);
     }else if( !haveBallHigh() && !haveBallLow()){
         _index.stopMotor();
         _intake.set(0.70);
+        _LED.set(-0.95);
     }
 }
 
@@ -69,6 +73,11 @@ public void Stop() {
     _intake.stopMotor();
     _index.stopMotor();
     _LED.set(-.95);
+}
+
+public void StopAuton() {
+    _intake.stopMotor();
+    _index.stopMotor();
 }
 
 public boolean haveBallLow() {
