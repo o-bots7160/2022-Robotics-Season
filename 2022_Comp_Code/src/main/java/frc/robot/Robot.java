@@ -86,11 +86,15 @@ public class Robot extends TimedRobot {
   private void launchAuto () {
       switch(lA){
         case BALLPICKUP:
-        if(!_westCoastDrive.moveTo(120, 18)){
+        if(_westCoastDrive.moveTo(120, 18)){
           System.out.println("Is driving");
         }else{
-          lA = LAUNCHAUTO.SHOOT;
+          lA = LAUNCHAUTO.TURN;
         }
+        break;
+
+        case TURN:
+
         break;
       }
       

@@ -118,10 +118,9 @@ public class WestCoastDrive {
     }else{
       stopDrive();
       autonActive = false;
-      return true;
     }
 
-    return false;
+    return autonActive;
   }
 
   public void setCoastMode(){
