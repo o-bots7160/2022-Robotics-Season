@@ -6,6 +6,7 @@ public class UI {
 
     private static final Joystick _joystick                = new Joystick(0);
     private static final Joystick _buttons1                = new Joystick(1);
+
     private static final Joystick _buttons2                = new Joystick(2);
     private static double speedReducerY = 1.25;
     private static double speedReducerZ = 2; 
@@ -57,6 +58,7 @@ public class UI {
     public static boolean getShooterLow(){
         return _buttons1.getRawButton( 5 );
     }
+
 
     public static boolean getClimbExtend(){
         return _buttons2.getRawButton( 12 );

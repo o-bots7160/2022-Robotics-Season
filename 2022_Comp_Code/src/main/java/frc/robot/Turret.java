@@ -22,8 +22,8 @@ public class Turret {
 
 
 protected void execute(){
-    SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Turrent Position", offset - _turret.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
+    //SmartDashboard.putNumber("Turrent Position", offset - _turret.getSelectedSensorPosition());
     SmartDashboard.putBoolean("Target?", m_LimelightHasValidTarget);
     //Update_Limelight_Tracking();
 }
@@ -100,8 +100,8 @@ public void Update_Limelight_Tracking()
   {
         // These numbers must be tuned for your Robot!  Be careful!
         final double TURN_K = 0.0225;                     // how hard to turn toward the target
-        final double RIGHT_MAX = 0.1;                   // Max speed the turret motor can go
-        final double LEFT_MAX = -0.1;
+        final double RIGHT_MAX = 0.3;                   // Max speed the turret motor can go
+        final double LEFT_MAX = -0.3;
         final double RIGHT_MIN = 0.04;
         final double LEFT_MIN = -0.04;
 
