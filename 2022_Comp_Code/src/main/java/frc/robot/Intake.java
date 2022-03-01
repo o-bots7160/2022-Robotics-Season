@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
+    
     private final WPI_TalonFX _intake    = new WPI_TalonFX(30);
     private final WPI_TalonFX _index     = new WPI_TalonFX(31); 
     private final TimeOfFlight _catch    = new TimeOfFlight(101);
@@ -29,7 +30,7 @@ public Intake() {
 }    
 
 //uses TOF sensors to intake or not intake
-public void Collect() {  
+public void Collect() { 
     //_LED.set(-.65);  
     if( haveBallLow() && haveBallHigh() ) {
         _index.stopMotor();
@@ -75,6 +76,7 @@ public void Stop() {
     _LED.set(-.95);
 }
 
+//stops the motors
 public void StopAuton() {
     _intake.stopMotor();
     _index.stopMotor();

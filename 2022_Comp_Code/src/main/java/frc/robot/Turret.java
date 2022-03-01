@@ -28,8 +28,7 @@ protected void execute(){
     //Update_Limelight_Tracking();
 }
 
-public Turret()
-{
+public Turret() {
     offset = _turret.getSelectedSensorPosition();
 }
 
@@ -96,8 +95,7 @@ public boolean isReady(){
     }
 }
 
-public void Update_Limelight_Tracking()
-  {
+public void Update_Limelight_Tracking(){
         // These numbers must be tuned for your Robot!  Be careful!
         final double TURN_K = 0.0225;                     // how hard to turn toward the target
         final double RIGHT_MAX = 0.1;                   // Max speed the turret motor can go

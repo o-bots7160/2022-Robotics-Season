@@ -1,8 +1,8 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-//import com.ctre.phoenix.sensors.WPI_Pigeon2; // for using Pigeon Gyro
-import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
+import com.ctre.phoenix.sensors.WPI_Pigeon2; // for using Pigeon Gyro
+//import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
 
 //import edu.wpi.first.math.controller.PIDController;
 //import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -20,8 +20,8 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtFrnt       = new WPI_TalonFX(20);
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
-  //private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
-  private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
+  //private final WPI_Pigeo gyro              = new WPI_Pigeon2(8);      // for using Pigeon Gyro
+  //private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
   private final double GEAR_BOX_RATIO       = 2.7;
   private boolean autonActive               = false;
  
@@ -42,13 +42,13 @@ public class WestCoastDrive {
     _rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
     _rghtBack.setInverted(TalonFXInvertType.FollowMaster);
     zeroEncoders();
-    gyro.calibrate();
-    gyro.reset();
+    //gyro.calibrate();
+    //gyro.reset();
   }
 
   public void autonomousInit() {
     zeroEncoders();
-    gyro.reset();
+    //gyro.reset();
   }
 
   public void arcadeDrive(double y, double z){
@@ -71,10 +71,10 @@ public class WestCoastDrive {
     }
     if (!autonActive) {
       setBrakeMode();
-      gyro.reset(); 
+      //gyro.reset(); 
       autonActive = true;
     } else { // Turn to angle
-      error = angle - gyro.getAngle();
+      //error = angle - gyro.getAngle();
        if (error > 15.0) {
          _difDrive.arcadeDrive( 0, 0.35);
        } else if ( error > 5 ) {
@@ -106,7 +106,7 @@ public class WestCoastDrive {
 
     if (!autonActive) {
       zeroEncoders();
-      gyro.reset();
+      //gyro.reset();
       //_rotPID.setSetpoint(0.0);
       autonActive = true;
     } 
@@ -134,6 +134,7 @@ public class WestCoastDrive {
     _leftFrnt.setNeutralMode(NeutralMode.Coast);
     _rghtFrnt.setNeutralMode(NeutralMode.Coast);
   }
+
   public void setBrakeMode(){
     _leftFrnt.setNeutralMode(NeutralMode.Coast);
     _rghtFrnt.setNeutralMode(NeutralMode.Coast);

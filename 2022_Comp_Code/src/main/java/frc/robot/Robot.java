@@ -15,8 +15,6 @@ public class Robot extends TimedRobot {
   private final Climber _climberClass             = new Climber();
 
 
-  
-
   //creates options for Smart Dashboard
   private final Integer PositionOne   = 1;
   private final Integer PositionTwo   = 2;
@@ -25,7 +23,6 @@ public class Robot extends TimedRobot {
   // Camera Thread
   Thread m_visionThread;
 
- 
 
   @Override
   public void robotInit() {
@@ -54,11 +51,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(_chooser);
     SmartDashboard.putNumber("Position", _chooser.getSelected());
     SmartDashboard.putNumber("Step", step);
-    _westCoastDrive.robotPeriodic();
-
-
-
-    
+    _westCoastDrive.robotPeriodic();   
   }
 
   @Override
@@ -185,7 +178,6 @@ public class Robot extends TimedRobot {
   }else {
     _climberClass.StopTilt();
   }
-
 }
 
   @Override
@@ -204,3 +196,4 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 }
+

@@ -7,7 +7,7 @@ public class UI {
     private static final Joystick _joystick                = new Joystick(0);
     private static final Joystick _buttons1                = new Joystick(1);
     private static final Joystick _buttons2                = new Joystick(2);
-    private static double speedReducerY = 1.25;
+    private static double speedReducerY = 1.5;
     private static double speedReducerZ = 2; 
 
     public static double yInput(){
@@ -27,23 +27,23 @@ public class UI {
     }
 
     public static boolean getFlushHigh(){
-        return _buttons1.getRawButton( 9 );
+        return _buttons1.getRawButton( 2 );
     }
 
     public static boolean getFlushLow(){
-        return _buttons1.getRawButton( 8 );
+        return _buttons1.getRawButton( 3 );
     }
 
     public static boolean getIntake(){
-        return _buttons1.getRawButton(7) || _joystick.getRawButton(1);
+        return  _joystick.getRawButton(1);
     }
 
     public static boolean getAutoAim(){
-        return _buttons1.getRawButton( 6 );
+        return _buttons1.getRawButton( 6 ); //fix
     }
 
     public static boolean getTurretLeft(){
-        return _buttons1.getRawButton( 12 );
+        return _buttons2.getRawButton( 10 );
     }
 
     public static boolean getTurretRight(){
@@ -51,27 +51,27 @@ public class UI {
     }
 
     public static boolean getShoot(){
-        return _buttons1.getRawButton( 11 );
-    }
-
-    public static boolean getShooterLow(){
-        return _buttons1.getRawButton( 5 );
-    }
-
-    public static boolean getClimbExtend(){
-        return _buttons2.getRawButton( 12 );
-    }
-
-    public static boolean getClimbRetract(){
         return _buttons2.getRawButton( 11 );
     }
 
+    public static boolean getShooterLow(){
+        return _buttons2.getRawButton( 7 );
+    }
+
+    public static boolean getClimbExtend(){
+        return _buttons2.getRawButton( 9 );
+    }
+
+    public static boolean getClimbRetract(){
+        return _buttons2.getRawButton( 8 );
+    }
+
     public static boolean getClimbPush(){
-        return _buttons2.getRawButton( 10 );
+        return _buttons1.getRawButton( 12 );
     }
 
     public static boolean getClimbPull(){
-        return _buttons2.getRawButton( 9 );
+        return _buttons1.getRawButton( 11 );
     }
 
     
