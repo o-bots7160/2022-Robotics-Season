@@ -3,8 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
 
 public class Robot extends TimedRobot {
 
@@ -13,14 +11,6 @@ public class Robot extends TimedRobot {
   private final Turret _turretClass               = new Turret();
   private final SendableChooser<AUTO> _chooser = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
-
-  //creates options for Smart Dashboard
-  private final Integer PositionOne   = 1;
-  private final Integer PositionTwo   = 2;
-  private final Integer PositionThree = 3;
-
-  // Camera Thread
-  Thread m_visionThread;
 
   private enum AUTO {
     LAUNCHAUTO
@@ -82,17 +72,23 @@ public class Robot extends TimedRobot {
   }
 
   private void launchAuto () {
+    _intakeClass.Collect();
       switch(lA){
         case BALLPICKUP:
-        if(_westCoastDrive.moveTo(120, 18)){
+        if(_westCoastDrive.moveTo(60, 26)){
           System.out.println("Is driving");
+          
         }else{
           lA = LAUNCHAUTO.TURN;
         }
         break;
 
         case TURN:
-
+        if(_westCoastDrive.turnTo(90, 40)){
+          _intakeClass.Collect();
+        }else{
+          lA = LAUNCHAUTO.SHOOT;
+        }
         break;
       }
   }
@@ -167,14 +163,31 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
+  int step = 0;
   @Override
   public void testInit() {
     _westCoastDrive.zeroEncoders();
+    
+    step = 0;
   }
+
+  
 
   @Override
   public void testPeriodic() {
-    System.out.println(_westCoastDrive.getTicks());
+    
+    switch(step){
+      case 0:
+      _westCoastDrive.testInit();
+      step++;
+      break;
+      case 1:
+      if(_westCoastDrive.turnTo(90, 40)){
 
+      }else{
+        step++;
+      }
+      break;
+    }
   }
 }

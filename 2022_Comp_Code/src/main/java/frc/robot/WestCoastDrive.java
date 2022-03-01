@@ -49,6 +49,7 @@ public class WestCoastDrive {
   public void autonomousInit() {
     zeroEncoders();
     gyro.reset();
+    gyro.setAccumZAngle(0);
   }
 
   public void arcadeDrive(double y, double z){
@@ -59,34 +60,32 @@ public class WestCoastDrive {
   //  Turn robot to angle from -180 to 180
   //
   //
-  public boolean turnTo( double angle ) {
+  public boolean turnTo( double angle, double slowDown ) {
     double error = 0.0;
-    /*if ( angle > 180 )
+    if ( angle > 180 )
     {
       angle = 180.0;  
     }
     else if ( angle < -180.0 )
     {
       angle = -180.0;
-    }*/
+    }
     if (!autonActive) {
       setBrakeMode();
       gyro.reset(); 
       autonActive = true;
-    } else { // Turn to angle
-      error = angle - gyro.getAngle();
-       if (error > 15.0) {
-         _difDrive.arcadeDrive( 0, 0.35);
-       } else if ( error > 5 ) {
-        _difDrive.arcadeDrive( 0, 0.15);
-       } else if ( error > -5) {
-         _difDrive.stopMotor();
-         autonActive = false;
-       } else if (error > -15) {
-         _difDrive.arcadeDrive( 0, -0.15);
-       } else {
-         _difDrive.arcadeDrive( 0, -0.35);
-       }
+    } 
+
+    error = angle - gyro.getAngle();
+    if(error > 0){
+      if((error-slowDown) > 0){
+        arcadeDrive(0, .65);
+      }else{
+        arcadeDrive(0, .15);
+      }
+    }else{
+      stopDrive();
+      autonActive = false;
     }
 
     return autonActive;
@@ -95,7 +94,7 @@ public class WestCoastDrive {
   public void robotPeriodic() {
     SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
     //PIDController test = new PIDController(0, 0, 0);
-    ///SmartDashboard.putNumber("Angle", gyro.ge);
+    SmartDashboard.putNumber("Angle", gyro.getAngle());
 
   }
   public boolean moveTo( double distance, double slowDown ) {
@@ -118,9 +117,10 @@ public class WestCoastDrive {
     }else{
       stopDrive();
       autonActive = false;
+      return false;
     }
 
-    return autonActive;
+    return true;
   }
 
   public void setCoastMode(){
@@ -138,6 +138,11 @@ public class WestCoastDrive {
 
   public double getTicks(){
     return _rghtFrnt.getSelectedSensorPosition();
+  }
+
+  public void testInit(){
+    autonActive = false;
+    gyro.reset();
   }
 
 }
