@@ -27,6 +27,7 @@ public class Climber {
 
     //pushes the _Climber out
     public void Extend() {
+
             _Climber.set(.75);
     }
 
