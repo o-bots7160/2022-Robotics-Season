@@ -20,6 +20,13 @@ public class Turret {
     private boolean isHigh = false;
     private double offset;
 
+    private double leftLimit = -76260.0;
+    private double rightLimit = 64774.0;
+
+    public void zeroEncoders(){
+        _turret.setSelectedSensorPosition(0.0);
+    }
+
 
 protected void execute(){
     //SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
@@ -35,7 +42,7 @@ public Turret() {
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set(0.55);
+    _shooter.set(0.75);
     if (isShooting == false){
         shotTimer.reset();
         shotTimer.start();
@@ -57,7 +64,7 @@ public void SetHigh(){
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     isHigh = false;
-    _shooter.set(0.35);
+    _shooter.set(0.55);
 }
 
 //stops shooter motor
@@ -83,7 +90,7 @@ public void TurnRight(){
 
 //sets a 5 second delay so the _shooter can get up to speed
 public boolean isReady(){
-    double target = 5000;
+    double target = 7500;
     if ( isHigh )
     {
         target = 14000;
@@ -136,16 +143,19 @@ public void Update_Limelight_Tracking(){
   }
 
 private void setTurret(double turnRate) {
-    double position = offset - _turret.getSelectedSensorPosition();
-
-    if (turnRate > 0.05 && position > -50000) {
-        _turret.setNeutralMode(NeutralMode.Coast); 
+    if(getTicks() > leftLimit && getTicks() < rightLimit){
         _turret.set(turnRate);
-    } else if (turnRate < 0.05 && position < 50000) {
-        _turret.setNeutralMode(NeutralMode.Coast); 
-        _turret.set(turnRate);
-    } else {
-        _turret.stopMotor();
+    }else{
+        _turret.set(0);
     }
+    
+  }
+
+  public void setCoast(){
+      _turret.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public double getTicks(){
+      return _turret.getSelectedSensorPosition();
   }
 }

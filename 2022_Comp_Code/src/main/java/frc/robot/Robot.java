@@ -9,7 +9,7 @@ public class Robot extends TimedRobot {
   private final WestCoastDrive _westCoastDrive    = new WestCoastDrive(); 
   private final Intake _intakeClass               = new Intake();
   private final Turret _turretClass               = new Turret();
-  private final SendableChooser<AUTO> _chooser = new SendableChooser<>();
+  private final SendableChooser<AUTO> _chooser    = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
 
   private enum AUTO {
@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     //_chooser.addOption(name, object);
+    UI.setLedsBlue();
   }
 
   @Override
@@ -38,17 +39,23 @@ public class Robot extends TimedRobot {
     _turretClass.execute();
     //_climberClass.execute();
     //puts options and result on Smart Dashboard
+<<<<<<< Updated upstream
     _westCoastDrive.robotPeriodic();
 
 
 
 
+=======
+    SmartDashboard.putData(_chooser);
+    _westCoastDrive.robotPeriodic();  
+>>>>>>> Stashed changes
   }
 
   @Override
   public void autonomousInit() {
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroEncoders();
+    UI.setLedsBlue();
     switch ( _chooser.getSelected() ){
       case LAUNCHAUTO:
         autonTracker = AUTO.LAUNCHAUTO;
@@ -73,21 +80,31 @@ public class Robot extends TimedRobot {
   private void launchAuto () {
     _intakeClass.Collect();
       switch(lA){
+        
         case BALLPICKUP:
-        if(_westCoastDrive.moveTo(60, 26)){
+        _turretClass.SetHigh();
+        if(_westCoastDrive.moveTo(56, 12)){
           System.out.println("Is driving");
           
         }else{
           lA = LAUNCHAUTO.TURN;
         }
+        _turretClass.isReady();
         break;
 
         case TURN:
-        if(_westCoastDrive.turnTo(90, 40)){
+        if(_westCoastDrive.turnTo(95, 35)){
           _intakeClass.Collect();
         }else{
           lA = LAUNCHAUTO.SHOOT;
         }
+        _turretClass.isReady();
+        break;
+
+        case SHOOT:
+        _turretClass.Update_Limelight_Tracking();
+        _turretClass.Shoot();
+        _intakeClass.feedUp();
         break;
       }
   }
@@ -95,6 +112,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     _climberClass.reset();
+    UI.setLedsBlue();
   }
 
   @Override
@@ -156,6 +174,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     _westCoastDrive.setCoastMode();
     _climberClass.setCoastMode();
+    _turretClass.setCoast();
   }
 
   @Override
@@ -165,7 +184,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     _westCoastDrive.zeroEncoders();
-    
+    _turretClass.zeroEncoders();
     step = 0;
   }
 
@@ -174,19 +193,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     
-    switch(step){
-      case 0:
-      _westCoastDrive.testInit();
-      step++;
-      break;
-      case 1:
-      if(_westCoastDrive.turnTo(90, 40)){
-
-      }else{
-        step++;
-      }
-      break;
-    }
+    System.out.println(_turretClass.getTicks());
   }
 }
 

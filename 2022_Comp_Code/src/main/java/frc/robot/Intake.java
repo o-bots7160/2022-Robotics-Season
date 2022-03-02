@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
@@ -15,7 +14,6 @@ public class Intake {
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
     private final OnOffDelay _highDelay  = new OnOffDelay( 0.0, 0.15, () -> _barrel.getRange() < 100 );
-    private final Spark _LED             = new Spark(4);
 
 //puts stuff on the Smart Dashboard
 protected void execute() {
@@ -30,25 +28,33 @@ public Intake() {
 }    
 
 //uses TOF sensors to intake or not intake
+<<<<<<< Updated upstream
 public void Collect() { 
     //_LED.set(-.65);  
+=======
+public void Collect() {    
+>>>>>>> Stashed changes
     if( haveBallLow() && haveBallHigh() ) {
+        UI.setLedsGreen();
         _index.stopMotor();
         _intake.stopMotor();
-        _LED.set(-0.65);
     }else if( haveBallHigh() && !haveBallLow()) {
+        UI.setLedsPink();
         _index.stopMotor();
         _intake.set(0.85);
-        _LED.set(-0.41);
     }else if( !haveBallHigh() && haveBallLow()) {
+        UI.setLedsPink();
         _index.set(0.70);
         _intake.stopMotor();
-        _LED.set(-0.41);
     }else if( !haveBallHigh() && !haveBallLow()){
+        UI.setLedsBlue();
         _index.stopMotor();
         _intake.set(0.70);
-        _LED.set(-0.95);
     }
+}
+
+public void feedUp(){
+    _index.set(0.70);
 }
 
 //moves cargo up when the shoot button is pressed
@@ -73,7 +79,6 @@ public void intakeFlush(){
 public void Stop() {
     _intake.stopMotor();
     _index.stopMotor();
-    _LED.set(-.95);
 }
 
 //stops the motors
