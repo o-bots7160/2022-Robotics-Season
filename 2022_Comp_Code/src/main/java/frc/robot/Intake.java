@@ -28,12 +28,8 @@ public Intake() {
 }    
 
 //uses TOF sensors to intake or not intake
-<<<<<<< Updated upstream
-public void Collect() { 
     //_LED.set(-.65);  
-=======
 public void Collect() {    
->>>>>>> Stashed changes
     if( haveBallLow() && haveBallHigh() ) {
         UI.setLedsGreen();
         _index.stopMotor();
@@ -81,11 +77,6 @@ public void Stop() {
     _index.stopMotor();
 }
 
-//stops the motors
-public void StopAuton() {
-    _intake.stopMotor();
-    _index.stopMotor();
-}
 
 public boolean haveBallLow() {
     return (_lowDelay.isOn( ) );

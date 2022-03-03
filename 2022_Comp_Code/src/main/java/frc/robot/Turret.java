@@ -18,7 +18,7 @@ public class Turret {
 
     private double m_LimelightSteerCommand = 0.0;
     private boolean isHigh = false;
-    private double offset;
+    private double _turret_power;
 
     private double leftLimit = -76260.0;
     private double rightLimit = 64774.0;
@@ -35,14 +35,11 @@ protected void execute(){
     //Update_Limelight_Tracking();
 }
 
-public Turret() {
-    offset = _turret.getSelectedSensorPosition();
-}
 
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set(0.75);
+    _shooter.set(_turret_power);
     if (isShooting == false){
         shotTimer.reset();
         shotTimer.start();
@@ -50,21 +47,16 @@ public void Shoot(){
     isShooting = true;
 }
 
-//sets shooter speed based off of switch
-public void ShooterOn(){
-    
-}
-
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     isHigh = true;
-    _shooter.set(0.70);
+    _turret_power = 0.67;
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     isHigh = false;
-    _shooter.set(0.55);
+    _turret_power = 0.55;
 }
 
 //stops shooter motor
@@ -93,7 +85,7 @@ public boolean isReady(){
     double target = 7500;
     if ( isHigh )
     {
-        target = 14000;
+        target = 14500;
     } 
     if(_shooter.getSelectedSensorVelocity() > target) {
         return true;

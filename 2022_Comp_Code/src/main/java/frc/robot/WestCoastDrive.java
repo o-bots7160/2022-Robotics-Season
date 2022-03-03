@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
 //import com.ctre.phoenix.sensors.WPI_Pigeon2; // for using Pigeon Gyro
 import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
 
@@ -23,7 +22,7 @@ public class WestCoastDrive {
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
   //private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
   private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
-  private final double GEAR_BOX_RATIO       = 2.7;
+//  private final double GEAR_BOX_RATIO       = 2.7;
   private boolean autonActive               = false;
  
   public void zeroEncoders(){
@@ -52,7 +51,7 @@ public class WestCoastDrive {
   }
 
   public void arcadeDrive(double y, double z){
-    _difDrive.arcadeDrive(-y, z);
+    _difDrive.arcadeDrive(y, z);
   }
   
   //

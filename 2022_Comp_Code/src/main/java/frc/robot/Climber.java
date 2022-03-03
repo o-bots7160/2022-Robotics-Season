@@ -27,13 +27,12 @@ public class Climber {
 
     //pushes the _Climber out
     public void Extend() {
-
-            _Climber.set(.75);
+        _Climber.set(.75);
     }
 
     //pulls the _Climber in
     public void Retract() {
-            _Climber.set(-.75);
+        _Climber.set(-.75);
     }
 
     //pushes the _Tiltinator away from the robot
@@ -47,7 +46,7 @@ public class Climber {
 
     //pulls the _Tiltinator towards the robot
     public void Pull() {
-            _Tiltinator.set(-.125);
+        _Tiltinator.set(-.125);
     }
 
     //stops the _Climber motor

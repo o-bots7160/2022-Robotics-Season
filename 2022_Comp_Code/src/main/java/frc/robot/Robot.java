@@ -1,8 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
 
@@ -11,6 +13,7 @@ public class Robot extends TimedRobot {
   private final Turret _turretClass               = new Turret();
   private final SendableChooser<AUTO> _chooser    = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
+  private final Timer   timer                     = new Timer();
 
   private enum AUTO {
     LAUNCHAUTO
@@ -21,7 +24,8 @@ public class Robot extends TimedRobot {
   private  enum LAUNCHAUTO {
     BALLPICKUP,
     TURN,
-    SHOOT
+    SHOOT,
+    STOP
   }
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
 
@@ -39,20 +43,18 @@ public class Robot extends TimedRobot {
     _turretClass.execute();
     //_climberClass.execute();
     //puts options and result on Smart Dashboard
-<<<<<<< Updated upstream
     _westCoastDrive.robotPeriodic();
 
 
 
 
-=======
     SmartDashboard.putData(_chooser);
     _westCoastDrive.robotPeriodic();  
->>>>>>> Stashed changes
   }
 
   @Override
   public void autonomousInit() {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroEncoders();
     UI.setLedsBlue();
@@ -78,33 +80,42 @@ public class Robot extends TimedRobot {
   }
 
   private void launchAuto () {
-    _intakeClass.Collect();
-      switch(lA){
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(2); 
+    switch(lA){
         
         case BALLPICKUP:
         _turretClass.SetHigh();
-        if(_westCoastDrive.moveTo(56, 12)){
+        _intakeClass.Collect();
+        if(_westCoastDrive.moveTo(56, 9)){
           System.out.println("Is driving");
           
         }else{
           lA = LAUNCHAUTO.TURN;
         }
-        _turretClass.isReady();
         break;
 
         case TURN:
-        if(_westCoastDrive.turnTo(95, 35)){
+        if(_westCoastDrive.turnTo(100, 35)){
           _intakeClass.Collect();
         }else{
+          timer.reset();
+          timer.start();
           lA = LAUNCHAUTO.SHOOT;
         }
-        _turretClass.isReady();
         break;
 
         case SHOOT:
         _turretClass.Update_Limelight_Tracking();
         _turretClass.Shoot();
-        _intakeClass.feedUp();
+        if(_turretClass.isReady()) {
+          _intakeClass.Shoot();
+        }else if (timer.hasElapsed( 10 )) {
+          _turretClass.StopShooter();
+          _intakeClass.Stop();
+        }
+        break;
+
+        case STOP:
         break;
       }
   }
@@ -167,8 +178,29 @@ public class Robot extends TimedRobot {
       }else{
         _turretClass.StopTurret();
       }
+
+    if(UI.getClimbExtend()){
+        _climberClass.Extend();
+    }
+    else if(UI.getClimbRetract()){
+      _climberClass.Retract();
+    }
+    else{
+      _climberClass.StopClimber();
+    }
 	}
+
+  if(UI.getClimbPull()){
+    _climberClass.Pull();
+  }
+  else if(UI.getClimbPush()){
+    _climberClass.Push();
+  }
+  else{
+    _climberClass.StopTilt();
+  }
 }
+
 
   @Override
   public void disabledInit() {
@@ -196,4 +228,3 @@ public class Robot extends TimedRobot {
     System.out.println(_turretClass.getTicks());
   }
 }
-
