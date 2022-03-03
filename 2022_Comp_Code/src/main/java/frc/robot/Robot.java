@@ -45,9 +45,6 @@ public class Robot extends TimedRobot {
     //puts options and result on Smart Dashboard
     _westCoastDrive.robotPeriodic();
 
-
-
-
     SmartDashboard.putData(_chooser);
     _westCoastDrive.robotPeriodic();  
   }
@@ -74,7 +71,6 @@ public class Robot extends TimedRobot {
       launchAuto();
       break;
     }
-
     _westCoastDrive.setBrakeMode();
     
   }
@@ -129,7 +125,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
     
     if(UI.getIntake())
@@ -143,6 +138,7 @@ public class Robot extends TimedRobot {
       } else {
         _turretClass.SetHigh();
       }
+      _turretClass.Shoot();
       if (_turretClass.isReady())
       {
         _intakeClass.Shoot();
@@ -152,24 +148,25 @@ public class Robot extends TimedRobot {
         _intakeClass.Stop();
       }
     }
-    else if(UI.getFlushHigh())
-    {
-      _intakeClass.FlushHigh();
-    }
-    else if(UI.getFlushLow())
-    {
-        _intakeClass.intakeFlush();
-    }
-    else
-    {
-      _intakeClass.Stop();
-      _turretClass.StopShooter();
-    }
-
+      else if(UI.getFlushHigh())
+     {
+        _intakeClass.FlushHigh();
+     }
+     else if(UI.getFlushLow())
+      {
+          _intakeClass.intakeFlush();
+      }
+     else
+      {
+        _intakeClass.Stop();
+        _turretClass.StopShooter();
+      }
 
     if(UI.getAutoAim()){
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(2); 
       _turretClass.Update_Limelight_Tracking();
     }else{
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
       if(UI.getTurretLeft()) {
         _turretClass.TurnLeft();
       }
@@ -201,7 +198,6 @@ public class Robot extends TimedRobot {
   }
 }
 
-
   @Override
   public void disabledInit() {
     _westCoastDrive.setCoastMode();
@@ -218,9 +214,7 @@ public class Robot extends TimedRobot {
     _westCoastDrive.zeroEncoders();
     _turretClass.zeroEncoders();
     step = 0;
-  }
-
-  
+  } 
 
   @Override
   public void testPeriodic() {

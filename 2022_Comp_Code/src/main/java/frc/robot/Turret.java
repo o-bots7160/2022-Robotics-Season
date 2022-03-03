@@ -56,7 +56,7 @@ public void SetHigh(){
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     isHigh = false;
-    _turret_power = 0.55;
+    _turret_power = 0.40;
 }
 
 //stops shooter motor
@@ -85,7 +85,7 @@ public boolean isReady(){
     double target = 7500;
     if ( isHigh )
     {
-        target = 14500;
+        target = 14650;
     } 
     if(_shooter.getSelectedSensorVelocity() > target) {
         return true;

@@ -27,8 +27,7 @@ public Intake() {
     _barrel.setRangingMode   ( RangingMode.Short, 24.0d );
 }    
 
-//uses TOF sensors to intake or not intake
-    //_LED.set(-.65);  
+//uses TOF sensors to intake or not intake  
 public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
         UI.setLedsGreen();

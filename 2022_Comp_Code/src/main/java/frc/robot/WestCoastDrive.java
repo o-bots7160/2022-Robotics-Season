@@ -108,9 +108,9 @@ public class WestCoastDrive {
     // Move to the set location
     if(getTicks() < distance){
       if(getTicks() < (distance - slowDown)){
-        arcadeDrive(-.65, 0);
+        arcadeDrive(.65, 0);
       }else{
-        arcadeDrive(-.4, 0);
+        arcadeDrive(.4, 0);
       }
     }else{
       stopDrive();
