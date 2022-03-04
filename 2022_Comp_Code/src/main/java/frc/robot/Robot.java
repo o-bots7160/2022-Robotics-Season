@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     //_chooser.addOption(name, object);
-    UI.setLedsBlue();
+    UI.setBlue();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroEncoders();
-    UI.setLedsBlue();
+    UI.setBlue();
     switch ( _chooser.getSelected() ){
       case LAUNCHAUTO:
         autonTracker = AUTO.LAUNCHAUTO;
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     _climberClass.reset();
-    UI.setLedsBlue();
+    UI.setBlue();
   }
 
   @Override

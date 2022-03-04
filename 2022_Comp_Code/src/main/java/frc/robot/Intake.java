@@ -30,19 +30,19 @@ public Intake() {
 //uses TOF sensors to intake or not intake  
 public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
-        UI.setLedsGreen();
+        UI.setGreen();
         _index.stopMotor();
         _intake.stopMotor();
     }else if( haveBallHigh() && !haveBallLow()) {
-        UI.setLedsPink();
+        UI.setPink();
         _index.stopMotor();
         _intake.set(0.85);
     }else if( !haveBallHigh() && haveBallLow()) {
-        UI.setLedsPink();
+        UI.setPink();
         _index.set(0.70);
         _intake.stopMotor();
     }else if( !haveBallHigh() && !haveBallLow()){
-        UI.setLedsBlue();
+        UI.setBlue();
         _index.stopMotor();
         _intake.set(0.70);
     }
