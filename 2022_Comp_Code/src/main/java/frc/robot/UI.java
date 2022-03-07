@@ -8,11 +8,11 @@ public class UI {
     private static final Joystick _joystick        = new Joystick(0);
     private static final Joystick _buttons1        = new Joystick(1);
     private static final Joystick _buttons2        = new Joystick(2);
-    private static final Spark _LED   = new Spark(0);
+    //
 
     //SPEED REDUCER
     private static double speedReducerY = 1.25;
-    private static double speedReducerZ = 1.75; 
+    private static double speedReducerZ = 2.00; 
 
     public static double yInput(){
         if(_joystick.getRawAxis(1) >=.2 || _joystick.getRawAxis(1) <= -.2){
@@ -43,7 +43,7 @@ public class UI {
     }
 
     public static boolean getAutoAim(){
-        return _buttons1.getRawButton( 6 );
+        return _buttons1.getRawButton( 4 );
     }
 
     public static boolean getTurretLeft(){
@@ -80,7 +80,7 @@ public class UI {
     }
 
     //sets LEDS to the blue pattern
-    public static void setBlue() {
+    /*public static void setBlue() {
         System.out.println("is blue");
         _LED.set(-0.95);
     }
@@ -96,5 +96,9 @@ public class UI {
         System.out.println("is pink");
         _LED.set(0.57);
     }
+
+    public static void endGameColor(){
+        _LED.set(-.25);
+    }*/
     
 }

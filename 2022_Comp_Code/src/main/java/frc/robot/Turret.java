@@ -4,14 +4,16 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Turret {
     private final WPI_TalonFX _turret    = new WPI_TalonFX(40); 
     private final WPI_TalonFX _shooter   = new WPI_TalonFX(41);     
-    private final Timer       shotTimer  = new Timer(); 
+    private final Timer       shotTimer  = new Timer();
+    private final DigitalInput leftLimitSW = new DigitalInput( 1 ); 
+    private final DigitalInput rightLimitSW = new DigitalInput( 0 ); 
     
     private boolean isShooting                = false;
     private boolean m_LimelightHasValidTarget = false;
@@ -31,7 +33,7 @@ public class Turret {
 protected void execute(){
     //SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
     //SmartDashboard.putNumber("Turrent Position", offset - _turret.getSelectedSensorPosition());
-    SmartDashboard.putBoolean("Target?", m_LimelightHasValidTarget);
+    //SmartDashboard.putBoolean("Target?", m_LimelightHasValidTarget);
     //Update_Limelight_Tracking();
 }
 
@@ -134,18 +136,17 @@ public void Update_Limelight_Tracking(){
 
   }
 
-private void setTurret(double turnRate) {
-    if(getTicks() > leftLimit && getTicks() < rightLimit){
-        _turret.set(turnRate);
-    }else{
-        _turret.set(0);
-    }
-    
-  }
+    private void setTurret(double turnRate) {
+        if((turnRate > 0 && !leftLimitSW.get())||(turnRate < 0 && !rightLimitSW.get())){
+            _turret.stopMotor();
+        }else{
+            _turret.set(turnRate);
+        }
+     }
 
-  public void setCoast(){
-      _turret.setNeutralMode(NeutralMode.Coast);
-  }
+    public void setCoast(){
+        _turret.setNeutralMode(NeutralMode.Coast);
+    }
 
   public double getTicks(){
       return _turret.getSelectedSensorPosition();

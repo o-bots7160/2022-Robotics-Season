@@ -1,10 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class Robot extends TimedRobot {
 
@@ -14,6 +16,9 @@ public class Robot extends TimedRobot {
   private final SendableChooser<AUTO> _chooser    = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
   private final Timer   timer                     = new Timer();
+  private final Spark _LED   = new Spark(1);
+
+  private final Timer   endGameTimer              = new Timer(); 
 
   private enum AUTO {
     LAUNCHAUTO
@@ -34,7 +39,7 @@ public class Robot extends TimedRobot {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     //_chooser.addOption(name, object);
-    UI.setBlue();
+    //UI.setBlue();
   }
 
   @Override
@@ -51,10 +56,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    endGameTimer.reset();
+    endGameTimer.start();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroEncoders();
-    UI.setBlue();
+    //UI.setBlue();
+    _LED.set(-.95);
     switch ( _chooser.getSelected() ){
       case LAUNCHAUTO:
         autonTracker = AUTO.LAUNCHAUTO;
@@ -76,13 +84,13 @@ public class Robot extends TimedRobot {
   }
 
   private void launchAuto () {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(2); 
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
     switch(lA){
         
         case BALLPICKUP:
         _turretClass.SetHigh();
         _intakeClass.Collect();
-        if(_westCoastDrive.moveTo(56, 9)){
+        if(_westCoastDrive.moveTo(65, 9)){
           System.out.println("Is driving");
           
         }else{
@@ -91,7 +99,7 @@ public class Robot extends TimedRobot {
         break;
 
         case TURN:
-        if(_westCoastDrive.turnTo(100, 35)){
+        if(_westCoastDrive.turnTo(95, 20)){
           _intakeClass.Collect();
         }else{
           timer.reset();
@@ -119,12 +127,23 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     _climberClass.reset();
-    UI.setBlue();
+    endGameTimer.reset();
+    endGameTimer.start();
+    //UI.setBlue();
   }
 
   @Override
   public void teleopPeriodic() {
-
+    if(endGameTimer.get() > 85.0d){
+      _LED.set(-.25);
+      } else if(_intakeClass.haveBallHigh() && !_intakeClass.haveBallLow()){
+      _LED.set(.57);
+      } else if (_intakeClass.haveBallHigh() && _intakeClass.haveBallLow()){
+      _LED.set(.75);
+    }else{
+   _LED.set(-.45);
+    }
+ 
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
     
     if(UI.getIntake())
@@ -163,15 +182,17 @@ public class Robot extends TimedRobot {
       }
 
     if(UI.getAutoAim()){
-      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(2); 
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
       _turretClass.Update_Limelight_Tracking();
     }else{
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
       if(UI.getTurretLeft()) {
         _turretClass.TurnLeft();
+        System.out.println("LEFT TURN");
       }
       else if(UI.getTurretRight()) {
         _turretClass.TurnRight();
+        System.out.println("RIGHT TURN");
       }else{
         _turretClass.StopTurret();
       }

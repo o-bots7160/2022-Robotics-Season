@@ -90,11 +90,22 @@ public class WestCoastDrive {
   }
 
   public void robotPeriodic() {
-    SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
+    //SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
     //PIDController test = new PIDController(0, 0, 0);
-    SmartDashboard.putNumber("Angle", gyro.getAngle());
+    //SmartDashboard.putNumber("Angle", gyro.getAngle());
 
   }
+
+  private double turnCorrect(){
+    if(gyro.getAngle() > 2){
+      return -.3;
+    }else if (gyro.getAngle() < -2){
+      return .3;
+    }else{
+      return 0.0;
+    }
+  }
+
   public boolean moveTo( double distance, double slowDown ) {
 
     double ticksPerIn = 1214.1916;
@@ -108,7 +119,7 @@ public class WestCoastDrive {
     // Move to the set location
     if(getTicks() < distance){
       if(getTicks() < (distance - slowDown)){
-        arcadeDrive(.65, 0);
+        arcadeDrive(.65, 0);//.65
       }else{
         arcadeDrive(.4, 0);
       }
