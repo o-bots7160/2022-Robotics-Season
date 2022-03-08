@@ -154,5 +154,4 @@ public class WestCoastDrive {
     autonActive = false;
     gyro.reset();
   }
-
 }

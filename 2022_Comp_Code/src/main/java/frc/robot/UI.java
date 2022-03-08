@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class UI {
 
@@ -12,7 +11,7 @@ public class UI {
 
     //SPEED REDUCER
     private static double speedReducerY = 1.25;
-    private static double speedReducerZ = 2.00; 
+    private static double speedReducerZ = 1.75; 
 
     public static double yInput(){
         if(_joystick.getRawAxis(1) >=.2 || _joystick.getRawAxis(1) <= -.2){
@@ -39,7 +38,13 @@ public class UI {
     }
 
     public static boolean getIntake(){
-        return  _joystick.getRawButton(1);
+        //slows turning speed down when intaking
+        if (_joystick.getRawButton(1)){
+            speedReducerZ = 2.0;
+        }else{
+            speedReducerZ = 1.75;
+        }
+       return  _joystick.getRawButton(1);
     }
 
     public static boolean getAutoAim(){
@@ -78,27 +83,5 @@ public class UI {
     public static boolean getClimbPull(){
         return _buttons1.getRawButton( 11 );
     }
-
-    //sets LEDS to the blue pattern
-    /*public static void setBlue() {
-        System.out.println("is blue");
-        _LED.set(-0.95);
-    }
-
-    //sets LEDS to solid green
-    public static void setGreen() {
-        System.out.println("is green");
-        _LED.set(0.75);
-    }
-
-    //sets LEDS to solid pink
-    public static void setPink() {
-        System.out.println("is pink");
-        _LED.set(0.57);
-    }
-
-    public static void endGameColor(){
-        _LED.set(-.25);
-    }*/
     
 }

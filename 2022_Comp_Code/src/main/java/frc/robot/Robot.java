@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,8 +15,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<AUTO> _chooser    = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
   private final Timer   timer                     = new Timer();
-  private final Spark _LED   = new Spark(1);
-
+  private final Spark _LED                        = new Spark(1);
   private final Timer   endGameTimer              = new Timer(); 
 
   private enum AUTO {
