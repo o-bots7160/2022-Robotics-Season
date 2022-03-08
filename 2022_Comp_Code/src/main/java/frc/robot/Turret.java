@@ -63,7 +63,7 @@ public void SetLow(){
 
 //stops shooter motor
 public void StopShooter(){ 
-    _shooter.stopMotor();
+    _shooter.set(0.15);
     isShooting = false;
 }
 
