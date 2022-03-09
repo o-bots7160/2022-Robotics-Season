@@ -64,9 +64,8 @@ public class UI {
     }
 
     public static boolean getShooterLow(){
-        return _buttons2.getRawButton( 7 );
+        return !_buttons2.getRawButton( 7 );
     }
-
 
     public static boolean getClimbExtend(){
         return _buttons2.getRawButton( 9 );
@@ -84,4 +83,7 @@ public class UI {
         return _buttons1.getRawButton( 11 );
     }
     
+    public static boolean getSafeZone(){
+        return _buttons2.getRawButton( 6 );
+    }
 }

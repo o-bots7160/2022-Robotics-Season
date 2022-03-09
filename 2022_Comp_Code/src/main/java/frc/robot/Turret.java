@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj.Timer;
 
 
 public class Turret {
+    enum ShootPosition {
+        LOW,
+        HIGH,
+        SAFE
+    }
     private final WPI_TalonFX _turret    = new WPI_TalonFX(40); 
     private final WPI_TalonFX _shooter   = new WPI_TalonFX(41);     
     private final Timer       shotTimer  = new Timer();
@@ -19,7 +24,7 @@ public class Turret {
     private boolean m_LimelightHasValidTarget = false;
 
     private double m_LimelightSteerCommand = 0.0;
-    private boolean isHigh = false;
+    private ShootPosition position = ShootPosition.LOW;
     private double _turret_power;
 
     private double leftLimit = -76260.0;
@@ -51,14 +56,20 @@ public void Shoot(){
 
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
-    isHigh = true;
-    _turret_power = 0.67;
+    position = ShootPosition.HIGH;
+    _turret_power = 0.75;
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
-    isHigh = false;
+    position = ShootPosition.LOW;
     _turret_power = 0.40;
+}
+
+//sets shooter to shoot into the upper hub from around the tarmac
+public void shootAtX(){
+    position = ShootPosition.SAFE;
+    _turret_power = 0.67;
 }
 
 //stops shooter motor
@@ -84,11 +95,20 @@ public void TurnRight(){
 
 //sets a 5 second delay so the _shooter can get up to speed
 public boolean isReady(){
-    double target = 7500;
-    if ( isHigh )
+    double target = 0;
+    if ( position == ShootPosition.HIGH )
     {
         target = 14650;
     } 
+    else if ( position == ShootPosition.LOW )
+    {
+        target = 7000;
+    } 
+    else if ( position == ShootPosition.SAFE )
+    {
+        target = 7000; //has to change for safe zone speed
+    } 
+    
     if(_shooter.getSelectedSensorVelocity() > target) {
         return true;
     }else {
