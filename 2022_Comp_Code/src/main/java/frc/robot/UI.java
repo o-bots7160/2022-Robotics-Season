@@ -15,7 +15,7 @@ public class UI {
 
     public static double yInput(){
         if(_joystick.getRawAxis(1) >=.2 || _joystick.getRawAxis(1) <= -.2){
-          return -(_joystick.getY() / speedReducerY);
+           return -(_joystick.getY() / speedReducerY);
         }else{
           return 0;
         }
@@ -64,9 +64,8 @@ public class UI {
     }
 
     public static boolean getShooterLow(){
-        return _buttons2.getRawButton( 7 );
+        return !_buttons2.getRawButton( 7 );
     }
-
 
     public static boolean getClimbExtend(){
         return _buttons2.getRawButton( 9 );
@@ -78,10 +77,13 @@ public class UI {
 
     public static boolean getClimbPush(){
         return _buttons1.getRawButton( 12 );
-    }
+    } 
 
     public static boolean getClimbPull(){
         return _buttons1.getRawButton( 11 );
     }
     
+    public static boolean getSafeZone(){
+        return _buttons2.getRawButton( 6 );   
+    }
 }

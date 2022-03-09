@@ -37,7 +37,6 @@ public class Robot extends TimedRobot {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     //_chooser.addOption(name, object);
-    //UI.setBlue();
   }
 
   @Override
@@ -59,7 +58,6 @@ public class Robot extends TimedRobot {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroEncoders();
-    //UI.setBlue();
     _LED.set(-.95);
     switch ( _chooser.getSelected() ){
       case LAUNCHAUTO:
@@ -127,19 +125,18 @@ public class Robot extends TimedRobot {
     _climberClass.reset();
     endGameTimer.reset();
     endGameTimer.start();
-    //UI.setBlue();
   }
 
   @Override
   public void teleopPeriodic() {
     if(endGameTimer.get() > 85.0d){
       _LED.set(-.25);
-      } else if(_intakeClass.haveBallHigh() && !_intakeClass.haveBallLow()){
+    } else if(_intakeClass.haveBallHigh() && !_intakeClass.haveBallLow()){
       _LED.set(.57);
-      } else if (_intakeClass.haveBallHigh() && _intakeClass.haveBallLow()){
+    } else if (_intakeClass.haveBallHigh() && _intakeClass.haveBallLow()){
       _LED.set(.75);
     }else{
-   _LED.set(-.45);
+      _LED.set(-.45);
     }
  
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
@@ -152,9 +149,12 @@ public class Robot extends TimedRobot {
     { 
       if (UI.getShooterLow()) {
         _turretClass.SetLow();
+      } else if ( UI.getSafeZone()){
+        _turretClass.shootAtX();
       } else {
         _turretClass.SetHigh();
       }
+
       _turretClass.Shoot();
       if (_turretClass.isReady())
       {
@@ -165,20 +165,20 @@ public class Robot extends TimedRobot {
         _intakeClass.Stop();
       }
     }
-      else if(UI.getFlushHigh())
-     {
+    else if(UI.getFlushHigh())
+    {
         _intakeClass.FlushHigh();
-     }
-     else if(UI.getFlushLow())
-      {
-          _intakeClass.intakeFlush();
-      }
-     else
-      {
-        _intakeClass.Stop();
-        _turretClass.StopShooter();
-      }
-
+    }
+    else if(UI.getFlushLow())
+    {
+      _intakeClass.intakeFlush();
+    }
+    else
+    {
+      _intakeClass.Stop();
+      _turretClass.StopShooter();
+    }
+     
     if(UI.getAutoAim()){
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
       _turretClass.Update_Limelight_Tracking();
@@ -206,11 +206,11 @@ public class Robot extends TimedRobot {
     }
 	}
 
-  if(UI.getClimbPull()){
+  if(UI.getClimbPull() || UI.getClimbPush()){
     _climberClass.Pull();
   }
-  else if(UI.getClimbPush()){
-    _climberClass.Push();
+  else if(UI.getClimbPull() && UI.getClimbPush()){
+    _climberClass.Pull();
   }
   else{
     _climberClass.StopTilt();
