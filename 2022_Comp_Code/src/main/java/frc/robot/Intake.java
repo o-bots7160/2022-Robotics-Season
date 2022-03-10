@@ -15,6 +15,8 @@ public class Intake {
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
     private final OnOffDelay _highDelay  = new OnOffDelay( 0.0, 0.15, () -> _barrel.getRange() < 100 );
+    private final Turret _turretClass    = new Turret();
+    
     //private final Spark _LEDi             = new Spark(1);
 
 //puts stuff on the Smart Dashboard
@@ -32,17 +34,17 @@ public Intake() {
 //uses TOF sensors to intake or not intake  
 public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
-        //_LEDi.set(.75);
         _index.stopMotor();
         _intake.stopMotor();
+        _turretClass.IdleSpeed();
     }else if( haveBallHigh() && !haveBallLow()) {
-        //_LEDi.set(.57);
         _index.stopMotor();
         _intake.set(0.90);
+        _turretClass.IdleSpeed();
     }else if( !haveBallHigh() && haveBallLow()) {
-        //_LEDi.set(.57);
         _index.set(0.70);
         _intake.stopMotor();
+        _turretClass.IdleSpeed();
     }else if( !haveBallHigh() && !haveBallLow()){
         _index.stopMotor();
         _intake.set(0.90);

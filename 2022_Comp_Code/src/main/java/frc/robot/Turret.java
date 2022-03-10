@@ -14,10 +14,10 @@ public class Turret {
         HIGH,
         SAFE
     }
-    private final WPI_TalonFX _turret    = new WPI_TalonFX(40); 
-    private final WPI_TalonFX _shooter   = new WPI_TalonFX(41);     
-    private final Timer       shotTimer  = new Timer();
-    private final DigitalInput leftLimitSW = new DigitalInput( 1 ); 
+    private final WPI_TalonFX _turret       = new WPI_TalonFX(40); 
+    private final WPI_TalonFX _shooter      = new WPI_TalonFX(41);     
+    private final Timer       shotTimer     = new Timer();
+    private final DigitalInput leftLimitSW  = new DigitalInput( 1 ); 
     private final DigitalInput rightLimitSW = new DigitalInput( 0 ); 
     
     private boolean isShooting                = false;
@@ -54,6 +54,10 @@ public void Shoot(){
     isShooting = true;
 }
 
+public void IdleSpeed() {
+    _turret_power = 0.1;
+}
+
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     position = ShootPosition.HIGH;
@@ -74,9 +78,10 @@ public void shootAtX(){
 
 //stops shooter motor
 public void StopShooter(){ 
-    _shooter.set(0.15);
+    _shooter.set(0.0);
     isShooting = false;
 }
+
 
 //stops turret motor
 public void StopTurret(){ 
