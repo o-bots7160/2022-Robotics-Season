@@ -147,6 +147,11 @@ public class Robot extends TimedRobot {
     if(UI.getIntake())
     {
       _intakeClass.Collect();
+      if (_intakeClass.haveBallHigh()) {
+        _turretClass.IdleSpeed();
+      } else {
+        _turretClass.StopShooter();
+      }
     }
     else if(UI.getShoot())
     { 
@@ -165,19 +170,23 @@ public class Robot extends TimedRobot {
         _intakeClass.Stop();
       }
     }
-      else if(UI.getFlushHigh())
-     {
+    else if(UI.getFlushHigh())
+    {
         _intakeClass.FlushHigh();
-     }
-     else if(UI.getFlushLow())
-      {
-          _intakeClass.intakeFlush();
-      }
-     else
-      {
+    }
+    else if(UI.getFlushLow())
+    {
+      _intakeClass.intakeFlush();
+    }
+    else
+    {
         _intakeClass.Stop();
-        _turretClass.StopShooter();
-      }
+        if (_intakeClass.haveBallHigh()) {
+          _turretClass.IdleSpeed();
+        } else {
+          _turretClass.StopShooter();
+        }
+    }
 
     if(UI.getAutoAim()){
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 

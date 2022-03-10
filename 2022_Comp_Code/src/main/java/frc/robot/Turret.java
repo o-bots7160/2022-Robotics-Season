@@ -55,7 +55,9 @@ public void Shoot(){
 }
 
 public void IdleSpeed() {
-    _turret_power = 0.1;
+    _turret_power = 0.2;
+    _turret.setNeutralMode(NeutralMode.Coast); 
+    _shooter.set(_turret_power);
 }
 
 //sets shooter to shoot into the upper hub

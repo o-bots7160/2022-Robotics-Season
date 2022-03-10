@@ -15,7 +15,7 @@ public class Intake {
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
     private final OnOffDelay _highDelay  = new OnOffDelay( 0.0, 0.15, () -> _barrel.getRange() < 100 );
-    private final Turret _turretClass    = new Turret();
+    //private final Turret _turretClass    = new Turret();
     
     //private final Spark _LEDi             = new Spark(1);
 
@@ -36,15 +36,15 @@ public void Collect() {
     if( haveBallLow() && haveBallHigh() ) {
         _index.stopMotor();
         _intake.stopMotor();
-        _turretClass.IdleSpeed();
+        //_turretClass.IdleSpeed();
     }else if( haveBallHigh() && !haveBallLow()) {
         _index.stopMotor();
         _intake.set(0.90);
-        _turretClass.IdleSpeed();
+        //_turretClass.IdleSpeed();
     }else if( !haveBallHigh() && haveBallLow()) {
         _index.set(0.70);
         _intake.stopMotor();
-        _turretClass.IdleSpeed();
+        //_turretClass.IdleSpeed();
     }else if( !haveBallHigh() && !haveBallLow()){
         _index.stopMotor();
         _intake.set(0.90);
