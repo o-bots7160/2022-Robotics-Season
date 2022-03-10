@@ -28,11 +28,17 @@ public class Climber {
     //pushes the _Climber out
     public void Extend() {
         _Climber.set(.75);
+        if (_Climber.getSelectedSensorPosition() >= 10000) {
+            _Climber.stopMotor();
+        }
     }
 
     //pulls the _Climber in
     public void Retract() {
         _Climber.set(-.75);
+        if ( _Climber.getSelectedSensorPosition() <= 0 ) {
+            _Climber.stopMotor();
+        }
     }
 
     //pushes the _Tiltinator away from the robot

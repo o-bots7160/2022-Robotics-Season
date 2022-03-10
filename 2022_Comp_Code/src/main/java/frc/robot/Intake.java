@@ -4,8 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-
+//import edu.wpi.first.wpilibj.motorcontrol.Spark;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
@@ -33,22 +32,18 @@ public Intake() {
 //uses TOF sensors to intake or not intake  
 public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
-        //UI.setGreen();
         //_LEDi.set(.75);
         _index.stopMotor();
         _intake.stopMotor();
     }else if( haveBallHigh() && !haveBallLow()) {
-        //UI.setPink();
         //_LEDi.set(.57);
         _index.stopMotor();
         _intake.set(0.90);
     }else if( !haveBallHigh() && haveBallLow()) {
-        //UI.setPink();
         //_LEDi.set(.57);
         _index.set(0.70);
         _intake.stopMotor();
     }else if( !haveBallHigh() && !haveBallLow()){
-        //UI.setBlue();
         _index.stopMotor();
         _intake.set(0.90);
     }
@@ -81,7 +76,6 @@ public void Stop() {
     _intake.stopMotor();
     _index.stopMotor();
 }
-
 
 public boolean haveBallLow() {
     return (_lowDelay.isOn( ) );
