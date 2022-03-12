@@ -29,7 +29,6 @@ public class Climber {
 
     //pushes the _Climber out
     public void Extend() {
-        System.out.println( _Climber.getSelectedSensorPosition());
         if (_Climber.getSelectedSensorPosition() >= 611586) {  //TODO test for number
             _Climber.stopMotor();
         } else {

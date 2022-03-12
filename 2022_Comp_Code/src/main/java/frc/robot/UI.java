@@ -89,4 +89,12 @@ public class UI {
     public static boolean getIgnoreLimits() {
         return _joystick.getRawButton( 7);
     }
+
+    public static boolean getCenter() {
+        return _buttons1.getRawButton(1);
+    }
+
+    public static boolean getLimit() {
+        return _buttons2.getRawButton(1);
+    }
 }

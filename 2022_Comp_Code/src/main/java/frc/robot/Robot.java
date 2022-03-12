@@ -193,27 +193,20 @@ public class Robot extends TimedRobot {
       _turretClass.Update_Limelight_Tracking();
     }else{
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
-      if(UI.getTurretLeft()) {
-        _turretClass.TurnLeft();
-        System.out.println("LEFT TURN");
-      }
-      else if(UI.getTurretRight()) {
-        _turretClass.TurnRight();
-        System.out.println("RIGHT TURN");
-      }else{
-        _turretClass.StopTurret();
-      }
+      
 
-    if(UI.getClimbExtend()){
-        _climberClass.Extend();
-    }
-    else if(UI.getClimbRetract()){
-      _climberClass.Retract( UI.getIgnoreLimits());
-    }
-    else{
-      _climberClass.StopClimber();
-    }
+    
 	}
+
+  if(UI.getClimbExtend()){
+    _climberClass.Extend();
+  }
+  else if(UI.getClimbRetract()){
+    _climberClass.Retract( UI.getIgnoreLimits());
+  }
+  else{
+    _climberClass.StopClimber();
+  }
 
   if(UI.getClimbPull()){
     _climberClass.Pull();
@@ -239,14 +232,12 @@ public class Robot extends TimedRobot {
   int step = 0;
   @Override
   public void testInit() {
-    _westCoastDrive.zeroEncoders();
-    _turretClass.zeroEncoders();
-    step = 0;
+    _turretClass.teleopInit();
   } 
 
   @Override
   public void testPeriodic() {
     
-    System.out.println(_turretClass.getTicks());
+    _turretClass.turretControl();
   }
 }
