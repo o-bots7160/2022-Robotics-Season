@@ -208,7 +208,7 @@ public class Robot extends TimedRobot {
         _climberClass.Extend();
     }
     else if(UI.getClimbRetract()){
-      _climberClass.Retract();
+      _climberClass.Retract( UI.getIgnoreLimits());
     }
     else{
       _climberClass.StopClimber();

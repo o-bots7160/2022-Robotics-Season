@@ -90,14 +90,22 @@ public void StopTurret(){
     _turret.stopMotor();
 }
 
-//turns turret left
+//turns turret left, goes faster if AutoAim is on
 public void TurnLeft(){
-    setTurret(-0.125);
+    if (UI.getAutoAim()) {
+        setTurret(-0.2);   //TODO test for number
+    } else {
+        setTurret(-0.125);
+    }
 }
 
-//turns turret right
+//turns turret right, goes faster if AutoAim is on
 public void TurnRight(){
-    setTurret(0.125);
+    if (UI.getAutoAim()) {
+        setTurret(0.2);    //TODO test for number
+    } else {
+        setTurret(0.125);
+    }
 }
 
 //sets a 5 second delay so the _shooter can get up to speed
