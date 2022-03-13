@@ -39,10 +39,10 @@ public class UI {
 
     public static boolean getIntake(){
         //slows turning speed down when intaking
-        if (_joystick.getRawButton(1)){
-            speedReducerZ = 2.0;
+        if (_joystick.getRawButton(1)){  
+            speedReducerZ = 2.0;               //TODO test for number
         }else{
-            speedReducerZ = 1.75;
+            speedReducerZ = 1.75;              //TODO test for number
         }
        return  _joystick.getRawButton(1);
     }
@@ -85,5 +85,16 @@ public class UI {
     
     public static boolean getSafeZone(){
         return _buttons2.getRawButton( 6 );
+    }
+    public static boolean getIgnoreLimits() {
+        return _joystick.getRawButton( 7);
+    }
+
+    public static boolean getCenter() {
+        return _buttons1.getRawButton(1);
+    }
+
+    public static boolean getLimit() {
+        return _buttons2.getRawButton(1);
     }
 }

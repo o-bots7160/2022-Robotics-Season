@@ -14,10 +14,10 @@ public class Turret {
         HIGH,
         SAFE
     }
-    private final WPI_TalonFX _turret    = new WPI_TalonFX(40); 
-    private final WPI_TalonFX _shooter   = new WPI_TalonFX(41);     
-    private final Timer       shotTimer  = new Timer();
-    private final DigitalInput leftLimitSW = new DigitalInput( 1 ); 
+    private final WPI_TalonFX _turret       = new WPI_TalonFX(40); 
+    private final WPI_TalonFX _shooter      = new WPI_TalonFX(41);     
+    private final Timer       shotTimer     = new Timer();
+    private final DigitalInput leftLimitSW  = new DigitalInput( 1 ); 
     private final DigitalInput rightLimitSW = new DigitalInput( 0 ); 
     
     private boolean isShooting                = false;
@@ -27,13 +27,38 @@ public class Turret {
     private ShootPosition position = ShootPosition.LOW;
     private double _turret_power;
 
-    private double leftLimit = -76260.0;
-    private double rightLimit = 64774.0;
-    // Units per 100ms = 14859.000 for practice bot
-    // F-gain = 0.1033
-    // Starting Error = +5,827
+    private double lToR                       = 126774.0;  // Left To Right
+    private double lToRS                      = 114962.0;  // Left To Right Slow Down Distance
+    private double lToCS                      = 49290.0;   // Left to Center Slow Down Distance
+    private double lToC                       = 64367.0;   // Left To Center
+    private double rToL                       = 125654.0;  // Right To Left
+    private double rToLS                      = 114962.0;  // Right To Left Slow Down Distance
+    private double rToCS                      = 45521.0;   // Right To Center Slow Down Distance
+    private double rToC                       = 62019.0;   // Right To Center
+    private boolean centering                 = false;
+    private boolean toLeft                    = false;
+    private boolean toRight                   = false;
+
+
+    private double target = 0.0;
+    private double greaterSlow = 0.0;
+    private double lesserSlow = 0.0;
+
+    // Zeroed Direction
+    enum zeroedDirection{
+        LEFT,
+        RIGHT
+    }
+
+
+    private zeroedDirection zD;
+
     public void zeroEncoders(){
         _turret.setSelectedSensorPosition(0.0);
+    }
+
+    public void teleopInit(){
+        target = 0;
     }
 
 
@@ -56,9 +81,15 @@ public void Shoot(){
     isShooting = true;
 }
 
+public void IdleSpeed() {
+    _turret_power = 0.2;
+    _turret.setNeutralMode(NeutralMode.Coast); 
+    _shooter.set(_turret_power);
+}
+
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
-    position = ShootPosition.HIGH;
+    position = ShootPosition.SAFE;
     _turret_power = 0.75;
 }
 
@@ -70,29 +101,38 @@ public void SetLow(){
 
 //sets shooter to shoot into the upper hub from around the tarmac
 public void shootAtX(){
-    position = ShootPosition.SAFE;
-    _turret_power = 0.67;
+    position = ShootPosition.HIGH;
+    _turret_power = 0.55;
 }
 
 //stops shooter motor
 public void StopShooter(){ 
-    _shooter.set(0.15);
+    _shooter.set(0.0);
     isShooting = false;
 }
+
 
 //stops turret motor
 public void StopTurret(){ 
     _turret.stopMotor();
 }
 
-//turns turret left
+//turns turret left, goes faster if AutoAim is on
 public void TurnLeft(){
-    setTurret(-0.125);
+    if (UI.getAutoAim()) {
+        setTurret(-0.2);   //TODO test for number
+    } else {
+        setTurret(-0.125);
+    }
 }
 
-//turns turret right
+//turns turret right, goes faster if AutoAim is on
 public void TurnRight(){
-    setTurret(0.125);
+    if (UI.getAutoAim()) {
+        setTurret(0.2);    //TODO test for number
+    } else {
+        setTurret(0.125);
+    }
 }
 
 //sets a 5 second delay so the _shooter can get up to speed
@@ -108,7 +148,7 @@ public boolean isReady(){
     } 
     else if ( position == ShootPosition.SAFE )
     {
-        target = 7000; //has to change for safe zone speed
+        target = 15000; //has to change for safe zone speed
     } 
     
     if(_shooter.getSelectedSensorVelocity() > target) {
@@ -171,7 +211,115 @@ public void Update_Limelight_Tracking(){
     }
 
   public double getTicks(){
-      return _turret.getSelectedSensorPosition();
+      return Math.abs(_turret.getSelectedSensorPosition());
+  }
+
+  private void manualControl(){
+    if(UI.getTurretLeft()) {
+        TurnLeft();
+        System.out.println("LEFT TURN");
+      }
+      else if(UI.getTurretRight()) {
+        TurnRight();
+        System.out.println("RIGHT TURN");
+      }else{
+        StopTurret();
+      }
+  }
+
+  public void turretControl() {
+      System.out.println("Target: " + target);;
+
+    if(!leftLimitSW.get()){
+        zD = zeroedDirection.LEFT;
+        zeroEncoders();
+    }else if(!rightLimitSW.get()){
+        zD = zeroedDirection.RIGHT;
+        zeroEncoders();
+    }
+        
+    switch(zD){
+        case LEFT:
+        if(target > lToR){
+            target = lToR;
+        }else if(target < 0){
+            target = 0;
+        }
+
+        if(UI.getTurretLeft() && !UI.getLimit() && !UI.getCenter() && !UI.getTurretRight()){
+            target-=1000;
+        }else if(UI.getTurretRight() && !UI.getLimit() && !UI.getCenter() && !UI.getTurretLeft()){
+            target+=1000;
+        }else if(UI.getCenter() && !UI.getTurretLeft() && !UI.getLimit() && !UI.getTurretRight()){
+            target = lToC;
+            lesserSlow = lToCS;
+            greaterSlow = rToCS;
+        }else if(UI.getLimit() && UI.getTurretLeft() && !UI.getCenter() && !UI.getTurretRight()){
+            target = rToL;
+        }else if(UI.getLimit() && UI.getTurretRight() && !UI.getCenter() && !UI.getTurretLeft()){
+            target = lToR;
+        }
+
+        if (getTicks() > target-500 && getTicks() < target+500){
+            StopTurret();
+        }else{
+            if(getTicks() < target){
+                if(getTicks() < lesserSlow){
+                    setTurret(.2);
+                }else{
+                    setTurret(.125);
+                }
+            }else if(getTicks() > target){
+                if(getTicks() > greaterSlow){
+                    setTurret(-.2);
+                }else{
+                    setTurret(-.125);
+                }
+            }
+        }
+        break;
+        case RIGHT:
+        if(target > rToL){
+            target = rToL;
+        }else if(target < 0){
+            target = 0;
+        }
+
+        if(UI.getTurretLeft() && !UI.getLimit() && !UI.getCenter() && !UI.getTurretRight()){
+            target+=1000;
+        }else if(UI.getTurretRight() && !UI.getLimit() && !UI.getCenter() && !UI.getTurretLeft()){
+            target-=1000;
+        }else if(UI.getCenter() && !UI.getTurretLeft() && !UI.getLimit() && !UI.getTurretRight()){
+            target = rToC;
+            lesserSlow = rToCS;
+            greaterSlow = lToCS;
+        }else if(UI.getLimit() && UI.getTurretLeft() && !UI.getCenter() && !UI.getTurretRight()){
+            target = lToR;
+        }else if(UI.getLimit() && UI.getTurretRight() && !UI.getCenter() && !UI.getTurretLeft()){
+            target = rToL;
+        }
+
+        if (getTicks() > target-500 && getTicks() < target+500){
+            StopTurret();
+        }else{
+            if(getTicks() < target){
+                if(getTicks() < lesserSlow){
+                    setTurret(-.4);
+                }else{
+                    setTurret(-.2);
+                }
+            }else if(getTicks() > target){
+                if(getTicks() > greaterSlow){
+                    setTurret(.4);
+                }else{
+                    setTurret(.2);
+                }
+            }
+        }
+        break;
+
+    }
+
   }
 
 }
