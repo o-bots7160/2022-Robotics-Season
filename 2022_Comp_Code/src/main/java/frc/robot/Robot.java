@@ -196,13 +196,16 @@ public class Robot extends TimedRobot {
     }
 
     if(UI.getAutoAim()){
+      _turretClass.breakMode();
       if(UI.getShoot()){
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
         _turretClass.Update_Limelight_Tracking();
       }else{
-
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3);
+        _turretClass.manualControl();
       }
     }else{
+      _turretClass.breakMode();
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
       _turretClass.manualControl();
     
