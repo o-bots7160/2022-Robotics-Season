@@ -98,7 +98,7 @@ public void IdleSpeed() {
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     position = ShootPosition.SAFE;
-    _turret_power = 0.73;
+    _turret_power = 0.72;
 }
 
 //sets shooter to shoot into the lower hub
@@ -110,7 +110,7 @@ public void SetLow(){
 //sets shooter to shoot into the upper hub from around the tarmac
 public void shootAtX(){
     position = ShootPosition.HIGH;
-    _turret_power = 0.55;
+    _turret_power = 0.69;
 }
 
 //stops shooter motor
@@ -148,7 +148,7 @@ public boolean isReady(){
     double target = 0;
     if ( position == ShootPosition.HIGH )
     {
-        target = 14650;
+        target = 12450;
     } 
     else if ( position == ShootPosition.LOW )
     {

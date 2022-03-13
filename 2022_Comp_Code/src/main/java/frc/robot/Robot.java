@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
         _turretClass.Update_Limelight_Tracking();
       }else{
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
         _turretClass.manualControl();
       }
     }else{

@@ -40,7 +40,7 @@ public class UI {
     public static boolean getIntake(){
         //slows turning speed down when intaking
         if (_joystick.getRawButton(1)){  
-            speedReducerZ = 2.0;               //TODO test for number
+            speedReducerZ = 2.25;               //TODO test for number
         }else{
             speedReducerZ = 1.75;              //TODO test for number
         }
