@@ -148,7 +148,7 @@ public class Robot extends TimedRobot {
     {
       _intakeClass.Collect();
       if (_intakeClass.haveBallHigh()) {
-        _turretClass.IdleSpeed();
+        //_turretClass.IdleSpeed();
       } else {
         _turretClass.StopShooter();
       }
@@ -182,7 +182,7 @@ public class Robot extends TimedRobot {
     {
         _intakeClass.Stop();
         if (_intakeClass.haveBallHigh()) {
-          _turretClass.IdleSpeed();
+          //_turretClass.IdleSpeed();
         } else {
           _turretClass.StopShooter();
         }
