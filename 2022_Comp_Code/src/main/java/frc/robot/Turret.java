@@ -90,7 +90,7 @@ public void IdleSpeed() {
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     position = ShootPosition.SAFE;
-    _turret_power = 0.75;
+    _turret_power = 0.73;
 }
 
 //sets shooter to shoot into the lower hub
@@ -148,7 +148,7 @@ public boolean isReady(){
     } 
     else if ( position == ShootPosition.SAFE )
     {
-        target = 15000; //has to change for safe zone speed
+        target = 13500; 
     } 
     
     if(_shooter.getSelectedSensorVelocity() > target) {
