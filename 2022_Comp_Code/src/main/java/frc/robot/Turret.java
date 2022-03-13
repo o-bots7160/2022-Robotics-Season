@@ -81,9 +81,17 @@ public void Shoot(){
     isShooting = true;
 }
 
+public void breakMode(){
+    _turret.setNeutralMode(NeutralMode.Brake);
+}
+
+public void disabledInit(){
+    _turret.setNeutralMode(NeutralMode.Coast);
+}
+
 public void IdleSpeed() {
     _turret_power = 0.2;
-    _turret.setNeutralMode(NeutralMode.Coast); 
+    _shooter.setNeutralMode(NeutralMode.Coast); 
     _shooter.set(_turret_power);
 }
 
@@ -122,7 +130,7 @@ public void TurnLeft(){
     if (UI.getAutoAim()) {
         setTurret(-0.2);   //TODO test for number
     } else {
-        setTurret(-0.125);
+        setTurret(-0.25);
     }
 }
 
@@ -131,7 +139,7 @@ public void TurnRight(){
     if (UI.getAutoAim()) {
         setTurret(0.2);    //TODO test for number
     } else {
-        setTurret(0.125);
+        setTurret(0.25);
     }
 }
 
@@ -144,7 +152,7 @@ public boolean isReady(){
     } 
     else if ( position == ShootPosition.LOW )
     {
-        target = 7000;
+        target = 3000;
     } 
     else if ( position == ShootPosition.SAFE )
     {
@@ -161,8 +169,8 @@ public boolean isReady(){
 public void Update_Limelight_Tracking(){
         // These numbers must be tuned for your Robot!  Be careful!
         final double TURN_K = 0.0225;                     // how hard to turn toward the target
-        final double RIGHT_MAX = 0.3;                   // Max speed the turret motor can go
-        final double LEFT_MAX = -0.3;
+        final double RIGHT_MAX = 1;                   // Max speed the turret motor can go
+        final double LEFT_MAX = -1;
         final double RIGHT_MIN = 0.04;
         final double LEFT_MIN = -0.04;
 
@@ -211,10 +219,17 @@ public void Update_Limelight_Tracking(){
     }
 
   public double getTicks(){
-      return Math.abs(_turret.getSelectedSensorPosition());
+      return _turret.getSelectedSensorPosition();
   }
 
-  private void manualControl(){
+  public void softLimits(){
+      _turret.configForwardSoftLimitThreshold(-3000, 0);
+      _turret.configReverseSoftLimitThreshold(-121000.0, 0);
+      _turret.configForwardSoftLimitEnable(true, 0);
+      _turret.configReverseSoftLimitEnable(true, 0);
+  }
+
+  public void manualControl(){
     if(UI.getTurretLeft()) {
         TurnLeft();
         System.out.println("LEFT TURN");
