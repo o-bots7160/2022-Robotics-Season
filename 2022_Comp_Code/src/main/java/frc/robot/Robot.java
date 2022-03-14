@@ -135,6 +135,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
+    UI.getSpeedChange(); // Checks to see if the speed change buttons were pressed
+
     if(endGameTimer.get() > 85.0d){
       _LED.set(-.25);
       } else if(_intakeClass.haveBallHigh() && !_intakeClass.haveBallLow()){

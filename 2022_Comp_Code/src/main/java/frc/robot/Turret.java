@@ -156,7 +156,7 @@ public boolean isReady(){
     } 
     else if ( position == ShootPosition.SAFE )
     {
-        target = 13650; 
+        target = 13800; 
     } 
     
     if(_shooter.getSelectedSensorVelocity() > target) {

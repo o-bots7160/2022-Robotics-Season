@@ -97,4 +97,17 @@ public class UI {
     public static boolean getLimit() {
         return _buttons2.getRawButton(1);
     }
+
+    public static void getSpeedChange() {
+        if ( _joystick.getRawButton( 4 ) ) {
+            speedReducerY = 2;
+            speedReducerZ = 2.25;
+        } else if ( _joystick.getRawButton( 2 ) ) {
+            speedReducerY = 1;
+            speedReducerZ = 1.25;
+        } else {
+            speedReducerY = 1.25;
+            speedReducerZ = 1.75;
+        }
+    }
 }
