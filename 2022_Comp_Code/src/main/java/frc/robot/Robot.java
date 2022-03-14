@@ -127,7 +127,6 @@ public class Robot extends TimedRobot {
     _climberClass.reset();
     endGameTimer.reset();
     endGameTimer.start();
-    //UI.setBlue();
   }
 
   @Override
@@ -141,7 +140,7 @@ public class Robot extends TimedRobot {
     }else{
    _LED.set(-.45);
     }
- 
+    UI.getSpeedChange();
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
     
     if(UI.getIntake())
@@ -157,8 +156,10 @@ public class Robot extends TimedRobot {
     { 
       if (UI.getShooterLow()) {
         _turretClass.SetLow();
+
       } else {
         _turretClass.SetHigh();
+
       }
       _turretClass.Shoot();
       if (_turretClass.isReady())
@@ -193,9 +194,6 @@ public class Robot extends TimedRobot {
       _turretClass.Update_Limelight_Tracking();
     }else{
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
-      
-
-    
 	}
 
   if(UI.getClimbExtend()){
