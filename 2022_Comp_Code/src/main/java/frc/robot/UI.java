@@ -40,7 +40,7 @@ public class UI {
     public static boolean getIntake(){
         //slows turning speed down when intaking
         if (_joystick.getRawButton(1)){  
-            speedReducerZ = 2.0;               //TODO test for number
+            speedReducerZ = 2.25;               //TODO test for number
         }else{
             speedReducerZ = 1.75;              //TODO test for number
         }
@@ -96,18 +96,5 @@ public class UI {
 
     public static boolean getLimit() {
         return _buttons2.getRawButton(1);
-    }
-
-    public static boolean getSpeedChange() {
-        if ( _joystick.getRawButton( 4 ) ) {
-            speedReducerY = 4;
-            return true;
-        } else if ( _joystick.getRawButton( 2 ) ) {
-            speedReducerY = 1;
-            return true;
-        } else {
-            speedReducerY = 1.75;
-        }
-        return false;
     }
 }

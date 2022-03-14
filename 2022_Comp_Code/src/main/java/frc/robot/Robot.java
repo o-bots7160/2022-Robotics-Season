@@ -127,6 +127,10 @@ public class Robot extends TimedRobot {
     _climberClass.reset();
     endGameTimer.reset();
     endGameTimer.start();
+    _turretClass.zeroEncoders(); // Comment at match
+    _turretClass.softLimits(); // Comment at match
+    _turretClass.breakMode(); // Move this to Auton init at comp
+    _intakeClass.breakMode();
   }
 
   @Override
@@ -140,14 +144,14 @@ public class Robot extends TimedRobot {
     }else{
    _LED.set(-.45);
     }
-    UI.getSpeedChange();
+ 
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 
     
     if(UI.getIntake())
     {
       _intakeClass.Collect();
       if (_intakeClass.haveBallHigh()) {
-        _turretClass.IdleSpeed();
+        //_turretClass.IdleSpeed();
       } else {
         _turretClass.StopShooter();
       }
@@ -156,10 +160,12 @@ public class Robot extends TimedRobot {
     { 
       if (UI.getShooterLow()) {
         _turretClass.SetLow();
-
       } else {
+        if(!UI.getSafeZone()){ // Yes I know backwards
         _turretClass.SetHigh();
-
+        }else {
+          _turretClass.shootAtX();
+        }
       }
       _turretClass.Shoot();
       if (_turretClass.isReady())
@@ -183,17 +189,26 @@ public class Robot extends TimedRobot {
     {
         _intakeClass.Stop();
         if (_intakeClass.haveBallHigh()) {
-          _turretClass.IdleSpeed();
+          //_turretClass.IdleSpeed();
         } else {
           _turretClass.StopShooter();
         }
     }
 
     if(UI.getAutoAim()){
-      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-      _turretClass.Update_Limelight_Tracking();
+      _turretClass.breakMode();
+      if(UI.getShoot()){
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+        _turretClass.Update_Limelight_Tracking();
+      }else{
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+        _turretClass.manualControl();
+      }
     }else{
+      _turretClass.breakMode();
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
+      _turretClass.manualControl();
+    
 	}
 
   if(UI.getClimbExtend()){
@@ -225,17 +240,16 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    _turretClass.disabledInit();
+  }
 
   int step = 0;
   @Override
   public void testInit() {
-    _turretClass.teleopInit();
   } 
 
   @Override
   public void testPeriodic() {
-    
-    _turretClass.turretControl();
   }
 }
