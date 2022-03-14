@@ -100,13 +100,16 @@ public class UI {
 
     public static boolean getSpeedChange() {
         if ( _joystick.getRawButton( 4 ) ) {
-            speedReducerY = 4;
+            speedReducerY = 2;
+            speedReducerZ = 2.25;
             return true;
         } else if ( _joystick.getRawButton( 2 ) ) {
             speedReducerY = 1;
+            speedReducerZ = 1.25;
             return true;
         } else {
-            speedReducerY = 1.75;
+            speedReducerY = 1.25;
+            speedReducerZ = 1.75;
         }
         return false;
     }

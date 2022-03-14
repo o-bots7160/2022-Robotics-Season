@@ -156,10 +156,10 @@ public class Robot extends TimedRobot {
     { 
       if (UI.getShooterLow()) {
         _turretClass.SetLow();
-
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
       } else {
         _turretClass.SetHigh();
-
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
       }
       _turretClass.Shoot();
       if (_turretClass.isReady())
