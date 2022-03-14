@@ -29,7 +29,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;;
 public class Robot extends TimedRobot {
   private XboxController m_xboxController = new XboxController(0);
   //private PowerDistribution m_pd = new PowerDistribution();
-  private int deviceID = 1;
+  private int deviceID = 41;
   private int m_follow_deviceID = 0;    // CAN Id zero disables follow motor mode
   private boolean m_follow_motor_inverted = true;
   private double m_setPoint = 0;
@@ -62,13 +62,13 @@ public class Robot extends TimedRobot {
     // PID coefficients (starting point)
     // Small initial kFF and kP values, probably just big enough to do *something* 
     // and *probably* too small to overdrive an untuned system.
-    kFF = 0.02;
-    kP = 0.04;
+    kFF = 0.09375;
+    kP = 0.0;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kMaxOutput = 1.0;
-    kMinOutput = -1.0;
+    kMaxOutput = .75;
+    kMinOutput = -.75;
     maxRPM = 6300;     // free speed of Falcon 500 is listed as 6380
     m_rate_RPMpersecond = 1e10;    // 10 million effectively disables rate limiting
 
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Overshot", overshot);
     SmartDashboard.putNumber("Undershot", undershot);
     SmartDashboard.putNumber("Error (RPM)", 0.0);
-    SmartDashboard.putNumber("Follow CAN Id", m_follow_deviceID);
+    //SmartDashboard.putNumber("Follow CAN Id", m_follow_deviceID);
     SmartDashboard.putBoolean("Invert Follow Motor", m_follow_motor_inverted);
     SmartDashboard.putBoolean("Invert Lead Motor", m_invert_motor);
     mode_chooser.setDefaultOption("Fixed RPM (A, B, Y, X buttons)", "fixed");

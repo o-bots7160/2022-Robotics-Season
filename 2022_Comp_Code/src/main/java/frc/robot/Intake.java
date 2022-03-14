@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
@@ -77,6 +78,11 @@ public void intakeFlush(){
 public void Stop() {
     _intake.stopMotor();
     _index.stopMotor();
+}
+
+public void breakMode(){
+    _index.setNeutralMode(NeutralMode.Coast);
+    _intake.setNeutralMode(NeutralMode.Coast);
 }
 
 public boolean haveBallLow() {
