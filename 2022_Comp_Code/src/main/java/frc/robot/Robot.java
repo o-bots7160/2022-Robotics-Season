@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
       } else if (_intakeClass.haveBallHigh() && _intakeClass.haveBallLow()){
       _LED.set(.75);
     }else{
-   _LED.set(-.45);
+      _LED.set(-.43);
     }
  
     _westCoastDrive.arcadeDrive(UI.yInput(), UI.zInput()); 

@@ -38,12 +38,6 @@ public class UI {
     }
 
     public static boolean getIntake(){
-        //slows turning speed down when intaking
-        if (_joystick.getRawButton(1)){  
-            speedReducerZ = 2.25;               //TODO test for number
-        }else{
-            speedReducerZ = 1.75;              //TODO test for number
-        }
        return  _joystick.getRawButton(1);
     }
 
@@ -99,15 +93,21 @@ public class UI {
     }
 
     public static void getSpeedChange() {
-        if ( _joystick.getRawButton( 4 ) ) {
-            speedReducerY = 2;
-            speedReducerZ = 2.25;
-        } else if ( _joystick.getRawButton( 2 ) ) {
-            speedReducerY = 1;
-            speedReducerZ = 1.25;
-        } else {
-            speedReducerY = 1.25;
-            speedReducerZ = 1.75;
+        if(getIntake()){
+            speedReducerZ = 2.25;    
+        }else{
+            if ( _joystick.getRawButton( 4 ) || _joystick.getRawButton( 3 )) {
+                speedReducerY = 2;
+                speedReducerZ = 2.25;
+            } else if ( _joystick.getRawButton( 2 ) ) {
+                speedReducerY = 1;
+                speedReducerZ = 1.25;
+            } else {
+                speedReducerY = 1.25;
+                speedReducerZ = 1.75;
+            }
         }
+
+        
     }
 }
