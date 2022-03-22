@@ -22,12 +22,54 @@ public class Robot extends TimedRobot {
   private final Timer   endGameTimer              = new Timer(); 
 
   private enum AUTO {
-    LAUNCHAUTO
+    LAUNCHAUTO,
+    CUSTOM_1, // Jaiden
+    CUSTOM_2, // Quinn
+    CUSTOM_3, // Sam
+    CUSTOM_4, // Ashley
+    CUSTOM_5, // Olivia
+    CUSTOM_6, // Ethan
   }
 
   private AUTO autonTracker;
 
   private  enum LAUNCHAUTO {
+    BALLPICKUP,
+    TURN,
+    SHOOT,
+    STOP
+  }
+  private  enum CUSTOM_1 {
+    BALLPICKUP,
+    TURN,
+    SHOOT,
+    STOP
+  }
+  private  enum CUSTOM_2 {
+    BALLPICKUP,
+    TURN,
+    SHOOT,
+    STOP
+  }
+  private  enum CUSTOM_3 {
+    BALLPICKUP,
+    TURN,
+    SHOOT,
+    STOP
+  }
+  private  enum CUSTOM_4 {
+    BALLPICKUP,
+    TURN,
+    SHOOT,
+    STOP
+  }
+  private  enum CUSTOM_5 {
+    BALLPICKUP,
+    TURN,
+    SHOOT,
+    STOP
+  }
+  private  enum CUSTOM_6 {
     BALLPICKUP,
     TURN,
     SHOOT,
@@ -77,6 +119,18 @@ public class Robot extends TimedRobot {
         autonTracker = AUTO.LAUNCHAUTO;
         lA = LAUNCHAUTO.BALLPICKUP;
         break;
+      case CUSTOM_1:
+      break;
+      case CUSTOM_2:
+      break;
+      case CUSTOM_3:
+      break;
+      case CUSTOM_4:
+      break;
+      case CUSTOM_5:
+      break;
+      case CUSTOM_6:
+      break;
     }
   }
 
@@ -132,7 +186,110 @@ public class Robot extends TimedRobot {
         break;
       }
   }
+
+  private void custom_1 () {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+    switch(lA){
+        
+        case BALLPICKUP:
+        break;
+
+        case TURN:
+        break;
+
+        case SHOOT:
+        break;
+
+        case STOP:
+        break;
+      }
+  }
   
+  private void custom_2 () {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+    switch(lA){
+        
+        case BALLPICKUP:
+        break;
+
+        case TURN:
+        break;
+
+        case SHOOT:
+        break;
+
+        case STOP:
+        break;
+      }
+  }
+  private void custom_3 () {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+    switch(lA){
+        
+        case BALLPICKUP:
+        break;
+
+        case TURN:
+        break;
+
+        case SHOOT:
+        break;
+
+        case STOP:
+        break;
+      }
+  }
+  private void custom_4 () {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+    switch(lA){
+        
+        case BALLPICKUP:
+        break;
+
+        case TURN:
+        break;
+
+        case SHOOT:
+        break;
+
+        case STOP:
+        break;
+      }
+  }
+  private void custom_5 () {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+    switch(lA){
+        
+        case BALLPICKUP:
+        break;
+
+        case TURN:
+        break;
+
+        case SHOOT:
+        break;
+
+        case STOP:
+        break;
+      }
+  }
+  private void custom_6 () {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
+    switch(lA){
+        
+        case BALLPICKUP:
+        break;
+
+        case TURN:
+        break;
+
+        case SHOOT:
+        break;
+
+        case STOP:
+        break;
+      }
+  }
   @Override
   public void teleopInit() {
     _climberClass.reset();
