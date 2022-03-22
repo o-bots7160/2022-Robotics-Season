@@ -29,11 +29,11 @@ public class Climber {
 
     //pushes the _Climber out
     public void Extend() {
-        if (_Climber.getSelectedSensorPosition() >= 611586) {  //TODO test for number
-            _Climber.stopMotor();
-        } else {
+        //if (_Climber.getSelectedSensorPosition() >= 611586) {  
+        //    _Climber.stopMotor();
+        //} else {
             _Climber.set(.90);
-        }
+        //}
     }
 
     //pulls the _Climber in

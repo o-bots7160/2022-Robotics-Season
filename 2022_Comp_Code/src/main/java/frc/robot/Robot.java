@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,6 +41,14 @@ public class Robot extends TimedRobot {
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     //_chooser.addOption(name, object);
     //UI.setBlue();
+    /*Thread camera =
+    new Thread(() ->{
+      UsbCamera cameraServer = CameraServer.startAutomaticCapture(1);
+      cameraServer.setVideoMode(PixelFormat.kMJPEG, 320, 240, 15);
+    });
+    camera.setDaemon(true);
+    camera.start();*/
+
   }
 
   @Override
@@ -97,7 +108,7 @@ public class Robot extends TimedRobot {
         break;
 
         case TURN:
-        if(_westCoastDrive.turnTo(95, 20)){
+        if(_westCoastDrive.turnTo(94, 20)){
           _intakeClass.Collect();
         }else{
           timer.reset();
@@ -165,8 +176,10 @@ public class Robot extends TimedRobot {
         _turretClass.SetLow();
       } else {
         if(!UI.getSafeZone()){ // Yes I know backwards
-        _turretClass.SetHigh();
+          //NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1); 
+          _turretClass.SetHigh();
         }else {
+         //NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
           _turretClass.shootAtX();
         }
       }
@@ -200,11 +213,14 @@ public class Robot extends TimedRobot {
 
     if(UI.getAutoAim()){
       _turretClass.breakMode();
+      if(!UI.getSafeZone()){ // Yes I know backwards
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1); 
+      }else {
+       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+      }
       if(UI.getShoot()){
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
         _turretClass.Update_Limelight_Tracking();
       }else{
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
         _turretClass.manualControl();
       }
     }else{
