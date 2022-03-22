@@ -92,4 +92,11 @@ public boolean haveBallLow() {
 public boolean haveBallHigh() {
     return (_highDelay.isOn( ) );
 }  
+
+public boolean AutonSecondDrive() {
+    if( haveBallLow() && haveBallHigh() ) {
+        return true;
+    }else
+    return false;
+}
 }

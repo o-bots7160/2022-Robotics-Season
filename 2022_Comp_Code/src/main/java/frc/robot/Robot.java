@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
@@ -40,9 +42,13 @@ public class Robot extends TimedRobot {
     STOP
   }
   private  enum CUSTOM_1 {
-    BALLPICKUP,
-    TURN,
-    SHOOT,
+    FIRSTBALLPICKUP,
+    FIRSTTURN,
+    FIRSTSHOOT,
+    SECONDTURN,
+    SECONDBALLPICKUP,
+    THIRDTURN,
+    SECONDSHOOT,
     STOP
   }
   private  enum CUSTOM_2 {
@@ -76,6 +82,7 @@ public class Robot extends TimedRobot {
     STOP
   }
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
+  private CUSTOM_1 C1 = CUSTOM_1.FIRSTBALLPICKUP;
 
   @Override
   public void robotInit() {
@@ -120,6 +127,8 @@ public class Robot extends TimedRobot {
         lA = LAUNCHAUTO.BALLPICKUP;
         break;
       case CUSTOM_1:
+        autonTracker = AUTO.CUSTOM_1;
+        C1 = CUSTOM_1.FIRSTBALLPICKUP;
       break;
       case CUSTOM_2:
       break;
@@ -140,6 +149,11 @@ public class Robot extends TimedRobot {
     switch(autonTracker){
       case LAUNCHAUTO:
       launchAuto();
+      break;
+    }
+    switch(autonTracker){
+      case CUSTOM_1:
+      custom_1();
       break;
     }
     _westCoastDrive.setBrakeMode();
@@ -189,19 +203,87 @@ public class Robot extends TimedRobot {
 
   private void custom_1 () {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
+    switch(C1){
         
-        case BALLPICKUP:
-        break;
+      case FIRSTBALLPICKUP:
+      _turretClass.SetHigh();
+      _intakeClass.Collect();
+      if(_westCoastDrive.moveTo(65, 9)){
+        System.out.println("Is driving");
+        
+      }else{
+        C1 = CUSTOM_1.FIRSTTURN;
+      }
+      break;
 
-        case TURN:
-        break;
+      case FIRSTTURN:
+      if(_westCoastDrive.turnTo(94, 20)){
+        _intakeClass.Collect();
+      }else{
+        timer.reset();
+        timer.start();
+        C1 = CUSTOM_1.FIRSTSHOOT;
+      }
+      break;
 
-        case SHOOT:
-        break;
+      case FIRSTSHOOT:
+      _turretClass.Update_Limelight_Tracking();
+      _turretClass.Shoot();
+      if(_turretClass.isReady()) {
+        _intakeClass.Shoot();
+      }else if (timer.hasElapsed( 10 )) {
+        _turretClass.StopShooter();
+        _intakeClass.Stop();
+        C1 = CUSTOM_1.SECONDTURN;
+      }
+      break;
 
-        case STOP:
-        break;
+      case SECONDTURN:
+      if(_westCoastDrive.turnTo(65, 20)){
+        _intakeClass.Collect();
+        C1 = CUSTOM_1.SECONDBALLPICKUP;
+      }
+      break;
+
+      case SECONDBALLPICKUP:
+      _turretClass.SetHigh();
+      _intakeClass.Collect();
+      if(_westCoastDrive.moveTo(150, 9)){
+        System.out.println("Is driving");
+      }else if(_intakeClass.AutonSecondDrive()) {
+        C1 = CUSTOM_1.THIRDTURN;
+      }
+      break;
+
+      case THIRDTURN:
+      if(_westCoastDrive.turnTo(180, 20)) {
+        _intakeClass.Collect();
+        _turretClass.AutonCenterTurret();
+      }else{
+        timer.reset();
+        timer.start();
+        C1 = CUSTOM_1.SECONDSHOOT;
+      }
+      break;
+
+      case SECONDSHOOT:
+      if(_westCoastDrive.moveTo(150, 9)) {
+        System.out.println("Is driving");
+      }else {
+        _turretClass.Update_Limelight_Tracking();
+        _turretClass.Shoot();
+        if(_turretClass.isReady()) {
+          _intakeClass.Shoot();
+        }else if (timer.hasElapsed(10)) {
+          _turretClass.StopShooter();
+          _intakeClass.Stop();
+          C1 = CUSTOM_1.STOP;
+        }
+      }
+      break;
+
+      case STOP:
+      break;
       }
   }
   

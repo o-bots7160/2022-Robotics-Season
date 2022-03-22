@@ -50,6 +50,11 @@ public class Turret {
         RIGHT
     }
 
+    public Turret( ){
+        _shooter.configFactoryDefault();
+		_shooter.config_kF( 0, 0.01,  30);
+		_shooter.config_kP( 0, 0.001, 30);
+    }
 
     private zeroedDirection zD;
 
@@ -337,4 +342,10 @@ public void Update_Limelight_Tracking(){
 
   }
 
+  public void AutonCenterTurret() {
+      target = rToC;
+      lesserSlow = rToCS;
+      greaterSlow = lToCS;
+  }
+  
 }
