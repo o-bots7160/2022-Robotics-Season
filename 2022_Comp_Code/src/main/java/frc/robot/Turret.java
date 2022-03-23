@@ -1,11 +1,13 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Turret {
@@ -25,7 +27,7 @@ public class Turret {
 
     private double m_LimelightSteerCommand = 0.0;
     private ShootPosition position = ShootPosition.LOW;
-    private double _turret_power;
+    private double _turret_speed;
 
     private double lToR                       = 126774.0;  // Left To Right
     private double lToRS                      = 114962.0;  // Left To Right Slow Down Distance
@@ -52,8 +54,11 @@ public class Turret {
 
     public Turret( ){
         _shooter.configFactoryDefault();
-		_shooter.config_kF( 0, 0.01,  30);
-		_shooter.config_kP( 0, 0.001, 30);
+		_shooter.config_kF( 0, 0.045,  30); //determined by CTRE tuner
+		_shooter.config_kP( 0, 0.25,           30);
+		_shooter.config_kI( 0, 0.001,          30);
+		_shooter.config_kD( 0, 9.0,            30);
+		_shooter.config_IntegralZone( 0, 50.0, 30);
     }
 
     private zeroedDirection zD;
@@ -68,7 +73,7 @@ public class Turret {
 
 
 protected void execute(){
-    //SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
     //SmartDashboard.putNumber("Turrent Position", offset - _turret.getSelectedSensorPosition());
     //SmartDashboard.putBoolean("Target?", m_LimelightHasValidTarget);
     //Update_Limelight_Tracking();
@@ -78,7 +83,7 @@ protected void execute(){
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set(_turret_power);
+    _shooter.set( ControlMode.Velocity, _turret_speed);
     if (isShooting == false){
         shotTimer.reset();
         shotTimer.start();
@@ -95,27 +100,30 @@ public void disabledInit(){
 }
 
 public void IdleSpeed() {
-    _turret_power = 0.2;
+    _turret_speed = 300;
     _shooter.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set(_turret_power);
+    _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     position = ShootPosition.SAFE;
-    _turret_power = 0.72;
+    _turret_speed = 14200;
+    _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     position = ShootPosition.LOW;
-    _turret_power = 0.40;
+    _turret_speed = 3000;
+    _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
 //sets shooter to shoot into the upper hub from around the tarmac
 public void shootAtX(){
     position = ShootPosition.HIGH;
-    _turret_power = 0.64;
+    _turret_speed = 12750;
+    _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
 //stops shooter motor
@@ -150,21 +158,9 @@ public void TurnRight(){
 
 //sets a 5 second delay so the _shooter can get up to speed
 public boolean isReady(){
-    double target = 0;
-    if ( position == ShootPosition.HIGH )
-    {
-        target = 12750;//12750 was used during match 6 to high???
-    } 
-    else if ( position == ShootPosition.LOW )
-    {
-        target = 3000;
-    } 
-    else if ( position == ShootPosition.SAFE )
-    {
-        target = 13800; //13800 was used during match 6 to high???
-    } 
-    
-    if(_shooter.getSelectedSensorVelocity() > target) {
+    double error = Math.abs( _shooter.getSelectedSensorVelocity() - _turret_speed );
+
+    if( error < 100 ) {
         return true;
     }else {
         return false;

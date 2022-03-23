@@ -54,11 +54,11 @@ public class UI {
     }
 
     public static boolean getShoot(){
-        return _buttons2.getRawButton( 11 );
+        return _buttons2.getRawButton( 11 ) || _joystick.getRawButton(8);
     }
 
     public static boolean getShooterLow(){
-        return !_buttons2.getRawButton( 7 );
+        return _buttons2.getRawButton( 7 );
     }
 
     public static boolean getClimbExtend(){
@@ -78,7 +78,7 @@ public class UI {
     }
     
     public static boolean getSafeZone(){
-        return _buttons2.getRawButton( 6 );
+        return _buttons2.getRawButton( 6 ) || _joystick.getRawButton(7);
     }
     public static boolean getIgnoreLimits() {
         return _joystick.getRawButton( 7);

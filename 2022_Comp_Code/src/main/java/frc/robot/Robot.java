@@ -217,7 +217,7 @@ public class Robot extends TimedRobot {
       break;
 
       case FIRSTTURN:
-      if(_westCoastDrive.turnTo(94, 20)){
+      if(_westCoastDrive.turnTo(95, 20)){
         _intakeClass.Collect();
       }else{
         timer.reset();
@@ -239,7 +239,7 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDTURN:
-      if(_westCoastDrive.turnTo(65, 20)){
+      if(_westCoastDrive.turnTo(-65, 20)){
         _intakeClass.Collect();
         C1 = CUSTOM_1.SECONDBALLPICKUP;
       }
@@ -248,7 +248,7 @@ public class Robot extends TimedRobot {
       case SECONDBALLPICKUP:
       _turretClass.SetHigh();
       _intakeClass.Collect();
-      if(_westCoastDrive.moveTo(150, 9)){
+      if(_westCoastDrive.moveTo(130, 9)){
         System.out.println("Is driving");
       }else if(_intakeClass.AutonSecondDrive()) {
         C1 = CUSTOM_1.THIRDTURN;
@@ -267,7 +267,7 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDSHOOT:
-      if(_westCoastDrive.moveTo(150, 9)) {
+      if(_westCoastDrive.moveTo(130, 9)) {
         System.out.println("Is driving");
       }else {
         _turretClass.Update_Limelight_Tracking();
@@ -414,7 +414,7 @@ public class Robot extends TimedRobot {
       if (UI.getShooterLow()) {
         _turretClass.SetLow();
       } else {
-        if(!UI.getSafeZone()){ // Yes I know backwards
+        if (!UI.getSafeZone()){ // Yes I know backwards
           //NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1); 
           _turretClass.SetHigh();
         }else {
