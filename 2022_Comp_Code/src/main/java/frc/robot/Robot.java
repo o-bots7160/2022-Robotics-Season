@@ -83,12 +83,18 @@ public class Robot extends TimedRobot {
   }
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
   private CUSTOM_1 C1 = CUSTOM_1.FIRSTBALLPICKUP;
+  private CUSTOM_2 C2 = CUSTOM_2.BALLPICKUP;
 
   @Override
   public void robotInit() {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
-    //_chooser.addOption(name, object);
+    _chooser.addOption("Custom1", AUTO.CUSTOM_1);
+    _chooser.addOption("Custom2", AUTO.CUSTOM_2);
+    _chooser.addOption("Custom3", AUTO.CUSTOM_3);
+    _chooser.addOption("Custom4", AUTO.CUSTOM_4);
+    _chooser.addOption("Custom5", AUTO.CUSTOM_5);
+    _chooser.addOption("Custom6", AUTO.CUSTOM_6);
     //UI.setBlue();
     /*Thread camera =
     new Thread(() ->{
@@ -131,6 +137,8 @@ public class Robot extends TimedRobot {
         C1 = CUSTOM_1.FIRSTBALLPICKUP;
       break;
       case CUSTOM_2:
+      autonTracker = AUTO.CUSTOM_2;
+      C2 = CUSTOM_2.BALLPICKUP;
       break;
       case CUSTOM_3:
       break;
@@ -292,6 +300,12 @@ public class Robot extends TimedRobot {
     switch(lA){
         
         case BALLPICKUP:
+        _intakeClass.Collect();
+        if ( _westCoastDrive.moveTo(65, 8) ) {
+          System.out.println("We gaming");
+        } else {
+          C2 = CUSTOM_2.TURN;
+        }
         break;
 
         case TURN:
@@ -404,7 +418,7 @@ public class Robot extends TimedRobot {
     {
       _intakeClass.Collect();
       if (_intakeClass.haveBallHigh()) {
-        //_turretClass.IdleSpeed();
+        _turretClass.IdleSpeed();
       } else {
         _turretClass.StopShooter();
       }

@@ -54,7 +54,7 @@ public class Turret {
 
     public Turret( ){
         _shooter.configFactoryDefault();
-		_shooter.config_kF( 0, 0.045,  30); //determined by CTRE tuner
+		_shooter.config_kF( 0, 0.045,          30); //determined by CTRE tuner
 		_shooter.config_kP( 0, 0.25,           30);
 		_shooter.config_kI( 0, 0.001,          30);
 		_shooter.config_kD( 0, 9.0,            30);
@@ -100,7 +100,7 @@ public void disabledInit(){
 }
 
 public void IdleSpeed() {
-    _turret_speed = 300;
+    _turret_speed = 1500;
     _shooter.setNeutralMode(NeutralMode.Coast); 
     _shooter.set( ControlMode.Velocity, _turret_speed);
 }
