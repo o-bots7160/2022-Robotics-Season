@@ -13,6 +13,7 @@ public class Intake {
     
     private final WPI_TalonFX _intake    = new WPI_TalonFX(30);
     private final WPI_TalonFX _index     = new WPI_TalonFX(31); 
+    private final WPI_TalonFX _OTBI      = new WPI_TalonFX(32);
     private final TimeOfFlight _catch    = new TimeOfFlight(101);
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
@@ -23,7 +24,9 @@ public class Intake {
 protected void execute() {
     //SmartDashboard.putNumber("_catch", _catch.getRange());
     //SmartDashboard.putNumber("_barrel", _barrel.getRange());
-    System.out.println( _index.getSelectedSensorPosition());
+    //System.out.println( _index.getSelectedSensorPosition());
+    System.out.println( _OTBI.getSelectedSensorPosition());
+    //56408.0 Limit
 }
 
 //sets Ranging Mode on TOF sensors
