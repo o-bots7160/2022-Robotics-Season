@@ -215,7 +215,7 @@ public void Update_Limelight_Tracking(){
         }
      }
 
-    public void setCoast(){
+    public void setCoastMode(){
         _turret.setNeutralMode(NeutralMode.Coast);
     }
 

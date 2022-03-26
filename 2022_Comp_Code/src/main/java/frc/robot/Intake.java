@@ -13,7 +13,7 @@ public class Intake {
     
     private final WPI_TalonFX _intake    = new WPI_TalonFX(30);
     private final WPI_TalonFX _index     = new WPI_TalonFX(31); 
-    private final WPI_TalonFX _OTBI      = new WPI_TalonFX(32);
+    private final WPI_TalonFX _OTBI      = new WPI_TalonFX(32); //The motor to lower the intake
     private final TimeOfFlight _catch    = new TimeOfFlight(101);
     private final TimeOfFlight _barrel   = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
@@ -36,35 +36,58 @@ public Intake() {
 
     _index.configFactoryDefault();
     //_index.config_kF( 0, 0.125,  30); //determined by CTRE tuner
-    _index.config_kP( 0, 0.125,          30);
-    //_index.config_kI( 0, 0.001,          30);
-    //_index.config_kD( 0, 9.0,            30);
-    //_index.config_IntegralZone( 0, 50.0, 30);
+    _index.config_kP( 0, 0.125,           30);
+    _index.config_kI( 0, 0.00125,         30);
+    _index.config_kD( 0, 12.0,            30);
+    _index.config_IntegralZone( 0, 400.0, 30);
     _index.setNeutralMode(NeutralMode.Brake);
+    zeroEncoders();
+    OTBILimit();
 }    
+
+public void zeroEncoders() {
+    _OTBI.setSelectedSensorPosition(0);
+}
+
+public void LowerIntake() {
+    _OTBI.set(0.5);
+}
+
+public void RaiseIntake() {
+    _OTBI.set(-0.5);
+}
+
+public void OTBILimit() {
+
+    _OTBI.configFactoryDefault();
+    _OTBI.setNeutralMode( NeutralMode.Brake);
+    _OTBI.configReverseSoftLimitThreshold( -500.0, 10);
+    _OTBI.configForwardSoftLimitThreshold( 56000.0, 10);
+    _OTBI.configForwardSoftLimitEnable(true, 10);
+    _OTBI.configReverseSoftLimitEnable(true, 10);
+}
 
 //uses TOF sensors to intake or not intake  
 public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
-        _index.stopMotor();
+        //_index.stopMotor();
         _intake.stopMotor();
         //_turretClass.IdleSpeed();
     }else if( haveBallHigh() && !haveBallLow()) {
-        _index.stopMotor();
-        _intake.set(0.90);
+        //_index.stopMotor();
+        _intake.set(0.95);
         //_turretClass.IdleSpeed();
     }else if( !haveBallHigh() && haveBallLow()) {
         if ( ! indexing)
         {
             indexing = true;
             _index.setSelectedSensorPosition( 0 );
-            _index.set( ControlMode.Position, 76250 );
+            _index.set( ControlMode.Position, 82000 );
         }
         _intake.stopMotor();
-        //_turretClass.IdleSpeed();
     }else if( !haveBallHigh() && !haveBallLow()){
         _index.stopMotor();
-        _intake.set(0.90);
+        _intake.set(0.95);
     }
 }
 
@@ -100,9 +123,10 @@ public void Stop() {
     }
 }
 
-public void breakMode(){
+public void setCoastMode(){
     _index.setNeutralMode(NeutralMode.Coast);
     _intake.setNeutralMode(NeutralMode.Coast);
+    _OTBI.setNeutralMode( NeutralMode.Coast);
 }
 
 public boolean haveBallLow() {

@@ -394,13 +394,16 @@ public class Robot extends TimedRobot {
     _turretClass.zeroEncoders(); // Comment at match
     _turretClass.softLimits(); // Comment at match
     _turretClass.breakMode(); // Move this to Auton init at comp
-    _intakeClass.breakMode();
+    _intakeClass.setCoastMode();
+    _intakeClass.zeroEncoders();
+    _intakeClass.OTBILimit();
   }
 
   @Override
   public void teleopPeriodic() {
 
     UI.getSpeedChange(); // Checks to see if the speed change buttons were pressed
+
 
     if(endGameTimer.get() > 85.0d){
       _LED.set(-.25);
@@ -416,6 +419,7 @@ public class Robot extends TimedRobot {
     
     if(UI.getIntake())
     {
+      _intakeClass.LowerIntake();
       _intakeClass.Collect();
       if (_intakeClass.haveBallHigh()) {
         _turretClass.IdleSpeed();
@@ -456,12 +460,13 @@ public class Robot extends TimedRobot {
     }
     else
     {
-        _intakeClass.Stop();
-        if (_intakeClass.haveBallHigh()) {
-          //_turretClass.IdleSpeed();
-        } else {
-          _turretClass.StopShooter();
-        }
+      _intakeClass.Stop();
+      _intakeClass.RaiseIntake();
+      if (_intakeClass.haveBallHigh()) {
+        //_turretClass.IdleSpeed();
+      } else {
+        _turretClass.StopShooter();
+      }
     }
 
     if(UI.getAutoAim()){
@@ -508,7 +513,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     _westCoastDrive.setCoastMode();
     _climberClass.setCoastMode();
-    _turretClass.setCoast();
+    _turretClass.setCoastMode();
+    _intakeClass.setCoastMode();
   }
 
   @Override
