@@ -9,16 +9,15 @@ import com.playingwithfusion.TimeOfFlight.RangingMode;
 //import edu.wpi.first.wpilibj.motorcontrol.Spark;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Intake {
-    
-    private final WPI_TalonFX _intake    = new WPI_TalonFX(30);
-    private final WPI_TalonFX _index     = new WPI_TalonFX(31); 
-    private final WPI_TalonFX _OTBI      = new WPI_TalonFX(32); //The motor to lower the intake
-    private final TimeOfFlight _catch    = new TimeOfFlight(101);
-    private final TimeOfFlight _barrel   = new TimeOfFlight(102);
-    private final OnOffDelay _lowDelay   = new OnOffDelay( 0.05, 1, () -> _catch.getRange() < 100  );
-    private final OnOffDelay _highDelay  = new OnOffDelay( 0.0, 0.15, () -> _barrel.getRange() < 100 );
-    private       boolean     indexing   = false;
+public class IntakeAssembly {
+    private final IntakeIndexer _indexer;
+    private final WPI_TalonFX _intake     = new WPI_TalonFX(30);
+    private final WPI_TalonFX _OTBI       = new WPI_TalonFX(32); //The motor to lower the intake
+    private final TimeOfFlight _catch     = new TimeOfFlight(101);
+    private final TimeOfFlight _barrel    = new TimeOfFlight(102);
+    private final OnOffDelay _lowDelay    = new OnOffDelay( 0.05, 0.4, () -> _catch.getRange() < 100  );
+    private final OnOffDelay _highDelay   = new OnOffDelay( 0.1, 0.15, () -> _barrel.getRange() < 100 );
+    private       boolean     indexing    = false;
 
 //puts stuff on the Smart Dashboard
 protected void execute() {
@@ -30,17 +29,11 @@ protected void execute() {
 }
 
 //sets Ranging Mode on TOF sensors
-public Intake() {
+public IntakeAssembly() {
+    _indexer = new IntakeIndexer( () -> haveBallLow() );
     _catch.setRangingMode    ( RangingMode.Short, 24.0d );
     _barrel.setRangingMode   ( RangingMode.Short, 24.0d );
 
-    _index.configFactoryDefault();
-    //_index.config_kF( 0, 0.125,  30); //determined by CTRE tuner
-    _index.config_kP( 0, 0.125,           30);
-    _index.config_kI( 0, 0.00125,         30);
-    _index.config_kD( 0, 12.0,            30);
-    _index.config_IntegralZone( 0, 400.0, 30);
-    _index.setNeutralMode(NeutralMode.Brake);
     zeroEncoders();
     OTBILimit();
 }    
@@ -62,7 +55,7 @@ public void OTBILimit() {
     _OTBI.configFactoryDefault();
     _OTBI.setNeutralMode( NeutralMode.Brake);
     _OTBI.configReverseSoftLimitThreshold( -500.0, 10);
-    _OTBI.configForwardSoftLimitThreshold( 56000.0, 10);
+    _OTBI.configForwardSoftLimitThreshold( 54000.0, 10);
     _OTBI.configForwardSoftLimitEnable(true, 10);
     _OTBI.configReverseSoftLimitEnable(true, 10);
 }
@@ -70,48 +63,43 @@ public void OTBILimit() {
 //uses TOF sensors to intake or not intake  
 public void Collect() {    
     if( haveBallLow() && haveBallHigh() ) {
-        //_index.stopMotor();
+        _indexer.Stop();
         _intake.stopMotor();
         //_turretClass.IdleSpeed();
     }else if( haveBallHigh() && !haveBallLow()) {
-        //_index.stopMotor();
+        _indexer.Stop();
         _intake.set(0.95);
         //_turretClass.IdleSpeed();
     }else if( !haveBallHigh() && haveBallLow()) {
-        if ( ! indexing)
-        {
-            indexing = true;
-            _index.setSelectedSensorPosition( 0 );
-            _index.set( ControlMode.Position, 82000 );
-        }
+        _indexer.Collect();
         _intake.stopMotor();
     }else if( !haveBallHigh() && !haveBallLow()){
-        _index.stopMotor();
+        _indexer.Stop();
         _intake.set(0.95);
     }
 }
 
-public void feedUp(){
-    _index.set(0.70);
-}
+// public void feedUp(){
+//     _index.set(0.70);
+// }
 
 //moves cargo up when the shoot button is pressed
 public void Shoot(){
     indexing = false;
     _intake.set(0.40);
-    _index.set(0.40);
+    _indexer.Shoot();
 }
 
 //spits all cargo out
 public void FlushHigh(){
     indexing = false;
     _intake.set(-0.90);
-    _index.set(-0.40);
 }
 
 //spits the lower cargo out
-public void intakeFlush(){
+public void intakeFlush() {
     _intake.set(-0.60);
+    _indexer.Flush();
 }
 
 //stops _intake & _index motors
@@ -119,12 +107,12 @@ public void Stop() {
     _intake.stopMotor();
     if ( ! indexing )
     {
-        _index.stopMotor();
+        _indexer.Stop();
     }
 }
 
 public void setCoastMode(){
-    _index.setNeutralMode(NeutralMode.Coast);
+    _indexer.disable( );
     _intake.setNeutralMode(NeutralMode.Coast);
     _OTBI.setNeutralMode( NeutralMode.Coast);
 }

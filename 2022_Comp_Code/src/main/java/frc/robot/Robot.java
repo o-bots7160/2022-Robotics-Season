@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 public class Robot extends TimedRobot {
 
   private final WestCoastDrive _westCoastDrive    = new WestCoastDrive(); 
-  private final Intake _intakeClass               = new Intake();
+  private final IntakeAssembly _intakeClass       = new IntakeAssembly();
   private final Turret _turretClass               = new Turret();
   private final SendableChooser<AUTO> _chooser    = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
