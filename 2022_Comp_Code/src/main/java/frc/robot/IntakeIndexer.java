@@ -8,11 +8,15 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 public class IntakeIndexer {
     private final WPI_TalonFX _index   = new WPI_TalonFX(31);
     private BooleanSupplier   ballLow;
+    private BooleanSupplier   indexFull;
+    private Boolean           collecting = false;
 
-    public IntakeIndexer( BooleanSupplier new_ballLow) {
+    public IntakeIndexer( BooleanSupplier new_ballLow,
+                          BooleanSupplier new_indexFull) {
         _index.configFactoryDefault();
         _index.setNeutralMode(NeutralMode.Brake);
-        ballLow = new_ballLow;
+        ballLow   = new_ballLow;
+        indexFull = new_indexFull;
     }
 
     public void disable() {
@@ -20,18 +24,24 @@ public class IntakeIndexer {
         _index.setNeutralMode(NeutralMode.Coast);
     }
     public void Collect() {
-        if ( ballLow.getAsBoolean() ) {
-            _index.set( ControlMode.PercentOutput, 0.20 );
+        if ( ! collecting && ballLow.getAsBoolean() && ! indexFull.getAsBoolean() ) {
+            collecting = true;
+            _index.set( ControlMode.PercentOutput, 0.40 );
         }
         else {
-            _index.stopMotor();
+            StopAfterBall();
         }
     }
     public void Flush() {
         _index.set( ControlMode.PercentOutput, -0.40);
     }
-    public void Stop() {
-        if ( ! ballLow.getAsBoolean() ) {
+    public void StopAfterBall() {
+        if ( collecting ){
+            if ( ! ballLow.getAsBoolean() ) {
+                collecting = false;
+                _index.stopMotor();
+            }
+        } else {
             _index.stopMotor();
         }
     }

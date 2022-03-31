@@ -21,7 +21,8 @@ public class Robot extends TimedRobot {
   private final Climber _climberClass             = new Climber();
   private final Timer   timer                     = new Timer();
   private final Spark _LED                        = new Spark(1);
-  private final Timer   endGameTimer              = new Timer(); 
+  private final Timer   endGameTimer              = new Timer();
+  private       Boolean shooting                  = false; 
 
   private enum AUTO {
     LAUNCHAUTO,
@@ -395,8 +396,7 @@ public class Robot extends TimedRobot {
     _turretClass.softLimits(); // Comment at match
     _turretClass.breakMode(); // Move this to Auton init at comp
     _intakeClass.setCoastMode();
-    _intakeClass.zeroEncoders();
-    _intakeClass.OTBILimit();
+    _intakeClass.ZeroEncoders();
   }
 
   @Override
@@ -419,7 +419,6 @@ public class Robot extends TimedRobot {
     
     if(UI.getIntake())
     {
-      _intakeClass.LowerIntake();
       _intakeClass.Collect();
       if (_intakeClass.haveBallHigh()) {
         _turretClass.IdleSpeed();
@@ -441,8 +440,9 @@ public class Robot extends TimedRobot {
         }
       }
       _turretClass.Shoot();
-      if (_turretClass.isReady())
+      if (_turretClass.isReady()|| shooting)
       {
+        shooting = true;
         _intakeClass.Shoot();
       }
       else
@@ -460,8 +460,8 @@ public class Robot extends TimedRobot {
     }
     else
     {
+      shooting = false;
       _intakeClass.Stop();
-      _intakeClass.RaiseIntake();
       if (_intakeClass.haveBallHigh()) {
         //_turretClass.IdleSpeed();
       } else {
