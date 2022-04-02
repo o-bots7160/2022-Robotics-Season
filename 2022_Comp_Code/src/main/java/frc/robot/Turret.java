@@ -105,6 +105,12 @@ public void IdleSpeed() {
     _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
+public void AutonIdleSpeed() {
+    _turret_speed = 7500;
+    _shooter.setNeutralMode(NeutralMode.Coast); 
+    _shooter.set( ControlMode.Velocity, _turret_speed);
+}
+
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     position = ShootPosition.SAFE;

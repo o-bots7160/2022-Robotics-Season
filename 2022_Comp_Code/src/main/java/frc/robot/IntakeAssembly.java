@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
@@ -82,6 +81,10 @@ public void setCoastMode(){
     _OTBI.disable();
 }
 
+public void StowIntake() {
+    _OTBI.StowIntake();
+}
+
 public boolean haveBallLow() {
     return (_lowDelay.isOn( ) );
 }
@@ -90,7 +93,7 @@ public boolean haveBallHigh() {
     return ( _highDelay.isOn( ) );
 }  
 
-public boolean AutonSecondDrive() {
+public boolean HaveTwoBalls() {
     if( haveBallLow() && haveBallHigh() ) {
         return true;
     }else

@@ -30,7 +30,7 @@ public void zeroEncoders() {
 }
 
 public void LowerIntake() {
-    _OTBI.set( ControlMode.Position, 46000.0);
+    _OTBI.set( ControlMode.Position, 55000.0);
 }
 
 public void StowIntake() {
@@ -38,7 +38,7 @@ public void StowIntake() {
 }
 
 public void RaiseIntake() {
-    _OTBI.set( ControlMode.Position, 1500.00);
+    _OTBI.set( ControlMode.Position, 18000.00);
 }
 
 public void disable() {

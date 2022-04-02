@@ -95,7 +95,7 @@ public class WestCoastDrive {
 
   }
 
-  private double turnCorrect(){
+/*  private double turnCorrect(){
     if(gyro.getAngle() > 2){
       return -.3;
     }else if (gyro.getAngle() < -2){
@@ -103,7 +103,7 @@ public class WestCoastDrive {
     }else{
       return 0.0;
     }
-  }
+  }*/
 
   public boolean moveTo( double distance, double slowDown ) {
 

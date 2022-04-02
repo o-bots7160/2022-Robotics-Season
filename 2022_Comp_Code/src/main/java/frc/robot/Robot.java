@@ -1,10 +1,10 @@
 package frc.robot;
 
-import javax.lang.model.util.ElementScanner6;
+/*import javax.lang.model.util.ElementScanner6;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;*/
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
     FIRSTSHOOT,
     SECONDTURN,
     SECONDBALLPICKUP,
-    THIRDTURN,
+    THIRDMOVE,
     SECONDSHOOT,
     STOP
   }
@@ -136,19 +136,19 @@ public class Robot extends TimedRobot {
       case CUSTOM_1:
         autonTracker = AUTO.CUSTOM_1;
         C1 = CUSTOM_1.FIRSTBALLPICKUP;
-      break;
+        break;
       case CUSTOM_2:
       autonTracker = AUTO.CUSTOM_2;
       C2 = CUSTOM_2.BALLPICKUP;
-      break;
+        break;
       case CUSTOM_3:
-      break;
+        break;
       case CUSTOM_4:
-      break;
+        break;
       case CUSTOM_5:
-      break;
+        break;
       case CUSTOM_6:
-      break;
+        break;
     }
   }
 
@@ -259,13 +259,14 @@ public class Robot extends TimedRobot {
       _intakeClass.Collect();
       if(_westCoastDrive.moveTo(130, 9)){
         System.out.println("Is driving");
-      }else if(_intakeClass.AutonSecondDrive()) {
-        C1 = CUSTOM_1.THIRDTURN;
+      }else if(_intakeClass.HaveTwoBalls()) {
+        C1 = CUSTOM_1.THIRDMOVE;
       }
       break;
 
-      case THIRDTURN:
-      if(_westCoastDrive.turnTo(180, 20)) {
+      case THIRDMOVE:
+      if(_westCoastDrive.moveTo(-130, 9)) {
+        System.out.println("Is driving");
         _intakeClass.Collect();
         _turretClass.AutonCenterTurret();
       }else{
@@ -276,8 +277,9 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDSHOOT:
-      if(_westCoastDrive.moveTo(130, 9)) {
+      if(_westCoastDrive.turnTo(180, 20)) {
         System.out.println("Is driving");
+        _turretClass.AutonIdleSpeed();
       }else {
         _turretClass.Update_Limelight_Tracking();
         _turretClass.Shoot();
@@ -490,6 +492,7 @@ public class Robot extends TimedRobot {
 
   if(UI.getClimbExtend()){
     _climberClass.Extend();
+    _intakeClass.StowIntake();
   }
   else if(UI.getClimbRetract()){
     _climberClass.Retract( UI.getIgnoreLimits());
@@ -515,6 +518,7 @@ public class Robot extends TimedRobot {
     _climberClass.setCoastMode();
     _turretClass.setCoastMode();
     _intakeClass.setCoastMode();
+    //_intakeClass.StowIntake();
   }
 
   @Override
