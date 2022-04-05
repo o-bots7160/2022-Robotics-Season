@@ -1,7 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-//import com.ctre.phoenix.sensors.WPI_Pigeon2; // for using Pigeon Gyro
+import com.ctre.phoenix.sensors.WPI_Pigeon2; // for using Pigeon Gyro
 import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
 
 //import edu.wpi.first.math.controller.PIDController;
@@ -19,15 +19,17 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtFrnt       = new WPI_TalonFX(20);
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
-  //private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
-  private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
+  private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
+ // private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
 //  private final double GEAR_BOX_RATIO       = 2.7;
   private boolean autonActive               = false;
  
-  public void zeroEncoders(){
+  public void zeroSensors(){
     _rghtFrnt.setSelectedSensorPosition( 0.0 );
+    gyro.reset();
   }
   public WestCoastDrive() {
+    gyro.calibrate();
     _leftFrnt.configFactoryDefault();
     _leftBack.configFactoryDefault();
     _rghtFrnt.configFactoryDefault();
@@ -39,13 +41,13 @@ public class WestCoastDrive {
     _leftBack.setInverted(TalonFXInvertType.FollowMaster);
     _rghtFrnt.setInverted(TalonFXInvertType.Clockwise);
     _rghtBack.setInverted(TalonFXInvertType.FollowMaster);
-    zeroEncoders();
+    zeroSensors();
     //gyro.calibrate();
     //gyro.reset();
   }
 
   public void autonomousInit() {
-    zeroEncoders();
+    zeroSensors();
     gyro.reset();
   }
 
@@ -69,20 +71,35 @@ public class WestCoastDrive {
     }
     if (!autonActive) {
       setBrakeMode();
-      //gyro.reset(); 
+      gyro.reset(); 
       autonActive = true;
     } 
 
-    error = angle - gyro.getAngle();
-    if(error > 0){
-      if((error-slowDown) > 0){
-        arcadeDrive(0, .65);
+    if(angle > 0){
+      error = angle - gyro.getAngle();
+      if(error > 0){
+        if((error-slowDown) > 0){
+          arcadeDrive(0, .65);
+        }else{
+          arcadeDrive(0, .15);
+        }
       }else{
-        arcadeDrive(0, .15);
+        stopDrive();
+        autonActive = false;
       }
-    }else{
-      stopDrive();
-      autonActive = false;
+    }else if(angle < 0){
+      error = angle + -gyro.getAngle();
+      if(error < 0){
+        if((error+slowDown) < 0){
+  
+          arcadeDrive(0, -.65);
+        }else{
+          arcadeDrive(0, -.15);
+        }
+      }else{
+        stopDrive();
+        autonActive = false;
+      }
     }
 
     return autonActive;
@@ -105,6 +122,11 @@ public class WestCoastDrive {
     }
   }*/
 
+  private double rotControl(){
+    double kP = 0.01;
+    return -gyro.getAngle() * kP;
+  }
+
   public boolean moveTo( double distance, double slowDown ) {
 
     double ticksPerIn = 1214.1916;
@@ -112,15 +134,16 @@ public class WestCoastDrive {
     distance = distance * ticksPerIn;
 
     if (!autonActive) {
-      zeroEncoders();
+      zeroSensors();
+      gyro.reset();
       autonActive = true;
     } 
     // Move to the set location
     if(getTicks() < distance){
       if(getTicks() < (distance - slowDown)){
-        arcadeDrive(.65, 0);//.65
+        arcadeDrive(.65, rotControl());//.65
       }else{
-        arcadeDrive(.4, 0);
+        arcadeDrive(.4, rotControl());
       }
     }else{
       stopDrive();

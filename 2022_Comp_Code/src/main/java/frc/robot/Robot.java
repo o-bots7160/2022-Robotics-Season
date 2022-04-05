@@ -125,7 +125,8 @@ public class Robot extends TimedRobot {
     endGameTimer.start();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     _westCoastDrive.autonomousInit();
-    _westCoastDrive.zeroEncoders();
+    _westCoastDrive.zeroSensors();
+    _intakeClass.ZeroEncoders();
     //UI.setBlue();
     _LED.set(-.95);
     switch ( _chooser.getSelected() ){
@@ -211,6 +212,8 @@ public class Robot extends TimedRobot {
   }
 
   private void custom_1 () {
+    System.out.println("Case: " + C1.toString());
+
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
     switch(C1){
         
@@ -226,7 +229,8 @@ public class Robot extends TimedRobot {
       break;
 
       case FIRSTTURN:
-      if(_westCoastDrive.turnTo(95, 20)){
+      if(_westCoastDrive.turnTo(-95, 20)){
+
         _intakeClass.Collect();
       }else{
         timer.reset();
@@ -240,7 +244,7 @@ public class Robot extends TimedRobot {
       _turretClass.Shoot();
       if(_turretClass.isReady()) {
         _intakeClass.Shoot();
-      }else if (timer.hasElapsed( 10 )) {
+      }else if (timer.hasElapsed( 1.70 )) {
         _turretClass.StopShooter();
         _intakeClass.Stop();
         C1 = CUSTOM_1.SECONDTURN;
@@ -248,8 +252,9 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDTURN:
-      if(_westCoastDrive.turnTo(-65, 20)){
+      if(_westCoastDrive.turnTo(50, 20)){
         _intakeClass.Collect();
+      }else{
         C1 = CUSTOM_1.SECONDBALLPICKUP;
       }
       break;
@@ -257,7 +262,7 @@ public class Robot extends TimedRobot {
       case SECONDBALLPICKUP:
       _turretClass.SetHigh();
       _intakeClass.Collect();
-      if(_westCoastDrive.moveTo(130, 9)){
+      if(_westCoastDrive.moveTo(130, 30)){
         System.out.println("Is driving");
       }else if(_intakeClass.HaveTwoBalls()) {
         C1 = CUSTOM_1.THIRDMOVE;
@@ -265,10 +270,9 @@ public class Robot extends TimedRobot {
       break;
 
       case THIRDMOVE:
-      if(_westCoastDrive.moveTo(-130, 9)) {
+      if(_westCoastDrive.moveTo(-130, 30)) {
         System.out.println("Is driving");
         _intakeClass.Collect();
-        _turretClass.AutonCenterTurret();
       }else{
         timer.reset();
         timer.start();
@@ -277,7 +281,7 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDSHOOT:
-      if(_westCoastDrive.turnTo(180, 20)) {
+      if(_westCoastDrive.turnTo(115, 20)) {
         System.out.println("Is driving");
         _turretClass.AutonIdleSpeed();
       }else {
@@ -518,7 +522,7 @@ public class Robot extends TimedRobot {
     _climberClass.setCoastMode();
     _turretClass.setCoastMode();
     _intakeClass.setCoastMode();
-    //_intakeClass.StowIntake();
+    _intakeClass.StowIntake();
   }
 
   @Override

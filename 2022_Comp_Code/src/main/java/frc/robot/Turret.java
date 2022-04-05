@@ -44,7 +44,7 @@ public class Turret {
 
     private double target = 0.0;
     private double greaterSlow = 0.0;
-    private double lesserSlow = 0.0;
+    private double lesserSlow = 0.0;  
 
     // Zeroed Direction
     enum zeroedDirection{
@@ -249,7 +249,7 @@ public void Update_Limelight_Tracking(){
       }
   }
 
-  public void turretControl() {
+ /* public void turretControl() {
       System.out.println("Target: " + target);;
 
     if(!leftLimitSW.get()){
@@ -348,6 +348,6 @@ public void Update_Limelight_Tracking(){
       target = rToC;
       lesserSlow = rToCS;
       greaterSlow = lToCS;
-  }
+  }*/
   
 }

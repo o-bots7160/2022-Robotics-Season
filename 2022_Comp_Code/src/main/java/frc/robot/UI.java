@@ -46,11 +46,11 @@ public class UI {
     }
 
     public static boolean getTurretLeft(){
-        return _buttons2.getRawButton( 10 );
+        return _buttons2.getRawButton( 10 ) || _joystick.getRawButton(11);
     }
 
     public static boolean getTurretRight(){
-        return _buttons1.getRawButton( 10 );
+        return _buttons1.getRawButton( 10 ) || _joystick.getRawButton(12); 
     }
 
     public static boolean getShoot(){

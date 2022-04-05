@@ -22,7 +22,7 @@ _OTBI.setNeutralMode( NeutralMode.Brake);
     zeroEncoders();
 }
 public void Execute() {
-    System.out.println( _OTBI.getSelectedSensorPosition());
+    //System.out.println( _OTBI.getSelectedSensorPosition());
 }
 
 public void zeroEncoders() {
@@ -30,7 +30,7 @@ public void zeroEncoders() {
 }
 
 public void LowerIntake() {
-    _OTBI.set( ControlMode.Position, 55000.0);
+    _OTBI.set( ControlMode.Position, 54500.0);
 }
 
 public void StowIntake() {
