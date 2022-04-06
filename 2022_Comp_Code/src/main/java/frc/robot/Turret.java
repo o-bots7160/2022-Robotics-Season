@@ -114,21 +114,21 @@ public void AutonIdleSpeed() {
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
     position = ShootPosition.SAFE;
-    _turret_speed = 14200;
+    _turret_speed = 15000;
     _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
     position = ShootPosition.LOW;
-    _turret_speed = 3000;
+    _turret_speed = 6000;
     _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 
 //sets shooter to shoot into the upper hub from around the tarmac
 public void shootAtX(){
     position = ShootPosition.HIGH;
-    _turret_speed = 12750;
+    _turret_speed = 13500;
     _shooter.set( ControlMode.Velocity, _turret_speed);
 }
 

@@ -460,10 +460,6 @@ public class Robot extends TimedRobot {
     {
         _intakeClass.FlushHigh();
     }
-    else if(UI.getFlushLow())
-    {
-      _intakeClass.intakeFlush();
-    }
     else
     {
       shooting = false;
@@ -508,9 +504,9 @@ public class Robot extends TimedRobot {
   if(UI.getClimbPull()){
     _climberClass.Pull();
   }
-  else if(UI.getClimbPush()){
+  /*else if(UI.getClimbPush()){
     _climberClass.Push();
-  }
+  }*/
   else{
     _climberClass.StopTilt();
   }

@@ -26,15 +26,11 @@ public class UI {
           return _joystick.getZ() / speedReducerZ;
         }else{
           return 0;
-        }
+        }   
     }
 
     public static boolean getFlushHigh(){
         return _buttons1.getRawButton( 2 );
-    }
-
-    public static boolean getFlushLow(){
-        return _buttons1.getRawButton( 3 );
     }
 
     public static boolean getIntake(){
@@ -42,55 +38,55 @@ public class UI {
     }
 
     public static boolean getAutoAim(){
-        return _buttons1.getRawButton( 4 );
+        return _buttons1.getRawButton( 3 );
     }
 
     public static boolean getTurretLeft(){
-        return _buttons2.getRawButton( 10 ) || _joystick.getRawButton(11);
+        return _buttons2.getRawButton( 4 ) || _joystick.getRawButton(11);
     }
 
     public static boolean getTurretRight(){
-        return _buttons1.getRawButton( 10 ) || _joystick.getRawButton(12); 
+        return _buttons2.getRawButton( 2 ) || _joystick.getRawButton(12); 
     }
 
     public static boolean getShoot(){
-        return _buttons2.getRawButton( 11 ) || _joystick.getRawButton(8);
+        return _buttons2.getRawButton( 3 ) || _joystick.getRawButton(8);
     }
 
     public static boolean getShooterLow(){
-        return _buttons2.getRawButton( 7 );
+        return _buttons1.getRawButton( 1 );
     }
 
     public static boolean getClimbExtend(){
-        return _buttons2.getRawButton( 9 );
+        return _buttons2.getRawButton( 5 );
     }
 
     public static boolean getClimbRetract(){
-        return _buttons2.getRawButton( 8 );
+        return _buttons2.getRawButton( 6 );
     }
 
-    public static boolean getClimbPush(){
+    /*public static boolean getClimbPush(){
         return _buttons1.getRawButton( 12 );
-    }
+    }*/
 
     public static boolean getClimbPull(){
-        return _buttons1.getRawButton( 11 );
+        return _buttons1.getRawButton( 4 );
     }
     
     public static boolean getSafeZone(){
-        return _buttons2.getRawButton( 6 ) || _joystick.getRawButton(7);
+        return !_buttons2.getRawButton( 1 ) || _joystick.getRawButton(7);
     }
     public static boolean getIgnoreLimits() {
-        return _joystick.getRawButton( 7);
+        return _joystick.getRawButton(7);
     }
 
-    public static boolean getCenter() {
+    /*public static boolean getCenter() {
         return _buttons1.getRawButton(1);
     }
 
     public static boolean getLimit() {
         return _buttons2.getRawButton(1);
-    }
+    }*/
 
     public static void getSpeedChange() {
         if(getIntake()){
