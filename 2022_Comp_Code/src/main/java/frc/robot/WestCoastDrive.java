@@ -19,8 +19,8 @@ public class WestCoastDrive {
   private final WPI_TalonFX _rghtFrnt       = new WPI_TalonFX(20);
   private final WPI_TalonFX _rghtBack       = new WPI_TalonFX(21);
   private final DifferentialDrive _difDrive = new DifferentialDrive(_leftFrnt, _rghtFrnt);
-  private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
- // private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
+  //private final WPI_Pigeon2 gyro            = new WPI_Pigeon2(8);      // for using Pigeon Gyro
+  private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
 //  private final double GEAR_BOX_RATIO       = 2.7;
   private boolean autonActive               = false;
  

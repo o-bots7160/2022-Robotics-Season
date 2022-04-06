@@ -14,6 +14,7 @@ public class IntakeAssembly {
     private final TimeOfFlight _barrel    = new TimeOfFlight(102);
     private final OnOffDelay _lowDelay    = new OnOffDelay( 0.05, 0.5, () -> _catch.getRange() < 100  );
     private final OnOffDelay _highDelay   = new OnOffDelay( 0.6, 0.15, () -> _barrel.getRange() < 100 );
+    private boolean OTBI_high = false;
 
 //puts stuff on the Smart Dashboard
 protected void execute() {
@@ -38,7 +39,8 @@ public IntakeAssembly() {
     _barrel.setRangingMode   ( RangingMode.Short, 24.0d );
 }    
 //uses TOF sensors to intake or not intake  
-public void Collect() {    
+public void Collect() {
+    OTBI_high = false;    
     _indexer.Collect();
     _scoop.Collect();
     if(haveBallHigh() && haveBallLow()) {
@@ -72,7 +74,12 @@ public void intakeFlush() {
 public void Stop() {
     _scoop.Stop();
     _indexer.StopAfterBall();
-    _OTBI.RaiseIntake();
+    if ( OTBI_high )
+    {
+        _OTBI.StowIntake();
+    } else {
+        _OTBI.RaiseIntake();
+    }
 }
 
 public void setCoastMode(){
@@ -82,6 +89,7 @@ public void setCoastMode(){
 }
 
 public void StowIntake() {
+    OTBI_high = true;
     _OTBI.StowIntake();
 }
 
