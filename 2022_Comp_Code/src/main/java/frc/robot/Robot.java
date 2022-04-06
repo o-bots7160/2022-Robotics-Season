@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
   private enum AUTO {
     LAUNCHAUTO,
     CUSTOM_1, // Jaiden
-    CUSTOM_2, // Quinn
+    TOWARDSWALL, // Quinn
     CUSTOM_3, // Sam
     CUSTOM_4, // Ashley
     CUSTOM_5, // Olivia
@@ -52,10 +52,13 @@ public class Robot extends TimedRobot {
     SECONDSHOOT,
     STOP
   }
-  private  enum CUSTOM_2 {
-    BALLPICKUP,
-    TURN,
+  private  enum TOWARDSWALL {
+    WALLBALLPICKUP,
+    TURNTOTERMINAL,
     SHOOT,
+    TOTERMINAL,
+    TURNTOHUB,
+    TOHUB,
     STOP
   }
   private  enum CUSTOM_3 {
@@ -84,14 +87,14 @@ public class Robot extends TimedRobot {
   }
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
   private CUSTOM_1 C1 = CUSTOM_1.FIRSTBALLPICKUP;
-  private CUSTOM_2 C2 = CUSTOM_2.BALLPICKUP;
+  private TOWARDSWALL TW = TOWARDSWALL.WALLBALLPICKUP;
 
   @Override
   public void robotInit() {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     _chooser.addOption("Custom1", AUTO.CUSTOM_1);
-    _chooser.addOption("Custom2", AUTO.CUSTOM_2);
+    _chooser.addOption("Custom2", AUTO.TOWARDSWALL);
     _chooser.addOption("Custom3", AUTO.CUSTOM_3);
     _chooser.addOption("Custom4", AUTO.CUSTOM_4);
     _chooser.addOption("Custom5", AUTO.CUSTOM_5);
@@ -137,9 +140,9 @@ public class Robot extends TimedRobot {
         autonTracker = AUTO.CUSTOM_1;
         C1 = CUSTOM_1.FIRSTBALLPICKUP;
         break;
-      case CUSTOM_2:
-      autonTracker = AUTO.CUSTOM_2;
-      C2 = CUSTOM_2.BALLPICKUP;
+      case TOWARDSWALL:
+      autonTracker = AUTO.TOWARDSWALL;
+      TW = TOWARDSWALL.WALLBALLPICKUP;
         break;
       case CUSTOM_3:
         break;
@@ -159,10 +162,11 @@ public class Robot extends TimedRobot {
       case LAUNCHAUTO:
       launchAuto();
       break;
-    }
-    switch(autonTracker){
       case CUSTOM_1:
       custom_1();
+      break;
+      case TOWARDSWALL:
+      TOWARDSWALL();
       break;
     }
     _westCoastDrive.setBrakeMode();
@@ -298,27 +302,11 @@ public class Robot extends TimedRobot {
       }
   }
   
-  private void custom_2 () {
+  private void TOWARDSWALL () {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
+    switch(TW){
         
-        case BALLPICKUP:
-        _intakeClass.Collect();
-        if ( _westCoastDrive.moveTo(65, 8) ) {
-          System.out.println("We gaming");
-        } else {
-          C2 = CUSTOM_2.TURN;
-        }
-        break;
-
-        case TURN:
-        break;
-
-        case SHOOT:
-        break;
-
-        case STOP:
-        break;
+        
       }
   }
   private void custom_3 () {
