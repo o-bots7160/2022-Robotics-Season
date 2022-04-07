@@ -10,10 +10,10 @@ public class IntakeOTBI {
 
 public IntakeOTBI( ) {
     _OTBI.configFactoryDefault();
-    _OTBI.configReverseSoftLimitThreshold( -500.0, 10);
-    _OTBI.configForwardSoftLimitThreshold( 46000.0, 10);
-    _OTBI.configForwardSoftLimitEnable(true, 10);
-    _OTBI.configReverseSoftLimitEnable(true, 10);
+    _OTBI.configReverseSoftLimitThreshold(     0.0, 0);
+    _OTBI.configForwardSoftLimitThreshold( 54500.0, 0);
+    _OTBI.configForwardSoftLimitEnable(true, 0);
+    _OTBI.configReverseSoftLimitEnable(true, 0);
     _OTBI.config_kP( 0, 0.06,            30);
     //_OTBI.config_kI( 0, 0.001,          30);
     //_OTBI.config_kD( 0, 0.4,            30);
