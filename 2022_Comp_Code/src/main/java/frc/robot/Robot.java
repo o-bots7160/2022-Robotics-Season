@@ -16,7 +16,7 @@ public class Robot extends TimedRobot {
 
   private final WestCoastDrive _westCoastDrive    = new WestCoastDrive(); 
   private final IntakeAssembly _intakeClass       = new IntakeAssembly();
-  private final Turret _turretClass               = new Turret();
+  private final TurretAssembly _turretClass       = new TurretAssembly();
   private final SendableChooser<AUTO> _chooser    = new SendableChooser<>();
   private final Climber _climberClass             = new Climber();
   private final Timer   timer                     = new Timer();
@@ -65,9 +65,7 @@ public class Robot extends TimedRobot {
     STOP
   }
   private  enum CUSTOM_4 {
-    BALLPICKUP,
-    TURN,
-    SHOOT,
+    MOVE,
     STOP
   }
   private  enum CUSTOM_5 {
@@ -85,6 +83,7 @@ public class Robot extends TimedRobot {
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
   private CUSTOM_1 C1 = CUSTOM_1.FIRSTBALLPICKUP;
   private CUSTOM_2 C2 = CUSTOM_2.BALLPICKUP;
+  private CUSTOM_4 C4 = CUSTOM_4.MOVE;
 
   @Override
   public void robotInit() {
@@ -139,12 +138,14 @@ public class Robot extends TimedRobot {
         C1 = CUSTOM_1.FIRSTBALLPICKUP;
         break;
       case CUSTOM_2:
-      autonTracker = AUTO.CUSTOM_2;
-      C2 = CUSTOM_2.BALLPICKUP;
+        autonTracker = AUTO.CUSTOM_2;
+        C2 = CUSTOM_2.BALLPICKUP;
         break;
       case CUSTOM_3:
         break;
       case CUSTOM_4:
+        autonTracker = AUTO.CUSTOM_4;
+        C4 = CUSTOM_4.MOVE;
         break;
       case CUSTOM_5:
         break;
@@ -158,13 +159,14 @@ public class Robot extends TimedRobot {
 
     switch(autonTracker){
       case LAUNCHAUTO:
-      launchAuto();
-      break;
-    }
-    switch(autonTracker){
+        launchAuto();
+        break;
       case CUSTOM_1:
-      custom_1();
-      break;
+        custom_1();
+        break;
+      case CUSTOM_4:
+        custom_4();
+        break;
     }
     _westCoastDrive.setBrakeMode();
     
@@ -344,15 +346,14 @@ public class Robot extends TimedRobot {
   }
   private void custom_4 () {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
-        
-        case BALLPICKUP:
-        break;
+    switch(C4){
 
-        case TURN:
-        break;
-
-        case SHOOT:
+        case MOVE:
+        if ( _westCoastDrive.moveTo(50, 20) ) {
+        }
+        else{
+          C4 = CUSTOM_4.STOP;
+        }
         break;
 
         case STOP:

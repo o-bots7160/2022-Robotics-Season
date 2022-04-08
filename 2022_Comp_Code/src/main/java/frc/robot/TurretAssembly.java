@@ -10,25 +10,20 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Turret {
+public class TurretAssembly {
     enum ShootPosition {
         LOW,
         HIGH,
         SAFE
     }
+    private final TurretShooter  _Shooter   = new TurretShooter();
     private final WPI_TalonFX _turret       = new WPI_TalonFX(40); 
-    private final WPI_TalonFX _shooter      = new WPI_TalonFX(41);     
-    private final Timer       shotTimer     = new Timer();
     private final DigitalInput leftLimitSW  = new DigitalInput( 1 ); 
     private final DigitalInput rightLimitSW = new DigitalInput( 0 ); 
     
-    private boolean isShooting                = false;
     private boolean m_LimelightHasValidTarget = false;
 
     private double m_LimelightSteerCommand = 0.0;
-    private ShootPosition position = ShootPosition.LOW;
-    private double _turret_speed;
-
     private double lToR                       = 126774.0;  // Left To Right
     private double lToRS                      = 114962.0;  // Left To Right Slow Down Distance
     private double lToCS                      = 49290.0;   // Left to Center Slow Down Distance
@@ -52,13 +47,7 @@ public class Turret {
         RIGHT
     }
 
-    public Turret( ){
-        _shooter.configFactoryDefault();
-		_shooter.config_kF( 0, 0.045,          30); //determined by CTRE tuner
-		_shooter.config_kP( 0, 0.25,           30);
-		_shooter.config_kI( 0, 0.001,          30);
-		_shooter.config_kD( 0, 9.0,            30);
-		_shooter.config_IntegralZone( 0, 50.0, 30);
+    public TurretAssembly( ){
     }
 
     private zeroedDirection zD;
@@ -73,7 +62,7 @@ public class Turret {
 
 
 protected void execute(){
-    SmartDashboard.putNumber("RPM", _shooter.getSelectedSensorVelocity());
+    _Shooter.Execute();
     //SmartDashboard.putNumber("Turrent Position", offset - _turret.getSelectedSensorPosition());
     //SmartDashboard.putBoolean("Target?", m_LimelightHasValidTarget);
     //Update_Limelight_Tracking();
@@ -83,12 +72,7 @@ protected void execute(){
 //turns on shooter motor
 public void Shoot(){
     _turret.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set( ControlMode.Velocity, _turret_speed);
-    if (isShooting == false){
-        shotTimer.reset();
-        shotTimer.start();
-    } 
-    isShooting = true;
+    _Shooter.Shoot();
 }
 
 public void breakMode(){
@@ -100,45 +84,32 @@ public void disabledInit(){
 }
 
 public void IdleSpeed() {
-    _turret_speed = 1500;
-    _shooter.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set( ControlMode.Velocity, _turret_speed);
+    _Shooter.IdleSpeed();
 }
 
 public void AutonIdleSpeed() {
-    _turret_speed = 7500;
-    _shooter.setNeutralMode(NeutralMode.Coast); 
-    _shooter.set( ControlMode.Velocity, _turret_speed);
+    _Shooter.AutonIdleSpeed(); 
 }
 
 //sets shooter to shoot into the upper hub
 public void SetHigh(){
-    position = ShootPosition.SAFE;
-    _turret_speed = 15000;
-    _shooter.set( ControlMode.Velocity, _turret_speed);
+    _Shooter.SetHigh();
 }
 
 //sets shooter to shoot into the lower hub
 public void SetLow(){
-    position = ShootPosition.LOW;
-    _turret_speed = 6000;
-    _shooter.set( ControlMode.Velocity, _turret_speed);
+    _Shooter.SetLow();;
 }
 
 //sets shooter to shoot into the upper hub from around the tarmac
 public void shootAtX(){
-    position = ShootPosition.HIGH;
-    _turret_speed = 13500;
-    _shooter.set( ControlMode.Velocity, _turret_speed);
+    _Shooter.shootAtX();
 }
 
 //stops shooter motor
 public void StopShooter(){ 
-    _shooter.set(0.0);
-    isShooting = false;
+    _Shooter.StopShooter();
 }
-
-
 //stops turret motor
 public void StopTurret(){ 
     _turret.stopMotor();
@@ -164,13 +135,7 @@ public void TurnRight(){
 
 //sets a 5 second delay so the _shooter can get up to speed
 public boolean isReady(){
-    double error = Math.abs( _shooter.getSelectedSensorVelocity() - _turret_speed );
-
-    if( error < 100 ) {
-        return true;
-    }else {
-        return false;
-    }
+    return _Shooter.isReady();
 }
 
 public void Update_Limelight_Tracking(){

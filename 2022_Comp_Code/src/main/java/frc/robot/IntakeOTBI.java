@@ -38,7 +38,7 @@ public void StowIntake() {
 }
 
 public void RaiseIntake() {
-    _OTBI.set( ControlMode.Position, 18000.00);
+    _OTBI.set( ControlMode.Position, 15000.00);
 }
 
 public void disable() {
