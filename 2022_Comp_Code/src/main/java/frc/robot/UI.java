@@ -90,7 +90,7 @@ public class UI {
 
     public static void getSpeedChange() {
         if(getIntake()){
-            speedReducerZ = 2.25;    
+            speedReducerZ = 1.75;    
         }else{
             if ( _joystick.getRawButton( 4 ) || _joystick.getRawButton( 3 )) {
                 speedReducerY = 2;

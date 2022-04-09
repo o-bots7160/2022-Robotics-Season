@@ -349,7 +349,7 @@ public class Robot extends TimedRobot {
     switch(C4){
 
         case MOVE:
-        if ( _westCoastDrive.moveTo(50, 20) ) {
+        if ( _westCoastDrive.moveTo(70, 30) ) {
         }
         else{
           C4 = CUSTOM_4.STOP;
@@ -472,24 +472,20 @@ public class Robot extends TimedRobot {
       }
     }
 
-    if(UI.getAutoAim()){
+    if(UI.getAutoAim() && !(UI.getTurretLeft() || UI.getTurretRight())){
       _turretClass.breakMode();
       if(!UI.getSafeZone()){ // Yes I know backwards
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1); 
       }else {
        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
       }
-      if(UI.getShoot()){
         _turretClass.Update_Limelight_Tracking();
-      }else{
-        _turretClass.manualControl();
-      }
+      
     }else{
       _turretClass.breakMode();
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(3); 
       _turretClass.manualControl();
-    
-	}
+  	}
 
   if(UI.getClimbExtend()){
     _climberClass.Extend();

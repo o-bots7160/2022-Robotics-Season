@@ -34,7 +34,7 @@ public class TurretShooter {
         _shooter.set( ControlMode.Velocity, speed);
     }
     public void SetHigh(){
-        speed = 15000;
+        speed = 15500;
         _shooter.set( ControlMode.Velocity, speed);
     }
     
@@ -59,7 +59,7 @@ public class TurretShooter {
 public boolean isReady(){
     double error = Math.abs( _shooter.getSelectedSensorVelocity() - speed );
 
-    if( error < 100 ) {
+    if( error < 200 ) {
         return true;
     }else {
         return false;
