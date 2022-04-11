@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
 //import edu.wpi.first.math.controller.ProfiledPIDController;
 //import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -104,6 +105,42 @@ public class WestCoastDrive {
 
     return autonActive;
   }
+
+  public boolean turnToTwo(double angle, Timer resetTimer){
+
+    double angleTolerance = .5;
+    // These numbers must be tuned for your Robot!  Be careful!
+    final double TURN_K = 0.0005;                     // how hard to turn toward the target
+    final double RIGHT_MAX = .65;                   // Max speed the turret motor can go
+    final double LEFT_MAX = -.65;
+    final double RIGHT_MIN = 0.25;
+    final double LEFT_MIN = -0.25;
+    if(resetTimer.hasElapsed(.5)){
+      double error = angle - gyro.getAngle();
+      if (Math.abs(error)< angleTolerance)
+      {
+        return true;
+      }
+
+
+      // Start with proportional steering
+      double turn_cmd = error * TURN_K;
+      if (turn_cmd > RIGHT_MAX)
+      {
+        turn_cmd = RIGHT_MAX;
+      }else if(turn_cmd > 0 && turn_cmd < RIGHT_MIN){
+        turn_cmd = RIGHT_MIN;
+      }else if(turn_cmd < 0 && turn_cmd > LEFT_MIN){
+        turn_cmd = LEFT_MIN;
+      } else if (turn_cmd < LEFT_MAX){
+        turn_cmd = LEFT_MAX;
+      }
+
+      arcadeDrive(0, turn_cmd );
+  }
+  return false;
+
+}
 
   public void robotPeriodic() {
     //SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
