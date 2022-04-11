@@ -119,7 +119,7 @@ public class WestCoastDrive {
       double error = angle - gyro.getAngle();
       if (Math.abs(error)< angleTolerance)
       {
-        return true;
+        return false;
       }
 
 
@@ -138,7 +138,7 @@ public class WestCoastDrive {
 
       arcadeDrive(0, turn_cmd );
   }
-  return false;
+  return true;
 
 }
 
