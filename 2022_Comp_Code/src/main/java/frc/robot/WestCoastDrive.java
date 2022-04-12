@@ -10,6 +10,7 @@ import com.kauailabs.navx.frc.AHRS;          // for using NavX Gyro
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -24,6 +25,7 @@ public class WestCoastDrive {
   private final AHRS gyro                   = new AHRS(SPI.Port.kMXP); // for using NavX Gyro
 //  private final double GEAR_BOX_RATIO       = 2.7;
   private boolean autonActive               = false;
+  private boolean _delayReset               = true;
  
   public void zeroSensors(){
     _rghtFrnt.setSelectedSensorPosition( 0.0 );
@@ -60,7 +62,7 @@ public class WestCoastDrive {
   //  Turn robot to angle from -180 to 180
   //
   //
-  public boolean turnTo( double angle, double slowDown ) {
+  /*public boolean turnTo( double angle, double slowDown ) {
     double error = 0.0;
     if ( angle > 180 )
     {
@@ -104,23 +106,36 @@ public class WestCoastDrive {
     }
 
     return autonActive;
-  }
+  }*/
 
-  public boolean turnToTwo(double angle, Timer resetTimer){
+  public boolean turnTo(double angle, Timer resetTimer){
+    long _delayCheck = 0;
 
-    double angleTolerance = .5;
+    double angleTolerance = 1;
     // These numbers must be tuned for your Robot!  Be careful!
-    final double TURN_K = 0.0005;                     // how hard to turn toward the target
-    final double RIGHT_MAX = .65;                   // Max speed the turret motor can go
-    final double LEFT_MAX = -.65;
-    final double RIGHT_MIN = 0.25;
-    final double LEFT_MIN = -0.25;
+    final double TURN_K = 0.015;                     // how hard to turn toward the target
+    final double RIGHT_MAX = .5;                   // Max speed the turret motor can go
+    final double LEFT_MAX = -.5;
+    final double RIGHT_MIN = 0.27;
+    final double LEFT_MIN = -0.27;
     if(resetTimer.hasElapsed(.5)){
-      double error = angle - gyro.getAngle();
-      if (Math.abs(error)< angleTolerance)
+      double error = angle - gyro.getYaw();
+      if (Math.abs(error) < angleTolerance)
+      System.out.println("first check");
+
       {
-        return false;
-      }
+        if (!_delayReset){
+          _delayCheck = System.currentTimeMillis();
+          _delayReset = true;}
+
+        if(System.currentTimeMillis() - _delayCheck > 1000){
+          System.out.println("Second check");
+          error = angle - gyro.getYaw();
+          if (Math.abs(error) < angleTolerance){
+        stopDrive();
+        _delayReset = false;
+        return false;}
+      }}
 
 
       // Start with proportional steering
@@ -140,12 +155,10 @@ public class WestCoastDrive {
   }
   return true;
 
-}
+      }
 
   public void robotPeriodic() {
-    //SmartDashboard.putNumber("LeftDrive", _leftFrnt.getSelectedSensorPosition() );
-    //PIDController test = new PIDController(0, 0, 0);
-    //SmartDashboard.putNumber("Angle", gyro.getAngle());
+    SmartDashboard.putNumber("Get Yaw", getYaw() );
 
   }
 
@@ -202,6 +215,7 @@ public class WestCoastDrive {
   }
 
   public void stopDrive(){
+    setBrakeMode();
     _difDrive.arcadeDrive(0, 0);
   }
 
@@ -209,8 +223,16 @@ public class WestCoastDrive {
     return _rghtFrnt.getSelectedSensorPosition();
   }
 
+  public void resetGyro(){
+    gyro.zeroYaw();
+  }
+
   public void testInit(){
     autonActive = false;
     gyro.reset();
+  }
+
+  public double getYaw(){
+    return gyro.getYaw();
   }
 }

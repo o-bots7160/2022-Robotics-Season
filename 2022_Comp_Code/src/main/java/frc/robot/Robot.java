@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class Robot extends TimedRobot {
@@ -48,10 +49,14 @@ public class Robot extends TimedRobot {
     SECONDSHOOT,
     STOP
   }
-  private  enum CUSTOM_2 {
-    BALLPICKUP,
-    TURN,
+  private  enum TOWARDSWALL {
+    WALLBALLPICKUP,
+    TURNTOTERMINAL,
     SHOOT,
+    TOTERMINAL,
+    WAITFORHUMAN,
+    TURNTOHUB,
+    TOHUB,
     STOP
   }
   private  enum CUSTOM_3 {
@@ -76,9 +81,11 @@ public class Robot extends TimedRobot {
     SHOOT,
     STOP
   }
+
+  
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
   private CUSTOM_1 C1 = CUSTOM_1.FIRSTBALLPICKUP;
-  private CUSTOM_2 C2 = CUSTOM_2.BALLPICKUP;
+  private TOWARDSWALL tw = TOWARDSWALL.WALLBALLPICKUP;
   private CUSTOM_4 C4 = CUSTOM_4.MOVE;
 
   @Override
@@ -97,7 +104,7 @@ public class Robot extends TimedRobot {
       UsbCamera cameraServer = CameraServer.startAutomaticCapture(1);
       cameraServer.setVideoMode(PixelFormat.kMJPEG, 320, 240, 15);
     });
-    camera.setDaemon(true);
+    camera.setDaemon(true);             
     camera.start();*/
 
   }
@@ -135,7 +142,7 @@ public class Robot extends TimedRobot {
         break;
       case CUSTOM_2:
         autonTracker = AUTO.CUSTOM_2;
-        C2 = CUSTOM_2.BALLPICKUP;
+        tw = TOWARDSWALL.WALLBALLPICKUP;
         break;
       case CUSTOM_3:
         break;
@@ -176,20 +183,27 @@ public class Robot extends TimedRobot {
         _turretClass.SetHigh();
         _intakeClass.Collect();
         if(_westCoastDrive.moveTo(74, 9)){
-          System.out.println("Is driving");
+         // System.out.println("Ball Pick up");
           
         }else{
+          //System.out.println("Reset!");
+          _westCoastDrive.resetGyro();
+          timer.reset();
+          timer.start();
           lA = LAUNCHAUTO.TURN;
         }
         break;
 
         case TURN:
+        
         _turretClass.Update_Limelight_Tracking();
-        if(_westCoastDrive.turnTo(94, 20)){
+        if(_westCoastDrive.turnTo(90, timer)){
+          //System.out.println("Turning");
           _intakeClass.Collect();
         }else{
           timer.reset();
           timer.start();
+          _westCoastDrive.resetGyro();
           lA = LAUNCHAUTO.SHOOT;
         }
         break;
@@ -223,17 +237,22 @@ public class Robot extends TimedRobot {
           System.out.println("Is driving");
           
         }else{
+          _westCoastDrive.resetGyro();
+          timer.reset();
+          timer.start();
           C1 = CUSTOM_1.FIRSTTURN;
         }
         break;
 
         case FIRSTTURN:
         _turretClass.Update_Limelight_Tracking();
-        if(_westCoastDrive.turnTo(94, 20)){
+        if(_westCoastDrive.turnTo(90, timer)){
+          //System.out.println("Turning");
           _intakeClass.Collect();
         }else{
           timer.reset();
           timer.start();
+          _westCoastDrive.resetGyro();
           C1 = CUSTOM_1.FIRSTSHOOT;
         }
         break;
@@ -252,12 +271,14 @@ public class Robot extends TimedRobot {
 
       case SECONDTURN:
       _turretClass.StopTurret();
-      if(_westCoastDrive.turnTo(-85, 20)){
+      if(_westCoastDrive.turnTo(-90, timer)){
+        //System.out.println("Turning");
         _intakeClass.Collect();
       }else{
         timer.reset();
         timer.start();
-        C1 = CUSTOM_1.DELAYONE;
+        _westCoastDrive.resetGyro();
+        C1 = CUSTOM_1.STOP;
         
       }
       break;
@@ -290,7 +311,7 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDSHOOT:
-      if(_westCoastDrive.turnTo(115, 20)) {
+      if(_westCoastDrive.turnTo(115, timer)) {
         System.out.println("Is driving");
         _turretClass.AutonIdleSpeed();
       }else {
@@ -312,29 +333,88 @@ public class Robot extends TimedRobot {
       }
   }
   
-  private void custom_2 () {
+  private void TOWARDSWALL () {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
-        
-        case BALLPICKUP:
-        _intakeClass.Collect();
-        if ( _westCoastDrive.moveTo(65, 8) ) {
-          System.out.println("We gaming");
+    switch(tw){
+
+      case WALLBALLPICKUP:
+        if(_westCoastDrive.moveTo(40.5,10)) {
+          _turretClass.SetHigh();
+          _intakeClass.Collect();
         } else {
-          C2 = CUSTOM_2.TURN;
+          _westCoastDrive.setBrakeMode();
+          tw = TOWARDSWALL.TOHUB;
+        }
+        break;
+        
+      case TURNTOTERMINAL:
+        if(_westCoastDrive.turnTo(115, timer)) {
+          _intakeClass.Collect();
+        } else {
+          tw = TOWARDSWALL.SHOOT;
+          timer.reset();
+          timer.start();
         }
         break;
 
-        case TURN:
-        break;
-
-        case SHOOT:
-        break;
-
-        case STOP:
-        break;
+      case SHOOT:
+      _turretClass.Update_Limelight_Tracking();
+      _turretClass.Shoot();
+      _intakeClass.Shoot();
+      if (timer.hasElapsed( 5 )) {
+        _turretClass.StopShooter();
+        _intakeClass.Stop();
+        _westCoastDrive.zeroSensors();
+        tw = TOWARDSWALL.TOTERMINAL;
       }
-  }
+      break;
+
+      case TOTERMINAL:
+      if(_westCoastDrive.moveTo(50,20)) {
+        _intakeClass.Collect();
+        _turretClass.SetHigh();
+      } else {
+        timer.reset();
+        timer.start();
+        tw = TOWARDSWALL.WAITFORHUMAN;
+      }
+      break;
+
+      case WAITFORHUMAN:
+      if(timer.hasElapsed(10)) {
+        _westCoastDrive.setBrakeMode();
+        tw = TOWARDSWALL.TURNTOHUB;
+      }
+
+      case TURNTOHUB:
+      if(_westCoastDrive.turnTo(155, timer)) {
+       // set the turret position
+      } else {
+        timer.reset();
+        timer.start();
+        _westCoastDrive.zeroSensors();
+        tw = TOWARDSWALL.TOHUB;
+      }
+      break;
+
+      case TOHUB:
+      _turretClass.Update_Limelight_Tracking();
+      if(_westCoastDrive.moveTo(50, 25)) {
+        _turretClass.SetHigh();
+        _intakeClass.Collect();
+      } else if (!timer.hasElapsed(10)) {
+        _turretClass.Shoot();
+      } else {
+        tw = TOWARDSWALL.STOP;
+      }
+      break;
+
+      case STOP:
+      break;
+    }
+
+
+}
   private void custom_3 () {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
     switch(lA){

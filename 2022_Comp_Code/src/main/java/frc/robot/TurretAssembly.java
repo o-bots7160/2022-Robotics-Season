@@ -155,6 +155,7 @@ public void Update_Limelight_Tracking(){
         {
           m_LimelightHasValidTarget = false;
           m_LimelightSteerCommand = 0.0;
+          _turret.stopMotor();
           return;
         }
 
