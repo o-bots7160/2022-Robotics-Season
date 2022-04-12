@@ -22,12 +22,8 @@ public class Robot extends TimedRobot {
 
   private enum AUTO {
     LAUNCHAUTO,
-    CUSTOM_1, // Jaiden
-    CUSTOM_2, // Quinn
-    CUSTOM_3, // Sam
-    CUSTOM_4, // Ashley
-    CUSTOM_5, // Olivia
-    CUSTOM_6, // Ethan
+    TERMINALAUTO, // Jaiden
+    TOWARDSWALL, // Quinn
   }
 
   private AUTO autonTracker;
@@ -38,7 +34,7 @@ public class Robot extends TimedRobot {
     SHOOT,
     STOP
   }
-  private  enum CUSTOM_1 {
+  private  enum TERMINALAUTO {
     FIRSTBALLPICKUP,
     FIRSTTURN,
     FIRSTSHOOT,
@@ -59,53 +55,18 @@ public class Robot extends TimedRobot {
     TOHUB,
     STOP
   }
-  private  enum CUSTOM_3 {
-    BALLPICKUP,
-    TURN,
-    SHOOT,
-    STOP
-  }
-  private  enum CUSTOM_4 {
-    MOVE,
-    STOP
-  }
-  private  enum CUSTOM_5 {
-    BALLPICKUP,
-    TURN,
-    SHOOT,
-    STOP
-  }
-  private  enum CUSTOM_6 {
-    BALLPICKUP,
-    TURN,
-    SHOOT,
-    STOP
-  }
 
   
   private LAUNCHAUTO lA = LAUNCHAUTO.BALLPICKUP;
-  private CUSTOM_1 C1 = CUSTOM_1.FIRSTBALLPICKUP;
+  private TERMINALAUTO tA = TERMINALAUTO.FIRSTBALLPICKUP;
   private TOWARDSWALL tw = TOWARDSWALL.WALLBALLPICKUP;
-  private CUSTOM_4 C4 = CUSTOM_4.MOVE;
 
   @Override
   public void robotInit() {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
-    _chooser.addOption("Custom1", AUTO.CUSTOM_1);
-    _chooser.addOption("Custom2", AUTO.CUSTOM_2);
-    _chooser.addOption("Custom3", AUTO.CUSTOM_3);
-    _chooser.addOption("Custom4", AUTO.CUSTOM_4);
-    _chooser.addOption("Custom5", AUTO.CUSTOM_5);
-    _chooser.addOption("Custom6", AUTO.CUSTOM_6);
-    //UI.setBlue();
-    /*Thread camera =
-    new Thread(() ->{
-      UsbCamera cameraServer = CameraServer.startAutomaticCapture(1);
-      cameraServer.setVideoMode(PixelFormat.kMJPEG, 320, 240, 15);
-    });
-    camera.setDaemon(true);             
-    camera.start();*/
+    _chooser.addOption("TERMINALAUTO", AUTO.TERMINALAUTO);
+    _chooser.addOption("TOWARDSWALL", AUTO.TOWARDSWALL);
 
   }
 
@@ -136,23 +97,13 @@ public class Robot extends TimedRobot {
         autonTracker = AUTO.LAUNCHAUTO;
         lA = LAUNCHAUTO.BALLPICKUP;
         break;
-      case CUSTOM_1:
-        autonTracker = AUTO.CUSTOM_1;
-        C1 = CUSTOM_1.FIRSTBALLPICKUP;
+      case TERMINALAUTO:
+        autonTracker = AUTO.TERMINALAUTO;
+        tA = TERMINALAUTO.FIRSTBALLPICKUP;
         break;
-      case CUSTOM_2:
-        autonTracker = AUTO.CUSTOM_2;
+      case TOWARDSWALL:
+        autonTracker = AUTO.TOWARDSWALL;
         tw = TOWARDSWALL.WALLBALLPICKUP;
-        break;
-      case CUSTOM_3:
-        break;
-      case CUSTOM_4:
-        autonTracker = AUTO.CUSTOM_4;
-        C4 = CUSTOM_4.MOVE;
-        break;
-      case CUSTOM_5:
-        break;
-      case CUSTOM_6:
         break;
     }
   }
@@ -164,11 +115,11 @@ public class Robot extends TimedRobot {
       case LAUNCHAUTO:
         launchAuto();
         break;
-      case CUSTOM_1:
-        custom_1();
+      case TERMINALAUTO:
+        terminalAuto();
         break;
-      case CUSTOM_4:
-        custom_4();
+      case TOWARDSWALL:
+        towardsWall();
         break;
     }
     _westCoastDrive.setBrakeMode();
@@ -224,11 +175,11 @@ public class Robot extends TimedRobot {
       }
   }
 
-  private void custom_1 () {
-    System.out.println("Case: " + C1.toString());
+  private void terminalAuto () {
+    System.out.println("Case: " + tA.toString());
 
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(C1){
+    switch(tA){
         
       case FIRSTBALLPICKUP:
         _turretClass.SetHigh();
@@ -240,7 +191,7 @@ public class Robot extends TimedRobot {
           _westCoastDrive.resetGyro();
           timer.reset();
           timer.start();
-          C1 = CUSTOM_1.FIRSTTURN;
+          tA = TERMINALAUTO.FIRSTTURN;
         }
         break;
 
@@ -253,7 +204,7 @@ public class Robot extends TimedRobot {
           timer.reset();
           timer.start();
           _westCoastDrive.resetGyro();
-          C1 = CUSTOM_1.FIRSTSHOOT;
+          tA = TERMINALAUTO.FIRSTSHOOT;
         }
         break;
 
@@ -265,27 +216,27 @@ public class Robot extends TimedRobot {
         }else if (timer.hasElapsed( 1.7 )) {
           _turretClass.StopShooter();
           _intakeClass.Stop();
-          C1 = CUSTOM_1.SECONDTURN;
+          tA = TERMINALAUTO.SECONDTURN;
         }
         break;
 
       case SECONDTURN:
       _turretClass.StopTurret();
-      if(_westCoastDrive.turnTo(-90, timer)){
+      if(_westCoastDrive.turnTo(-80, timer)){
         //System.out.println("Turning");
         _intakeClass.Collect();
       }else{
         timer.reset();
         timer.start();
         _westCoastDrive.resetGyro();
-        C1 = CUSTOM_1.STOP;
+        tA = TERMINALAUTO.DELAYONE;
         
       }
       break;
 
       case DELAYONE:
       if(timer.hasElapsed(2)){
-        C1 = CUSTOM_1.SECONDBALLPICKUP;
+        tA = TERMINALAUTO.SECONDBALLPICKUP;
       }
       break;
 
@@ -295,23 +246,23 @@ public class Robot extends TimedRobot {
       if(_westCoastDrive.moveTo(120, 40)){
         System.out.println("Is driving");
       }else {
-        C1 = CUSTOM_1.STOP;
+        tA = TERMINALAUTO.THIRDMOVE;
       }
       break;
 
       case THIRDMOVE:
-      if(_westCoastDrive.moveTo(-130, 30)) {
+      if(_westCoastDrive.moveTo(-120, 30)) {
         System.out.println("Is driving");
         _intakeClass.Collect();
       }else{
         timer.reset();
         timer.start();
-        C1 = CUSTOM_1.SECONDSHOOT;
+        tA = TERMINALAUTO.SECONDSHOOT;
       }
       break;
 
       case SECONDSHOOT:
-      if(_westCoastDrive.turnTo(115, timer)) {
+      if(_westCoastDrive.turnTo(80, timer)) {
         System.out.println("Is driving");
         _turretClass.AutonIdleSpeed();
       }else {
@@ -322,7 +273,7 @@ public class Robot extends TimedRobot {
         }else if (timer.hasElapsed(10)) {
           _turretClass.StopShooter();
           _intakeClass.Stop();
-          C1 = CUSTOM_1.STOP;
+          tA = TERMINALAUTO.STOP;
         }
       }
       break;
@@ -333,7 +284,7 @@ public class Robot extends TimedRobot {
       }
   }
   
-  private void TOWARDSWALL () {
+  private void towardsWall () {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
     switch(tw){
 
@@ -415,73 +366,7 @@ public class Robot extends TimedRobot {
 
 
 }
-  private void custom_3 () {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
-        
-        case BALLPICKUP:
-        break;
-
-        case TURN:
-        break;
-
-        case SHOOT:
-        break;
-
-        case STOP:
-        break;
-      }
-  }
-  private void custom_4 () {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(C4){
-
-        case MOVE:
-        if ( _westCoastDrive.moveTo(70, 30) ) {
-        }
-        else{
-          C4 = CUSTOM_4.STOP;
-        }
-        break;
-
-        case STOP:
-        break;
-      }
-  }
-  private void custom_5 () {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
-        
-        case BALLPICKUP:
-        break;
-
-        case TURN:
-        break;
-
-        case SHOOT:
-        break;
-
-        case STOP:
-        break;
-      }
-  }
-  private void custom_6 () {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); 
-    switch(lA){
-        
-        case BALLPICKUP:
-        break;
-
-        case TURN:
-        break;
-
-        case SHOOT:
-        break;
-
-        case STOP:
-        break;
-      }
-  }
+  
   @Override
   public void teleopInit() {
     _climberClass.reset();
