@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
     SECONDTURN,
     DELAYONE,
     SECONDBALLPICKUP,
+    WAITFORHUMAN,
     THIRDMOVE,
     SECONDSHOOT,
     STOP
@@ -90,6 +91,7 @@ public class Robot extends TimedRobot {
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroSensors();
     _intakeClass.ZeroEncoders();
+    _turretClass.softLimits();
     //UI.setBlue();
     _LED.set(-.95);
     switch ( _chooser.getSelected() ){
@@ -225,8 +227,8 @@ public class Robot extends TimedRobot {
         break; 
 
       case SECONDTURN:
-      _turretClass.StopTurret();
-      if(_westCoastDrive.turnTo(-112, timer)){
+      _turretClass.TurnLeft();
+      if(_westCoastDrive.turnTo(-112, timer)){ //TODO adjust this angle
         //System.out.println("Turning");
         _intakeClass.Collect();
       }else{
@@ -235,24 +237,38 @@ public class Robot extends TimedRobot {
         timer.start();
         _westCoastDrive.resetGyro();
         _westCoastDrive.zeroSensors();
-        tA = TERMINALAUTO.SECONDBALLPICKUP; //TODO change this to next step
+        tA = TERMINALAUTO.SECONDBALLPICKUP;
         
       }
       break;
 
       case SECONDBALLPICKUP:
+      _turretClass.TurnLeft();
       _turretClass.SetHigh();
       _intakeClass.Collect();
-      if(_westCoastDrive.moveTo(126, 40)){
+      if(_westCoastDrive.moveTo(126, 20)){
         System.out.println("Is driving");
       }else {
+        timer.reset();
+        timer.start();
+        tA = TERMINALAUTO.WAITFORHUMAN;
+      }
+      break;
+
+      case WAITFORHUMAN:
+      _turretClass.TurnLeft();
+      if(timer.hasElapsed(1)){
+        timer.reset();
+        timer.start();
         tA = TERMINALAUTO.THIRDMOVE;
+      }else{
+        _intakeClass.Collect();
       }
       break;
 
       case THIRDMOVE:
       _turretClass.TurnLeft();
-      if(_westCoastDrive.moveTo(-126, 40)) {
+      if(_westCoastDrive.moveTo(-126, 20)) {
         System.out.println("Is driving");
         _intakeClass.Collect();
       }else{
@@ -264,7 +280,7 @@ public class Robot extends TimedRobot {
 
       case SECONDSHOOT:
       _turretClass.Update_Limelight_Tracking();
-      if(_westCoastDrive.turnTo(-78, timer)) {
+      if(_westCoastDrive.turnTo(-78, timer)) { //TODO adjust this angle
         System.out.println("Is driving");
         _turretClass.AutonIdleSpeed();
       }else {

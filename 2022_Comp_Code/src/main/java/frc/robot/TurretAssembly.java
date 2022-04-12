@@ -48,6 +48,7 @@ public class TurretAssembly {
     }
 
     public TurretAssembly( ){
+        softLimits();
     }
 
     private zeroedDirection zD;

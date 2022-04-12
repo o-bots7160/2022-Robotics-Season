@@ -114,12 +114,12 @@ public class WestCoastDrive {
 
     double angleTolerance = 1;
     // These numbers must be tuned for your Robot!  Be careful!
-    final double TURN_K = 0.015;                     // how hard to turn toward the target
+    final double TURN_K = 0.0175;                     // how hard to turn toward the target
     final double RIGHT_MAX = .5;                   // Max speed the turret motor can go
     final double LEFT_MAX = -.5;
     final double RIGHT_MIN = 0.27;
     final double LEFT_MIN = -0.27;
-    if(resetTimer.hasElapsed(.5)){
+    if(resetTimer.hasElapsed(.2)){
       double error = angle - gyro.getYaw();
       if (Math.abs(error) < angleTolerance)
       System.out.println("first check");
@@ -129,7 +129,7 @@ public class WestCoastDrive {
           _delayCheck = System.currentTimeMillis();
           _delayReset = true;}
 
-        if(System.currentTimeMillis() - _delayCheck > 1000){
+        if(System.currentTimeMillis() - _delayCheck > 500){
           System.out.println("Second check");
           error = angle - gyro.getYaw();
           if (Math.abs(error) < angleTolerance){
@@ -209,9 +209,9 @@ public class WestCoastDrive {
       // Move to the set location
       if(getTicks() > distance){
         if(getTicks() > (distance + slowDown)){
-          arcadeDrive(-0.65, 0.0);//-.65
+          arcadeDrive(-0.75, turn_cmd);//-.65
         }else{
-          arcadeDrive(-0.4, 0.0);
+          arcadeDrive(-0.4, turn_cmd);
         }
       }else{
         stopDrive();
@@ -221,9 +221,9 @@ public class WestCoastDrive {
     } else {
       if(getTicks() < distance){
         if(getTicks() < (distance - slowDown)){
-          arcadeDrive(.65, 0.0);//.65
+          arcadeDrive(.75, turn_cmd);//.65
         }else{
-          arcadeDrive(.4, 0.0);
+          arcadeDrive(.4, turn_cmd);
         }
       }else{
         stopDrive();
