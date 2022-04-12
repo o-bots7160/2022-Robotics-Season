@@ -213,37 +213,37 @@ public class Robot extends TimedRobot {
         _turretClass.Shoot();
         if(_turretClass.isReady()) {
           _intakeClass.Shoot();
-        }else if (timer.hasElapsed( 1.7 )) {
+        }
+        if (timer.hasElapsed( 1.7 )) {
           _turretClass.StopShooter();
           _intakeClass.Stop();
+          _westCoastDrive.resetGyro();
+          timer.reset();
+          timer.start();
           tA = TERMINALAUTO.SECONDTURN;
         }
-        break;
+        break; 
 
       case SECONDTURN:
       _turretClass.StopTurret();
-      if(_westCoastDrive.turnTo(-80, timer)){
+      if(_westCoastDrive.turnTo(-112, timer)){
         //System.out.println("Turning");
         _intakeClass.Collect();
       }else{
         timer.reset();
+
         timer.start();
         _westCoastDrive.resetGyro();
-        tA = TERMINALAUTO.DELAYONE;
+        _westCoastDrive.zeroSensors();
+        tA = TERMINALAUTO.SECONDBALLPICKUP; //TODO change this to next step
         
-      }
-      break;
-
-      case DELAYONE:
-      if(timer.hasElapsed(2)){
-        tA = TERMINALAUTO.SECONDBALLPICKUP;
       }
       break;
 
       case SECONDBALLPICKUP:
       _turretClass.SetHigh();
       _intakeClass.Collect();
-      if(_westCoastDrive.moveTo(120, 40)){
+      if(_westCoastDrive.moveTo(126, 40)){
         System.out.println("Is driving");
       }else {
         tA = TERMINALAUTO.THIRDMOVE;
@@ -251,7 +251,8 @@ public class Robot extends TimedRobot {
       break;
 
       case THIRDMOVE:
-      if(_westCoastDrive.moveTo(-120, 30)) {
+      _turretClass.TurnLeft();
+      if(_westCoastDrive.moveTo(-126, 40)) {
         System.out.println("Is driving");
         _intakeClass.Collect();
       }else{
@@ -262,11 +263,11 @@ public class Robot extends TimedRobot {
       break;
 
       case SECONDSHOOT:
-      if(_westCoastDrive.turnTo(80, timer)) {
+      _turretClass.Update_Limelight_Tracking();
+      if(_westCoastDrive.turnTo(-78, timer)) {
         System.out.println("Is driving");
         _turretClass.AutonIdleSpeed();
       }else {
-        _turretClass.Update_Limelight_Tracking();
         _turretClass.Shoot();
         if(_turretClass.isReady()) {
           _intakeClass.Shoot();

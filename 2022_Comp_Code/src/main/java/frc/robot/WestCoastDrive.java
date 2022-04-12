@@ -108,8 +108,9 @@ public class WestCoastDrive {
     return autonActive;
   }*/
 
+  long _delayCheck = 0;
   public boolean turnTo(double angle, Timer resetTimer){
-    long _delayCheck = 0;
+    
 
     double angleTolerance = 1;
     // These numbers must be tuned for your Robot!  Be careful!
@@ -179,6 +180,10 @@ public class WestCoastDrive {
 
   public boolean moveTo( double distance, double slowDown ) {
 
+    final double TURN_K = 0.015;                     // how hard to turn toward the target
+    final double RIGHT_MAX = .5;                   // Max speed the turret motor can go
+    final double LEFT_MAX = -.5;
+
     double ticksPerIn = 1214.1916;
     slowDown = slowDown * ticksPerIn;
     distance = distance * ticksPerIn;
@@ -188,19 +193,44 @@ public class WestCoastDrive {
       gyro.reset();
       autonActive = true;
     } 
-    // Move to the set location
-    if(getTicks() < distance){
-      if(getTicks() < (distance - slowDown)){
-        arcadeDrive(.65, rotControl());//.65
-      }else{
-        arcadeDrive(.4, rotControl());
-      }
-    }else{
-      stopDrive();
-      autonActive = false;
-      return false;
+
+    double error =  -getYaw();
+
+    // Start with proportional steering
+    double turn_cmd = error * TURN_K;
+    if (turn_cmd > RIGHT_MAX)
+    {
+      turn_cmd = RIGHT_MAX;
+    }else if (turn_cmd < LEFT_MAX){
+      turn_cmd = LEFT_MAX;
     }
 
+    if ( distance < 0.0d ) {
+      // Move to the set location
+      if(getTicks() > distance){
+        if(getTicks() > (distance + slowDown)){
+          arcadeDrive(-0.65, 0.0);//-.65
+        }else{
+          arcadeDrive(-0.4, 0.0);
+        }
+      }else{
+        stopDrive();
+        autonActive = false;
+        return false;
+      }
+    } else {
+      if(getTicks() < distance){
+        if(getTicks() < (distance - slowDown)){
+          arcadeDrive(.65, 0.0);//.65
+        }else{
+          arcadeDrive(.4, 0.0);
+        }
+      }else{
+        stopDrive();
+        autonActive = false;
+        return false;
+      }
+    }
     return true;
   }
 
