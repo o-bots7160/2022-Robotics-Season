@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     _chooser.addOption("TERMINALAUTO", AUTO.TERMINALAUTO);
-    _chooser.addOption("TOWARDSWALL", AUTO.TOWARDSWALL);
+    //_chooser.addOption("TOWARDSWALL", AUTO.TOWARDSWALL);
 
   }
 
@@ -228,7 +228,7 @@ public class Robot extends TimedRobot {
 
       case SECONDTURN:
       _turretClass.TurnLeft();
-      if(_westCoastDrive.turnTo(-112, timer)){ //TODO adjust this angle
+      if(_westCoastDrive.turnTo(-75, timer)){ //TODO adjust this angle
         //System.out.println("Turning");
         _intakeClass.Collect();
       }else{
@@ -280,7 +280,7 @@ public class Robot extends TimedRobot {
 
       case SECONDSHOOT:
       _turretClass.Update_Limelight_Tracking();
-      if(_westCoastDrive.turnTo(-78, timer)) { //TODO adjust this angle
+      if(_westCoastDrive.turnTo(-110, timer)) { //TODO adjust this angle
         System.out.println("Is driving");
         _turretClass.AutonIdleSpeed();
       }else {

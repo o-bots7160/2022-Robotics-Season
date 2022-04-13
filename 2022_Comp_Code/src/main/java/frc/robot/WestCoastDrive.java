@@ -117,8 +117,8 @@ public class WestCoastDrive {
     final double TURN_K = 0.0175;                     // how hard to turn toward the target
     final double RIGHT_MAX = .5;                   // Max speed the turret motor can go
     final double LEFT_MAX = -.5;
-    final double RIGHT_MIN = 0.27;
-    final double LEFT_MIN = -0.27;
+    final double RIGHT_MIN = 0.32;
+    final double LEFT_MIN = -0.32;
     if(resetTimer.hasElapsed(.2)){
       double error = angle - gyro.getYaw();
       if (Math.abs(error) < angleTolerance)
