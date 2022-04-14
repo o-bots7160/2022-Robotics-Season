@@ -50,6 +50,17 @@ public void Collect() {
     }
 }
 
+public void waitForHuman(){
+    OTBI_high = false;    
+    _indexer.Collect();
+    _scoop.Collect();
+    if(haveBallHigh() && haveBallLow()) {
+        _OTBI.waitForHuman();
+    }else {
+        _OTBI.LowerIntake();
+    }
+}
+
 //moves cargo up when the shoot button is pressed
 public void Shoot(){
     _scoop.Shoot();

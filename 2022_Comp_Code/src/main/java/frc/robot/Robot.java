@@ -164,7 +164,7 @@ public class Robot extends TimedRobot {
 
         case SHOOT:
         _turretClass.Update_Limelight_Tracking();
-        if(timer.hasElapsed(3)){
+        //if(timer.hasElapsed(3)){
           _turretClass.Shoot();
           if(_turretClass.isReady()) {
             _intakeClass.Shoot();
@@ -172,7 +172,7 @@ public class Robot extends TimedRobot {
             _turretClass.StopShooter();
             _intakeClass.Stop();
           }
-      }
+      //}
         break;
 
         case STOP:
@@ -219,7 +219,7 @@ public class Robot extends TimedRobot {
         if(_turretClass.isReady()) {
           _intakeClass.Shoot();
         }
-        if (timer.hasElapsed( 1.7 )) {
+        if (timer.hasElapsed( 2.2 )) {
           _turretClass.StopShooter();
           _intakeClass.Stop();
           _westCoastDrive.resetGyro();
@@ -266,7 +266,7 @@ public class Robot extends TimedRobot {
         timer.start();
         tA = TERMINALAUTO.THIRDMOVE;
       }else{
-        _intakeClass.Collect();
+        _intakeClass.waitForHuman();
       }
       break;
 
@@ -274,7 +274,7 @@ public class Robot extends TimedRobot {
       _turretClass.TurnLeft();
       if(_westCoastDrive.moveTo(-126, 20)) {
         System.out.println("Is driving");
-        _intakeClass.Collect();
+        _intakeClass.waitForHuman();
       }else{
         timer.reset();
         timer.start();

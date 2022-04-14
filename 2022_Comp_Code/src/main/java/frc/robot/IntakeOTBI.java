@@ -33,6 +33,10 @@ public void LowerIntake() {
     _OTBI.set( ControlMode.Position, 55500.0);
 }
 
+public void waitForHuman(){
+    _OTBI.set( ControlMode.Position, 50000.00);
+}
+
 public void StowIntake() {
     _OTBI.set( ControlMode.Position, 0.00);
 }
