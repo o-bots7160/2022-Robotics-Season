@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    _turretClass.softLimits();
+    _turretClass.enableSoftLimits();
     endGameTimer.reset();
     endGameTimer.start();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
@@ -150,28 +150,29 @@ public class Robot extends TimedRobot {
         break;
 
         case TURN:
-        
-        _turretClass.Update_Limelight_Tracking();
-        if(_westCoastDrive.turnTo(90, timer)){
-          //System.out.println("Turning");
-          _intakeClass.Collect();
-        }else{
-          timer.reset();
-          timer.start();
-          _westCoastDrive.resetGyro();
-          lA = LAUNCHAUTO.SHOOT;
-        }
+          _turretClass.Update_Limelight_Tracking();
+          if(_westCoastDrive.turnTo(90, timer)){
+            //System.out.println("Turning");
+            _intakeClass.Collect();
+          }else{
+            timer.reset();
+            timer.start();
+            _westCoastDrive.resetGyro();
+            lA = LAUNCHAUTO.SHOOT;
+          }
         break;
 
         case SHOOT:
         _turretClass.Update_Limelight_Tracking();
-        _turretClass.Shoot();
-        if(_turretClass.isReady()) {
-          _intakeClass.Shoot();
-        }else if (timer.hasElapsed( 10 )) {
-          _turretClass.StopShooter();
-          _intakeClass.Stop();
-        }
+        if(timer.hasElapsed(3)){
+          _turretClass.Shoot();
+          if(_turretClass.isReady()) {
+            _intakeClass.Shoot();
+          }else if (timer.hasElapsed( 10 )) {
+            _turretClass.StopShooter();
+            _intakeClass.Stop();
+          }
+      }
         break;
 
         case STOP:
@@ -230,6 +231,7 @@ public class Robot extends TimedRobot {
 
       case SECONDTURN:
       _turretClass.TurnLeft();
+      _turretClass.AutonIdleSpeed();
       if(_westCoastDrive.turnTo(-75, timer)){ //TODO adjust this angle
         //System.out.println("Turning");
         _intakeClass.Collect();
@@ -284,7 +286,7 @@ public class Robot extends TimedRobot {
       _turretClass.Update_Limelight_Tracking();
       if(_westCoastDrive.turnTo(-110, timer)) { //TODO adjust this angle
         System.out.println("Is driving");
-        _turretClass.AutonIdleSpeed();
+        _turretClass.SetHigh();
       }else {
         _turretClass.Shoot();
         if(_turretClass.isReady()) {
@@ -499,6 +501,14 @@ public class Robot extends TimedRobot {
   else{
     _climberClass.StopTilt();
   }
+
+
+  if(UI.resetLimits()){
+    _turretClass.disableSoftLimits();
+  }else{
+    _turretClass.enableSoftLimits();
+  }
+
 }
 
   @Override

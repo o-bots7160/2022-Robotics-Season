@@ -193,11 +193,17 @@ public void Update_Limelight_Tracking(){
       return _turret.getSelectedSensorPosition();
   }
 
-  public void softLimits(){
+  public void enableSoftLimits(){
       _turret.configForwardSoftLimitThreshold(-3000.0, 0);
       _turret.configReverseSoftLimitThreshold(-130000.0, 0);
       _turret.configForwardSoftLimitEnable(true, 0);
       _turret.configReverseSoftLimitEnable(true, 0);
+  }
+
+  public void disableSoftLimits(){
+      zeroEncoders();
+    _turret.configForwardSoftLimitEnable(false, 0);
+    _turret.configReverseSoftLimitEnable(false, 0);
   }
 
   public void manualControl(){

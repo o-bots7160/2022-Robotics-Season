@@ -11,7 +11,7 @@ public class IntakeOTBI {
 public IntakeOTBI( ) {
     _OTBI.configFactoryDefault();
     _OTBI.configReverseSoftLimitThreshold(     0.0, 0);
-    _OTBI.configForwardSoftLimitThreshold( 54500.0, 0);
+    _OTBI.configForwardSoftLimitThreshold( 55500.0, 0);
     _OTBI.configForwardSoftLimitEnable(true, 0);
     _OTBI.configReverseSoftLimitEnable(true, 0);
     _OTBI.config_kP( 0, 0.06,            30);
@@ -30,7 +30,7 @@ public void zeroEncoders() {
 }
 
 public void LowerIntake() {
-    _OTBI.set( ControlMode.Position, 54500.0);
+    _OTBI.set( ControlMode.Position, 55500.0);
 }
 
 public void StowIntake() {

@@ -35,7 +35,7 @@ public void Shoot() {
 
 public void Collect() {
     if(!ballLow.getAsBoolean()) {
-        _scoop.set(0.95);
+        _scoop.set(1);
     }else {
         _scoop.stopMotor();
     }

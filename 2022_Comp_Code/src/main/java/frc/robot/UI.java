@@ -42,11 +42,11 @@ public class UI {
     }
 
     public static boolean getTurretLeft(){
-        return _buttons2.getRawButton( 4 ) || _joystick.getRawButton(11);
+        return _buttons2.getRawButton( 4 );
     }
 
     public static boolean getTurretRight(){
-        return _buttons2.getRawButton( 2 ) || _joystick.getRawButton(12); 
+        return _buttons2.getRawButton( 2 ); 
     }
 
     public static boolean getShoot(){
@@ -80,6 +80,9 @@ public class UI {
         return _joystick.getRawButton(7);
     }
 
+    public static boolean resetLimits(){
+        return _joystick.getRawButton(12); 
+    }
     /*public static boolean getCenter() {
         return _buttons1.getRawButton(1);
     }

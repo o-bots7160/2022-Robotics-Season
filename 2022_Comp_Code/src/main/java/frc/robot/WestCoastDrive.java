@@ -120,6 +120,7 @@ public class WestCoastDrive {
     final double RIGHT_MIN = 0.32;
     final double LEFT_MIN = -0.32;
     if(resetTimer.hasElapsed(.2)){
+
       double error = angle - gyro.getYaw();
       if (Math.abs(error) < angleTolerance)
       System.out.println("first check");
@@ -159,7 +160,7 @@ public class WestCoastDrive {
       }
 
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Get Yaw", getYaw() );
+    //SmartDashboard.putNumber("Get Yaw", getYaw() );
 
   }
 
