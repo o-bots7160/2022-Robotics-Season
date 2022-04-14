@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    
     //sets up auton options on the Smart Dashboard
     _chooser.setDefaultOption("LAUNCHAUTO", AUTO.LAUNCHAUTO);
     _chooser.addOption("TERMINALAUTO", AUTO.TERMINALAUTO);
@@ -85,13 +86,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    _turretClass.softLimits();
     endGameTimer.reset();
     endGameTimer.start();
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+    _turretClass.zeroEncoders();
     _westCoastDrive.autonomousInit();
     _westCoastDrive.zeroSensors();
     _intakeClass.ZeroEncoders();
-    _turretClass.softLimits();
     //UI.setBlue();
     _LED.set(-.95);
     switch ( _chooser.getSelected() ){
@@ -389,8 +391,8 @@ public class Robot extends TimedRobot {
     _climberClass.reset();
     endGameTimer.reset();
     endGameTimer.start();
-    _turretClass.zeroEncoders(); // Comment at match
-    _turretClass.softLimits(); // Comment at match
+    //  _turretClass.zeroEncoders(); // TODO Comment at match
+    //_turretClass.softLimits(); // TODO Comment at match
     _turretClass.breakMode(); // Move this to Auton init at comp
     _intakeClass.setCoastMode();
     _intakeClass.ZeroEncoders();

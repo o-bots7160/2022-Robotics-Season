@@ -47,9 +47,6 @@ public class TurretAssembly {
         RIGHT
     }
 
-    public TurretAssembly( ){
-        softLimits();
-    }
 
     private zeroedDirection zD;
 
@@ -197,8 +194,8 @@ public void Update_Limelight_Tracking(){
   }
 
   public void softLimits(){
-      _turret.configForwardSoftLimitThreshold(-3000, 0);
-      _turret.configReverseSoftLimitThreshold(-121000.0, 0);
+      _turret.configForwardSoftLimitThreshold(-3000.0, 0);
+      _turret.configReverseSoftLimitThreshold(-130000.0, 0);
       _turret.configForwardSoftLimitEnable(true, 0);
       _turret.configReverseSoftLimitEnable(true, 0);
   }
