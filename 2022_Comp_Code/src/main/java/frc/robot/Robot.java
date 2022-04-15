@@ -136,9 +136,9 @@ public class Robot extends TimedRobot {
     switch(lA){
         
         case BALLPICKUP:
-        _turretClass.SetHigh();
+        _turretClass.SetHigh();;
         _intakeClass.Collect();
-        if(_westCoastDrive.moveTo(74, 9)){
+        if(_westCoastDrive.moveTo(85, 10)){
          // System.out.println("Ball Pick up");
           
         }else{
@@ -197,9 +197,9 @@ public class Robot extends TimedRobot {
     switch(tA){
         
       case FIRSTBALLPICKUP:
-        _turretClass.shootAtX();
+        _turretClass.SetHigh();
         _intakeClass.Collect();
-        if(_westCoastDrive.moveTo(75, 9)){
+        if(_westCoastDrive.moveTo(85, 10)){
           System.out.println("Is driving");
           
         }else{
@@ -260,7 +260,7 @@ public class Robot extends TimedRobot {
       _turretClass.TurnLeft();
       _turretClass.AutonIdleSpeed();
       _intakeClass.Collect();
-      if(_westCoastDrive.moveTo(126, 20)){
+      if(_westCoastDrive.moveTo(115, 20)){
         System.out.println("Is driving");
       }else {
         timer.reset();
@@ -282,7 +282,7 @@ public class Robot extends TimedRobot {
 
       case THIRDMOVE:
       _turretClass.TurnLeft();
-      if(_westCoastDrive.moveTo(-126, 20)) {
+      if(_westCoastDrive.moveTo(-115, 20)) {
         System.out.println("Is driving");
         _intakeClass.waitForHuman();
       }else{

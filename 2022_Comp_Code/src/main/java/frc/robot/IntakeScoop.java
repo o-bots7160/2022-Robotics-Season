@@ -17,7 +17,7 @@ public IntakeScoop(BooleanSupplier new_ballLow) {
 }
 
 public void Flush() {
-    _scoop.set(-0.60);
+    _scoop.set(-0.30);
 }
 
 public void Stop() {
@@ -35,7 +35,7 @@ public void Shoot() {
 
 public void Collect() {
     if(!ballLow.getAsBoolean()) {
-        _scoop.set(1);
+        _scoop.set(.45);
     }else {
         _scoop.stopMotor();
     }
