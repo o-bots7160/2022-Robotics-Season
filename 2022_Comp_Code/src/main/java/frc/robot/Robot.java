@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
 
   private  enum LAUNCHAUTO {
     BALLPICKUP,
+    DRIVEBACK,
     TURN,
     SHOOT,
     STOP
@@ -145,8 +146,17 @@ public class Robot extends TimedRobot {
           _westCoastDrive.resetGyro();
           timer.reset();
           timer.start();
-          lA = LAUNCHAUTO.TURN;
+          lA = LAUNCHAUTO.DRIVEBACK;
         }
+        break;
+
+        case DRIVEBACK:
+        if(_westCoastDrive.moveTo(-12, 5)){
+          }else{
+            timer.reset();
+            timer.start();
+            lA = LAUNCHAUTO.TURN;
+          }
         break;
 
         case TURN:
@@ -187,7 +197,7 @@ public class Robot extends TimedRobot {
     switch(tA){
         
       case FIRSTBALLPICKUP:
-        _turretClass.SetHigh();
+        _turretClass.shootAtX();
         _intakeClass.Collect();
         if(_westCoastDrive.moveTo(75, 9)){
           System.out.println("Is driving");
@@ -219,7 +229,7 @@ public class Robot extends TimedRobot {
         if(_turretClass.isReady()) {
           _intakeClass.Shoot();
         }
-        if (timer.hasElapsed( 2.2 )) {
+        if (timer.hasElapsed( 2.5 )) {
           _turretClass.StopShooter();
           _intakeClass.Stop();
           _westCoastDrive.resetGyro();
@@ -248,7 +258,7 @@ public class Robot extends TimedRobot {
 
       case SECONDBALLPICKUP:
       _turretClass.TurnLeft();
-      _turretClass.SetHigh();
+      _turretClass.AutonIdleSpeed();
       _intakeClass.Collect();
       if(_westCoastDrive.moveTo(126, 20)){
         System.out.println("Is driving");
