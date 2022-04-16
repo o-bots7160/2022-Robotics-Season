@@ -70,6 +70,9 @@ public class TurretAssembly {
     public void SetHigh(){
         _Shooter.SetHigh();
     }
+    public void SetAuton(){
+        _Shooter.SetAuton();
+    }
 
     //sets shooter to shoot into the lower hub
     public void SetLow(){
@@ -80,6 +83,7 @@ public class TurretAssembly {
     public void shootAtX(){
         _Shooter.shootAtX();
     }
+    
 
     //stops shooter motor
     public void StopShooter(){ 

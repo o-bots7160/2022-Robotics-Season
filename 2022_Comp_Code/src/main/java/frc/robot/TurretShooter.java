@@ -37,6 +37,10 @@ public class TurretShooter {
         speed = 15500;
         _shooter.set( ControlMode.Velocity, speed);
     }
+    public void SetAuton(){
+        speed = 15300;
+        _shooter.set( ControlMode.Velocity, speed);
+    }
     
     //sets shooter to shoot into the lower hub
     public void SetLow(){
