@@ -69,9 +69,23 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double y = Joystick.getRawAxis(2) *0.02;
+    double x = Joystick.getRawAxis(0);
+    double y = Joystick.getRawAxis(1);
+    double z = Joystick.getRawAxis(2) * 2;
+    if (x < Constants.JOYSTICK_X_POSITIVE_DEADBAND && x > Constants.JOYSTICK_X_NEGATIVE_DEADBAND)
+    {
+      x = 0;
+    }
+    if (y < Constants.JOYSTICK_Y_POSITIVE_DEADBAND && y > Constants.JOYSTICK_Y_NEGATIVE_DEADBAND)
+    {
+      y = 0;
+    }
+    if (z < Constants.JOYSTICK_Z_POSITIVE_DEADBAND && z > Constants.JOYSTICK_Z_NEGATIVE_DEADBAND)
+    {
+      z = 0;
+    }
 
-    _drive.drive(-Joystick.getRawAxis( 0 ), Joystick.getRawAxis(1), y);
+    _drive.drive(-x, y, z);
   }
 
   /** This function is called once when the robot is disabled. */

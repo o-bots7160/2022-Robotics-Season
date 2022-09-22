@@ -45,4 +45,11 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 21; // FIXME Set back right steer motor ID
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 20; // FIXME Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(270.0); // FIXME Measure and set back right steer offset
+
+    public static final double JOYSTICK_X_POSITIVE_DEADBAND = 0.05; // Joystick's +x-axis deadband
+    public static final double JOYSTICK_Y_POSITIVE_DEADBAND = 0.05; // Joystick's +y-axis deadband
+    public static final double JOYSTICK_Z_POSITIVE_DEADBAND = 0.25; // Joystick's +z-axis deadband
+    public static final double JOYSTICK_X_NEGATIVE_DEADBAND = -0.05; // Joystick's -x-axis deadband
+    public static final double JOYSTICK_Y_NEGATIVE_DEADBAND = -0.05; // Joystick's -y-axis deadband
+    public static final double JOYSTICK_Z_NEGATIVE_DEADBAND = -0.25; // Joystick's -z-axis deadband
 }
