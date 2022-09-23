@@ -69,9 +69,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double x = Joystick.getRawAxis(0);
-    double y = Joystick.getRawAxis(1);
-    double z = Joystick.getRawAxis(2) * 2;
+    // Convert these from -1.0 - 1.0 to min/max speed or rotation
+    double x = Joystick.getRawAxis(0) * 2.0;
+    double y = Joystick.getRawAxis(1) * 2.0;
+    double z = Joystick.getRawAxis(2) * 2.0;
     if (x < Constants.JOYSTICK_X_POSITIVE_DEADBAND && x > Constants.JOYSTICK_X_NEGATIVE_DEADBAND)
     {
       x = 0;
